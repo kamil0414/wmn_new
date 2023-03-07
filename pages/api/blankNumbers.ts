@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 
 type Data = {
-  nr: string;
+  message?: any;
+  nr?: string
 };
 
 export default async function handler(
@@ -16,6 +17,7 @@ export default async function handler(
     result.forEach((el) => {
       array.push(parseInt(el.nr));
     });
+    // @ts-ignore
     res.status(200).json(array);
   } catch (error) {
     console.log(error);

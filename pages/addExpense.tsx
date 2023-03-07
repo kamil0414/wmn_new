@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { PostProps } from "../components/Post";
 import {
   Dropdown,
   TextField,
@@ -12,11 +11,12 @@ import {
 } from "@fluentui/react";
 import Link from "next/link";
 
-const AddExpense: React.FC<PostProps> = (props) => {
+const AddExpense: React.FC<any> = (props) => {
   useEffect(() => {
     fetchCompanies();
     fetchSubaccounts();
     fetchAccountVouchers();
+    // @ts-ignore
     document.querySelector("#date").value = new Date()
       .toISOString()
       .split("T")[0];
@@ -92,7 +92,7 @@ const AddExpense: React.FC<PostProps> = (props) => {
     })
       .then(() => {
         setShowfeedback(true);
-        fetchAccountBalance();
+        // fetchAccountBalance();
       })
       .catch(() => {
         setShowfeedback(false);

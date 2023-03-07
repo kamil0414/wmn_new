@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 
 type Data = {
-  name: string;
+  message?: any;
 };
 
 export default async function handler(
@@ -26,7 +26,7 @@ export default async function handler(
         czy_bank,
         id_subkonta,
       } = req.body;
-      const result = await prisma.operacje.create({
+      await prisma.operacje.create({
         data: {
           id_firmy,
           data: new Date(data),
@@ -37,7 +37,7 @@ export default async function handler(
           id_subkonta,
         },
       });
-      res.status(200).json(result);
+      res.status(200)
     }
   } catch (error) {
     console.log(error);

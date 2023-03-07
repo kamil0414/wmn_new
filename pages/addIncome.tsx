@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { PostProps } from "../components/Post";
 import {
   Dropdown,
   TextField,
@@ -13,25 +12,28 @@ import {
 } from "@fluentui/react";
 import { formatter } from "../utils";
 
-const AddIncome: React.FC<PostProps> = (props) => {
+const AddIncome: React.FC<any> = (props) => {
   useEffect(() => {
     fetchBasicData();
     fetchBlankNumbers();
 
+    // @ts-ignore
     document.querySelector("#waterMeterDatepicker").value = new Date()
       .toISOString()
       .split("T")[0];
     document
       .querySelector("#waterMeterDatepicker")
       .dispatchEvent(new Event("input", { bubbles: true }));
+    // @ts-ignore
     setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
-
+    // @ts-ignore
     document.querySelector("#operationDatepicker").value = new Date()
       .toISOString()
       .split("T")[0];
     document
       .querySelector("#operationDatepicker")
       .dispatchEvent(new Event("input", { bubbles: true }));
+    // @ts-ignore
     setOperationDate(new Date().toISOString().split("T")[0]);
   }, []);
 
@@ -41,7 +43,7 @@ const AddIncome: React.FC<PostProps> = (props) => {
       .then((json) => {
         setBasicData(json);
         if (flat !== 0) {
-          setBalance(json[flat - 1]?.saldo);
+          setBalance(parseFloat(json[flat - 1]?.saldo));
           setOperationSum(-1 * json[flat - 1]?.saldo);
         }
       });
@@ -54,6 +56,7 @@ const AddIncome: React.FC<PostProps> = (props) => {
         setBlankNumbers(json);
         if (flat != null && !paymentType) {
           setOperationNumber(Math.max.apply(null, json) + 1);
+          // @ts-ignore
           document.querySelector("#numberSelectbox").value =
             Math.max.apply(null, json) + 1;
           document
@@ -124,7 +127,7 @@ const AddIncome: React.FC<PostProps> = (props) => {
           setShowfeedback2(true);
           fetchBasicData();
           fetchFlatHistory(flat);
-          fetchAccountBalance();
+          // fetchAccountBalance();
 
           if (!paymentType) {
             fetchBlankNumbers();
@@ -159,7 +162,7 @@ const AddIncome: React.FC<PostProps> = (props) => {
   const [flatHistory, setFlatHistory] = useState([]);
 
   const [operationDate, setOperationDate] = useState();
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState(0);
 
   const defaultOptionClick = () => {
     setOperationSum(-1 * balance);
@@ -174,17 +177,18 @@ const AddIncome: React.FC<PostProps> = (props) => {
   };
 
   const operationValueChanged = (event, value) => {
-    setOperationSum(value.replace(",", "."));
+    setOperationSum(parseFloat(value.replace(",", ".")));
   };
 
   const flatNumberChanged = (event, options, index) => {
     setFlat(index + 1);
-    setBalance(basicData[index]?.saldo);
+    setBalance(parseFloat(basicData[index]?.saldo));
     setWaterMeterPreviousValue(basicData[index]?.stan_wodomierza);
     setWaterMeterPreviousDate(
       basicData[index]?.data_odczytu_wodomierza.split("T")[0]
     );
     setWaterMeterPreviousType(basicData[index]?.typ_odczytu);
+    // @ts-ignore
     setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
     setPaymentType(basicData[index]?.platnosc_przelewem);
     setWaterMeterButtonState(true);
@@ -202,18 +206,22 @@ const AddIncome: React.FC<PostProps> = (props) => {
         : null
     );
 
+    // @ts-ignore
     document.querySelector("#waterMeterValueSelectbox").value =
       basicData[index]?.stan_wodomierza;
+    // @ts-ignore
     document.querySelector("#waterMeterValueSelectbox").min =
       basicData[index]?.stan_wodomierza;
     document
       .querySelector("#waterMeterValueSelectbox")
       .dispatchEvent(new Event("input", { bubbles: true }));
 
+    // @ts-ignore
     document.querySelector("#numberSelectbox").value = basicData[index]
       ?.platnosc_przelewem
       ? null
       : Math.max.apply(null, blankNumbers) + 1;
+    // @ts-ignore
     document.querySelector("#numberSelectbox").placeholder = `numer ${
       basicData[index]?.platnosc_przelewem ? "wyciągu" : "KP"
     }`;
@@ -283,65 +291,74 @@ const AddIncome: React.FC<PostProps> = (props) => {
           />
         </div>
 
-        <Separator alignContent="start">
-          2. Podaj odczyt wodomierza (opcjonalnie)
-        </Separator>
-        {showfeedback != null ? <Message /> : ""}
-        <form>
-          <div className="flex fw">
-            <TextField
-              onChange={waterMeterValueChanged}
-              max={10000}
-              type="number"
-              id="waterMeterValueSelectbox"
-              placeholder="stan wodomierza"
-              suffix="m3"
-            />
-            <TextField
-              onChange={waterMeterDateChanged}
-              type="date"
-              max={
-                new Date(new Date().getFullYear(), 11, 32)
-                  .toISOString()
-                  .split("T")[0]
-              }
-              id="waterMeterDatepicker"
-              placeholder="wybierz datę odczytu"
-            />
-          </div>
+        {waterMeterCurrentValue && waterMeterPreviousValue && waterMeterPreviousDate && (
+          <div>
+            <Separator alignContent="start">
+              2. Podaj odczyt wodomierza (opcjonalnie)
+            </Separator>
+            {showfeedback != null ? <Message /> : ""}
+            <form>
+              <div className="flex fw">
+                <TextField
+                  onChange={waterMeterValueChanged}
+                  max={10000}
+                  type="number"
+                  id="waterMeterValueSelectbox"
+                  placeholder="stan wodomierza"
+                  suffix="m3"
+                />
+                <TextField
+                  onChange={waterMeterDateChanged}
+                  type="date"
+                  max={
+                    new Date(new Date().getFullYear(), 11, 32)
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  id="waterMeterDatepicker"
+                  placeholder="wybierz datę odczytu"
+                />
+              </div>
 
-          {waterMeterCurrentValue - waterMeterPreviousValue > 0 && (
-            <Label>
-              zużycie:{" "}
-              {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(3)} m3
-            </Label>
-          )}
-          {waterMeterPreviousValue > 0 &&
-            waterMeterPreviousDate != null &&
-            waterMeterPreviousType != null && (
-              <Label>
-                ostatni odczyt: {waterMeterPreviousValue} m3 z dnia{" "}
-                {waterMeterPreviousDate.slice(0, 10)} ({waterMeterPreviousType})
-              </Label>
-            )}
+              {waterMeterCurrentValue - waterMeterCurrentValue > 0 && (
+                <Label>
+                  zużycie:{" "}
+                  {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(
+                    3
+                  )}{" "}
+                  m3
+                </Label>
+              )}
+              {waterMeterPreviousValue > 0 &&
+                waterMeterPreviousDate != null &&
+                waterMeterPreviousType != null && (
+                  <Label>
+                    ostatni odczyt: {waterMeterPreviousValue} m3 z dnia{" "}
+                    { // @ts-ignore
+                    waterMeterPreviousDate.slice(0, 10)} (
+                    {waterMeterPreviousType})
+                  </Label>
+                )}
 
-          <div className="flex section buttons">
-            <PrimaryButton
-              disabled={
-                !(
-                  waterMeterCurrentValue > waterMeterPreviousValue &&
-                  flat != null &&
-                  waterMeterCurrentDate != null &&
-                  waterMeterPreviousDate !== waterMeterCurrentDate &&
-                  waterMeterButtonState
-                )
-              }
-              onClick={saveWaterMeterValue}
-              id="saveButton"
-              text="Zapisz odczyt"
-            />
+              <div className="flex section buttons">
+                <PrimaryButton
+                  disabled={
+                    !(
+                      waterMeterCurrentValue > waterMeterPreviousValue &&
+                      flat != null &&
+                      waterMeterCurrentDate != null &&
+                      waterMeterPreviousDate !== waterMeterCurrentDate &&
+                      waterMeterButtonState
+                    )
+                  }
+                  onClick={saveWaterMeterValue}
+                  id="saveButton"
+                  text="Zapisz odczyt"
+                />
+              </div>
+            </form>
           </div>
-        </form>
+        )}
 
         <Separator alignContent="start">3. Dowód wpłaty</Separator>
         {showfeedback2 != null ? <Message2 /> : ""}
@@ -409,14 +426,11 @@ const AddIncome: React.FC<PostProps> = (props) => {
                     placeholder="wpisz kwotę"
                     suffix="zł"
                   />
-                  {operationSum > 0 &&
-                    parseFloat(balance) + parseFloat(operationSum) < 0 && (
-                      <Label>
-                        pozostanie do zapłaty{" "}
-                        {-1 * (parseFloat(balance) + parseFloat(operationSum))}{" "}
-                        zł
-                      </Label>
-                    )}
+                  {operationSum > 0 && balance + operationSum < 0 && (
+                    <Label>
+                      pozostanie do zapłaty {-1 * (balance + operationSum)} zł
+                    </Label>
+                  )}
                 </div>
               )}
             </div>

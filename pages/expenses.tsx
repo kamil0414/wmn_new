@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { PostProps } from "../components/Post";
 import { formatter } from "../utils";
 
-const Expenses: React.FC<PostProps> = (props) => {
+const Expenses: React.FC<any> = (props) => {
   const [expensesHistory, setExpensesHistory] = useState([]);
 
   useEffect(() => {

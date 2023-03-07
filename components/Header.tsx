@@ -3,7 +3,11 @@ import Link from "next/link";
 import { formatter } from "../utils";
 
 const Header: React.FC = () => {
-  const [accountsBalance, setAccountsBalance] = useState();
+  const [accountsBalance, setAccountsBalance] = useState({
+    kasa: 0,
+    bank: 0,
+    razem: 0
+  });
 
   const fetchAccountBalance = () => {
     fetch(`/api/accountBalance`, {})
