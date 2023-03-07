@@ -18,7 +18,7 @@ const AddIncome: React.FC<any> = (props) => {
     fetchBlankNumbers();
 
     // @ts-ignore
-    document.querySelector("#waterMeterDatepicker").value = new Date()
+    document.querySelector("#waterMeterDatepicker")?.value = new Date()
       .toISOString()
       .split("T")[0];
     document
@@ -27,7 +27,7 @@ const AddIncome: React.FC<any> = (props) => {
     // @ts-ignore
     setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
     // @ts-ignore
-    document.querySelector("#operationDatepicker").value = new Date()
+    document.querySelector("#operationDatepicker")?.value = new Date()
       .toISOString()
       .split("T")[0];
     document
@@ -57,7 +57,7 @@ const AddIncome: React.FC<any> = (props) => {
         if (flat != null && !paymentType) {
           setOperationNumber(Math.max.apply(null, json) + 1);
           // @ts-ignore
-          document.querySelector("#numberSelectbox").value =
+          document.querySelector("#numberSelectbox")?.value =
             Math.max.apply(null, json) + 1;
           document
             .querySelector("#numberSelectbox")
@@ -207,7 +207,7 @@ const AddIncome: React.FC<any> = (props) => {
     );
 
     // @ts-ignore
-    document.querySelector("#waterMeterValueSelectbox").value =
+    document.querySelector("#waterMeterValueSelectbox")?.value =
       basicData[index]?.stan_wodomierza;
     // @ts-ignore
     document.querySelector("#waterMeterValueSelectbox").min =
@@ -217,7 +217,7 @@ const AddIncome: React.FC<any> = (props) => {
       .dispatchEvent(new Event("input", { bubbles: true }));
 
     // @ts-ignore
-    document.querySelector("#numberSelectbox").value = basicData[index]
+    document.querySelector("#numberSelectbox")?.value = basicData[index]
       ?.platnosc_przelewem
       ? null
       : Math.max.apply(null, blankNumbers) + 1;
