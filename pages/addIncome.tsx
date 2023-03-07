@@ -13,26 +13,36 @@ import {
 import { formatter } from "../utils";
 
 const AddIncome: React.FC<any> = (props) => {
+  const numberSelectbox: HTMLInputElement =
+    document.querySelector("#numberSelectbox");
+
+  const waterMeterDatepicker: HTMLInputElement = document.querySelector(
+    "#waterMeterDatepicker"
+  );
+
+  const waterMeterValueSelectbox: HTMLInputElement = document.querySelector(
+    "#waterMeterValueSelectbox"
+  );
+
+  const operationDatepicker: HTMLInputElement = document.querySelector(
+    "#operationDatepicker"
+  );
+
   useEffect(() => {
     fetchBasicData();
     fetchBlankNumbers();
 
-    // @ts-ignore
-    document.querySelector("#waterMeterDatepicker")?.value = new Date()
-      .toISOString()
-      .split("T")[0];
-    document
-      .querySelector("#waterMeterDatepicker")
-      .dispatchEvent(new Event("input", { bubbles: true }));
+    if (waterMeterDatepicker) {
+      waterMeterDatepicker.value = new Date().toISOString().split("T")[0];
+      waterMeterDatepicker.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    
     // @ts-ignore
     setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
-    // @ts-ignore
-    document.querySelector("#operationDatepicker")?.value = new Date()
-      .toISOString()
-      .split("T")[0];
-    document
-      .querySelector("#operationDatepicker")
-      .dispatchEvent(new Event("input", { bubbles: true }));
+    if (operationDatepicker) {
+      operationDatepicker.value = new Date().toISOString().split("T")[0];
+      operationDatepicker.dispatchEvent(new Event("input", { bubbles: true }));
+    }
     // @ts-ignore
     setOperationDate(new Date().toISOString().split("T")[0]);
   }, []);
@@ -56,12 +66,10 @@ const AddIncome: React.FC<any> = (props) => {
         setBlankNumbers(json);
         if (flat != null && !paymentType) {
           setOperationNumber(Math.max.apply(null, json) + 1);
-          // @ts-ignore
-          document.querySelector("#numberSelectbox")?.value =
-            Math.max.apply(null, json) + 1;
-          document
-            .querySelector("#numberSelectbox")
-            .dispatchEvent(new Event("input", { bubbles: true }));
+          if (numberSelectbox) {
+            numberSelectbox.value = Math.max.apply(null, json) + 1;
+            numberSelectbox.dispatchEvent(new Event("input", { bubbles: true }));
+          }
         }
       });
   };
@@ -147,10 +155,10 @@ const AddIncome: React.FC<any> = (props) => {
   const [flat, setFlat] = useState();
   const [paymentType, setPaymentType] = useState();
   const [accountVoucher, setAccountVoucher] = useState();
-  const [waterMeterPreviousValue, setWaterMeterPreviousValue] = useState();
-  const [waterMeterPreviousDate, setWaterMeterPreviousDate] = useState();
+  const [waterMeterPreviousValue, setWaterMeterPreviousValue] = useState(0);
+  const [waterMeterPreviousDate, setWaterMeterPreviousDate] = useState("");
   const [waterMeterPreviousType, setWaterMeterPreviousType] = useState();
-  const [waterMeterCurrentValue, setWaterMeterCurrentValue] = useState();
+  const [waterMeterCurrentValue, setWaterMeterCurrentValue] = useState(0);
   const [waterMeterCurrentDate, setWaterMeterCurrentDate] = useState();
   const [operationNumber, setOperationNumber] = useState();
   const [operationSum, setOperationSum] = useState(0);
@@ -206,28 +214,24 @@ const AddIncome: React.FC<any> = (props) => {
         : null
     );
 
-    // @ts-ignore
-    document.querySelector("#waterMeterValueSelectbox")?.value =
-      basicData[index]?.stan_wodomierza;
-    // @ts-ignore
-    document.querySelector("#waterMeterValueSelectbox").min =
-      basicData[index]?.stan_wodomierza;
-    document
-      .querySelector("#waterMeterValueSelectbox")
-      .dispatchEvent(new Event("input", { bubbles: true }));
+    if (waterMeterValueSelectbox) {
+      waterMeterValueSelectbox.value = basicData[index]?.stan_wodomierza;
+      waterMeterValueSelectbox.min = basicData[index]?.stan_wodomierza;
+      waterMeterValueSelectbox.dispatchEvent(
+        new Event("input", { bubbles: true })
+      );
+    }
 
-    // @ts-ignore
-    document.querySelector("#numberSelectbox")?.value = basicData[index]
-      ?.platnosc_przelewem
-      ? null
-      : Math.max.apply(null, blankNumbers) + 1;
-    // @ts-ignore
-    document.querySelector("#numberSelectbox").placeholder = `numer ${
-      basicData[index]?.platnosc_przelewem ? "wyciągu" : "KP"
-    }`;
-    document
-      .querySelector("#numberSelectbox")
-      .dispatchEvent(new Event("input", { bubbles: true }));
+    if (numberSelectbox) {
+      numberSelectbox.value = basicData[index]?.platnosc_przelewem
+        ? null
+        : Math.max.apply(null, blankNumbers) + 1;
+
+      numberSelectbox.placeholder = `numer ${
+        basicData[index]?.platnosc_przelewem ? "wyciągu" : "KP"
+      }`;
+      numberSelectbox.dispatchEvent(new Event("input", { bubbles: true }));
+    }
 
     // document.querySelector("#accountVouchersSelectbox").selectedOptions = [0];
     // document.querySelector("#accountVouchersSelectbox").dispatchEvent(new Event("input", { bubbles: true }));
@@ -291,74 +295,72 @@ const AddIncome: React.FC<any> = (props) => {
           />
         </div>
 
-        {waterMeterCurrentValue && waterMeterPreviousValue && waterMeterPreviousDate && (
-          <div>
-            <Separator alignContent="start">
-              2. Podaj odczyt wodomierza (opcjonalnie)
-            </Separator>
-            {showfeedback != null ? <Message /> : ""}
-            <form>
-              <div className="flex fw">
-                <TextField
-                  onChange={waterMeterValueChanged}
-                  max={10000}
-                  type="number"
-                  id="waterMeterValueSelectbox"
-                  placeholder="stan wodomierza"
-                  suffix="m3"
-                />
-                <TextField
-                  onChange={waterMeterDateChanged}
-                  type="date"
-                  max={
-                    new Date(new Date().getFullYear(), 11, 32)
-                      .toISOString()
-                      .split("T")[0]
-                  }
-                  id="waterMeterDatepicker"
-                  placeholder="wybierz datę odczytu"
-                />
-              </div>
+        <div>
+          <Separator alignContent="start">
+            2. Podaj odczyt wodomierza (opcjonalnie)
+          </Separator>
+          {showfeedback != null ? <Message /> : ""}
+          <form>
+            <div className="flex fw">
+              <TextField
+                onChange={waterMeterValueChanged}
+                max={10000}
+                type="number"
+                id="waterMeterValueSelectbox"
+                placeholder="stan wodomierza"
+                suffix="m3"
+              />
+              <TextField
+                onChange={waterMeterDateChanged}
+                type="date"
+                max={
+                  new Date(new Date().getFullYear(), 11, 32)
+                    .toISOString()
+                    .split("T")[0]
+                }
+                id="waterMeterDatepicker"
+                placeholder="wybierz datę odczytu"
+              />
+            </div>
 
-              {waterMeterCurrentValue - waterMeterCurrentValue > 0 && (
+            {waterMeterCurrentValue - waterMeterCurrentValue > 0 && (
+              <Label>
+                zużycie:{" "}
+                {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(3)}{" "}
+                m3
+              </Label>
+            )}
+            {waterMeterPreviousValue > 0 &&
+              waterMeterPreviousDate != null &&
+              waterMeterPreviousType != null && (
                 <Label>
-                  zużycie:{" "}
-                  {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(
-                    3
-                  )}{" "}
-                  m3
+                  ostatni odczyt: {waterMeterPreviousValue} m3 z dnia{" "}
+                  {
+                    // @ts-ignore
+                    waterMeterPreviousDate.slice(0, 10)
+                  }{" "}
+                  ({waterMeterPreviousType})
                 </Label>
               )}
-              {waterMeterPreviousValue > 0 &&
-                waterMeterPreviousDate != null &&
-                waterMeterPreviousType != null && (
-                  <Label>
-                    ostatni odczyt: {waterMeterPreviousValue} m3 z dnia{" "}
-                    { // @ts-ignore
-                    waterMeterPreviousDate.slice(0, 10)} (
-                    {waterMeterPreviousType})
-                  </Label>
-                )}
 
-              <div className="flex section buttons">
-                <PrimaryButton
-                  disabled={
-                    !(
-                      waterMeterCurrentValue > waterMeterPreviousValue &&
-                      flat != null &&
-                      waterMeterCurrentDate != null &&
-                      waterMeterPreviousDate !== waterMeterCurrentDate &&
-                      waterMeterButtonState
-                    )
-                  }
-                  onClick={saveWaterMeterValue}
-                  id="saveButton"
-                  text="Zapisz odczyt"
-                />
-              </div>
-            </form>
-          </div>
-        )}
+            <div className="flex section buttons">
+              <PrimaryButton
+                disabled={
+                  !(
+                    waterMeterCurrentValue > waterMeterPreviousValue &&
+                    flat != null &&
+                    waterMeterCurrentDate != null &&
+                    waterMeterPreviousDate !== waterMeterCurrentDate &&
+                    waterMeterButtonState
+                  )
+                }
+                onClick={saveWaterMeterValue}
+                id="saveButton"
+                text="Zapisz odczyt"
+              />
+            </div>
+          </form>
+        </div>
 
         <Separator alignContent="start">3. Dowód wpłaty</Separator>
         {showfeedback2 != null ? <Message2 /> : ""}
