@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import {
   Dropdown,
@@ -13,35 +13,25 @@ import {
 import { formatter } from "../utils";
 
 const AddIncome: React.FC<any> = (props) => {
-  const numberSelectbox: HTMLInputElement =
-    document.querySelector("#numberSelectbox");
-
-  const waterMeterDatepicker: HTMLInputElement = document.querySelector(
-    "#waterMeterDatepicker"
-  );
-
-  const waterMeterValueSelectbox: HTMLInputElement = document.querySelector(
-    "#waterMeterValueSelectbox"
-  );
-
-  const operationDatepicker: HTMLInputElement = document.querySelector(
-    "#operationDatepicker"
-  );
+  const numberSelectbox = useRef<HTMLInputElement>(null);
+  const waterMeterDatepicker = useRef<HTMLInputElement>(null);
+  const waterMeterValueSelectbox = useRef<HTMLInputElement>(null);
+  const operationDatepicker = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchBasicData();
     fetchBlankNumbers();
 
     if (waterMeterDatepicker) {
-      waterMeterDatepicker.value = new Date().toISOString().split("T")[0];
-      waterMeterDatepicker.dispatchEvent(new Event("input", { bubbles: true }));
+      waterMeterDatepicker.current.value = new Date().toISOString().split("T")[0];
+      waterMeterDatepicker.current.dispatchEvent(new Event("input", { bubbles: true }));
     }
     
     // @ts-ignore
     setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
     if (operationDatepicker) {
-      operationDatepicker.value = new Date().toISOString().split("T")[0];
-      operationDatepicker.dispatchEvent(new Event("input", { bubbles: true }));
+      operationDatepicker.current.value = new Date().toISOString().split("T")[0];
+      operationDatepicker.current.dispatchEvent(new Event("input", { bubbles: true }));
     }
     // @ts-ignore
     setOperationDate(new Date().toISOString().split("T")[0]);
@@ -67,8 +57,8 @@ const AddIncome: React.FC<any> = (props) => {
         if (flat != null && !paymentType) {
           setOperationNumber(Math.max.apply(null, json) + 1);
           if (numberSelectbox) {
-            numberSelectbox.value = Math.max.apply(null, json) + 1;
-            numberSelectbox.dispatchEvent(new Event("input", { bubbles: true }));
+            numberSelectbox.current.value = Math.max.apply(null, json) + 1;
+            numberSelectbox.current.dispatchEvent(new Event("input", { bubbles: true }));
           }
         }
       });
@@ -215,22 +205,22 @@ const AddIncome: React.FC<any> = (props) => {
     );
 
     if (waterMeterValueSelectbox) {
-      waterMeterValueSelectbox.value = basicData[index]?.stan_wodomierza;
-      waterMeterValueSelectbox.min = basicData[index]?.stan_wodomierza;
-      waterMeterValueSelectbox.dispatchEvent(
+      waterMeterValueSelectbox.current.value = basicData[index]?.stan_wodomierza;
+      waterMeterValueSelectbox.current.min = basicData[index]?.stan_wodomierza;
+      waterMeterValueSelectbox.current.dispatchEvent(
         new Event("input", { bubbles: true })
       );
     }
 
     if (numberSelectbox) {
-      numberSelectbox.value = basicData[index]?.platnosc_przelewem
+      numberSelectbox.current.value = basicData[index]?.platnosc_przelewem
         ? null
         : Math.max.apply(null, blankNumbers) + 1;
 
-      numberSelectbox.placeholder = `numer ${
+      numberSelectbox.current.placeholder = `numer ${
         basicData[index]?.platnosc_przelewem ? "wyciągu" : "KP"
       }`;
-      numberSelectbox.dispatchEvent(new Event("input", { bubbles: true }));
+      numberSelectbox.current.dispatchEvent(new Event("input", { bubbles: true }));
     }
 
     // document.querySelector("#accountVouchersSelectbox").selectedOptions = [0];
@@ -306,7 +296,8 @@ const AddIncome: React.FC<any> = (props) => {
                 onChange={waterMeterValueChanged}
                 max={10000}
                 type="number"
-                id="waterMeterValueSelectbox"
+                // @ts-ignore
+                ref={waterMeterValueSelectbox}
                 placeholder="stan wodomierza"
                 suffix="m3"
               />
@@ -318,7 +309,8 @@ const AddIncome: React.FC<any> = (props) => {
                     .toISOString()
                     .split("T")[0]
                 }
-                id="waterMeterDatepicker"
+                // @ts-ignore
+                ref={waterMeterDatepicker}
                 placeholder="wybierz datę odczytu"
               />
             </div>
@@ -388,7 +380,8 @@ const AddIncome: React.FC<any> = (props) => {
                   : `/${new Date().getFullYear().toString().slice(2, 4)}`
               }
               placeholder="numer dowodu księgwego"
-              id="numberSelectbox"
+              // @ts-ignore
+              ref={numberSelectbox}
             />
             <TextField
               onChange={operationDateChanged}
@@ -398,8 +391,9 @@ const AddIncome: React.FC<any> = (props) => {
                   .toISOString()
                   .split("T")[0]
               }
-              id="operationDatepicker"
               placeholder="wybierz datę wpłaty"
+              // @ts-ignore
+              ref={operationDatepicker}
             />
           </div>
 
