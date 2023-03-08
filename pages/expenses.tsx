@@ -29,39 +29,39 @@ const Expenses: React.FC<any> = (props) => {
               <table className="border-collapse table-auto w-full text-sm">
                 <thead>
                   <tr>
-                    <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                    <th className="border-b font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 text-left">
                       Data
                     </th>
-                    <th className="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                    <th className="border-b font-medium p-4 pt-0 pb-3 text-slate-400 text-left">
                       Firma
                     </th>
-                    <th className="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                    <th className="border-b font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 text-left">
                       Rodzaj i numer dowodu księgowego
                     </th>
-                    <th className="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                    <th className="border-b font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 text-left">
                       Opis
                     </th>
-                    <th className="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                    <th className="border-b font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 text-left">
                       Kwota
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white dark:bg-slate-800">
+                <tbody className="bg-white ">
                   {expensesHistory.map((row, i) => (
                     <tr key={i} className={row.czy_bank ? "bg-sky-100" : ""}>
-                      <td className="border-b border-slate-200 dark:border-slate-600 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                      <td className="border-b border-slate-200 p-4 pl-8 text-slate-500 ">
                         {row.data.split("T")[0]}
                       </td>
-                      <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                      <td className="border-b border-slate-200 p-4 text-slate-500 ">
                         {row.firma}
                       </td>
-                      <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                      <td className="border-b border-slate-200 p-4 text-slate-500 ">
                         {row.rodzaj_i_numer_dowodu_ksiegowego}
                       </td>
-                      <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                      <td className="border-b border-slate-200 p-4 text-slate-500 ">
                         {row.opis}
                       </td>
-                      <td className="border-b border-slate-200 dark:border-slate-600 p-4 pr-8 text-slate-500 dark:text-slate-400">
+                      <td className="border-b border-slate-200 p-4 pr-8 text-slate-500 ">
                         {formatter.format(row.kwota)}
                       </td>
                     </tr>
@@ -70,7 +70,7 @@ const Expenses: React.FC<any> = (props) => {
               </table>
             </div>
           </div>
-          <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5"></div>
+          <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-xl"></div>
         </div>
       </div>
     </Layout>

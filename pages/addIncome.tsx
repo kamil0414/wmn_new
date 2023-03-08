@@ -422,42 +422,42 @@ const AddIncome: React.FC<any> = (props) => {
                   <table className="border-collapse table-auto w-full text-sm">
                     <thead>
                       <tr>
-                        <th className="border-b dark:border-slate-600 font-medium p-4 text-slate-400 dark:text-slate-200 text-left">
+                        <th className="border-b font-medium p-4 text-slate-400 text-left">
                           Data
                         </th>
-                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                        <th className="border-b font-medium p-4  text-slate-400 text-left">
                           Opis
                         </th>
-                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                        <th className="border-b font-medium p-4  text-slate-400 text-left">
                           Należność
                         </th>
-                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                        <th className="border-b font-medium p-4  text-slate-400 text-left">
                           Wpłata
                         </th>
-                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                        <th className="border-b font-medium p-4  text-slate-400 text-left">
                           Saldo
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white dark:bg-slate-800">
+                    <tbody className="bg-white">
                       {flatHistory.map((row, i) => (
                         <tr key={i}>
-                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                          <td className="border-b border-slate-200 p-4 text-slate-500">
                             {row.data.split("T")[0]}
                           </td>
-                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                          <td className="border-b border-slate-200 p-4 text-slate-500">
                             {row.opis}
                           </td>
-                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                          <td className="border-b border-slate-200 p-4 text-slate-500">
                             {formatter.format(row.naleznosc)}
                           </td>
-                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                          <td className="border-b border-slate-200 p-4 text-slate-500">
                             {formatter.format(row.wplata)}
                           </td>
                           <td
                             className={classNames(
                               row.saldo < 0 ? "text-red-500" : "text-slate-500",
-                              "border-b border-slate-200 dark:border-slate-600 p-4 dark:text-slate-400"
+                              "border-b border-slate-200 p-4"
                             )}
                           >
                             {formatter.format(row.saldo)}
@@ -468,7 +468,7 @@ const AddIncome: React.FC<any> = (props) => {
                         <tr>
                           <td
                             colSpan={5}
-                            className="text-center border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400"
+                            className="text-center border-b border-slate-200 p-4 text-slate-500"
                           >
                             brak operacji
                           </td>
@@ -478,7 +478,7 @@ const AddIncome: React.FC<any> = (props) => {
                   </table>
                 </div>
               </div>
-              <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5"></div>
+              <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-xl"></div>
             </div>
           </div>
         )}
