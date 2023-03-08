@@ -60,17 +60,14 @@ const Header: React.FC = () => {
                         key={item.name}
                         href={item.href}
                         aria-current={isActive(item.href) ? "page" : undefined}
+                        className={classNames(
+                          isActive(item.href)
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium"
+                        )}
                       >
-                        <span
-                          className={classNames(
-                            isActive(item.href)
-                              ? "bg-gray-900 text-white"
-                              : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                            "rounded-md px-3 py-2 text-sm font-medium cursor-pointer"
-                          )}
-                        >
-                          {item.name}
-                        </span>
+                        {item.name}
                       </Link>
                     ))}
                   </div>
@@ -109,7 +106,7 @@ const Header: React.FC = () => {
                       isActive(item.href)
                         ? "bg-gray-900 text-white"
                         : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                      "block rounded-md px-3 py-2 text-base font-medium cursor-pointer"
+                      "block rounded-md px-3 py-2 text-base font-medium "
                     )}
                   >
                     {item.name}
