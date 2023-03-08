@@ -1,38 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import {
-  Dropdown,
-  TextField,
-  Separator,
-  PrimaryButton,
-  Checkbox,
-  Label,
-  MessageBar,
-  MessageBarType,
-} from "@fluentui/react";
-import { formatter } from "../utils";
+// import {
+//   TextField,
+//   Separator,
+//   PrimaryButton,
+//   Checkbox,
+//   Label,
+//   MessageBar,
+//   MessageBarType,
+// } from "@fluentui/react";
+import { classNames, formatter } from "../utils";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 const AddIncome: React.FC<any> = (props) => {
-  const numberSelectbox = useRef<HTMLInputElement>(null);
-  const waterMeterDatepicker = useRef<HTMLInputElement>(null);
-  const waterMeterValueSelectbox = useRef<HTMLInputElement>(null);
-  const operationDatepicker = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     fetchBasicData();
     fetchBlankNumbers();
 
-    if (waterMeterDatepicker) {
-      waterMeterDatepicker.current.value = new Date().toISOString().split("T")[0];
-      waterMeterDatepicker.current.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    
-    // @ts-ignore
-    setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
-    if (operationDatepicker) {
-      operationDatepicker.current.value = new Date().toISOString().split("T")[0];
-      operationDatepicker.current.dispatchEvent(new Event("input", { bubbles: true }));
-    }
+    // if (operationDatepicker) {
+    //   operationDatepicker.current.value = new Date().toISOString().split("T")[0];
+    //   operationDatepicker.current.dispatchEvent(new Event("input", { bubbles: true }));
+    // }
     // @ts-ignore
     setOperationDate(new Date().toISOString().split("T")[0]);
   }, []);
@@ -56,10 +45,10 @@ const AddIncome: React.FC<any> = (props) => {
         setBlankNumbers(json);
         if (flat != null && !paymentType) {
           setOperationNumber(Math.max.apply(null, json) + 1);
-          if (numberSelectbox) {
-            numberSelectbox.current.value = Math.max.apply(null, json) + 1;
-            numberSelectbox.current.dispatchEvent(new Event("input", { bubbles: true }));
-          }
+          // if (numberSelectbox) {
+          // numberSelectbox.current.value = Math.max.apply(null, json) + 1;
+          // numberSelectbox.current.dispatchEvent(new Event("input", { bubbles: true }));
+          // }
         }
       });
   };
@@ -70,7 +59,8 @@ const AddIncome: React.FC<any> = (props) => {
       .then((json) => setFlatHistory(json));
   };
 
-  const saveWaterMeterValue = () => {
+  const saveWaterMeterValue = (e) => {
+    e.preventDefault();
     fetch(`/api/waterMeters`, {
       method: "POST",
       headers: {
@@ -85,6 +75,9 @@ const AddIncome: React.FC<any> = (props) => {
     })
       .then((response) => {
         if (response.ok) {
+          setWaterMeterPreviousValue(waterMeterCurrentValue);
+          setWaterMeterPreviousDate(waterMeterCurrentDate);
+          setWaterMeterPreviousType(0);
           fetchBasicData();
           fetchFlatHistory(flat);
           setWaterMeterButtonState(false);
@@ -142,14 +135,19 @@ const AddIncome: React.FC<any> = (props) => {
   const [accountsBalance, setAccountsBalance] = useState();
   const [basicData, setBasicData] = useState([]);
   const [blankNumbers, setBlankNumbers] = useState();
-  const [flat, setFlat] = useState();
+  const [flat, setFlat] = useState(1);
   const [paymentType, setPaymentType] = useState();
   const [accountVoucher, setAccountVoucher] = useState();
+
   const [waterMeterPreviousValue, setWaterMeterPreviousValue] = useState(0);
   const [waterMeterPreviousDate, setWaterMeterPreviousDate] = useState("");
-  const [waterMeterPreviousType, setWaterMeterPreviousType] = useState();
+  const [waterMeterPreviousType, setWaterMeterPreviousType] = useState(0);
   const [waterMeterCurrentValue, setWaterMeterCurrentValue] = useState(0);
-  const [waterMeterCurrentDate, setWaterMeterCurrentDate] = useState();
+  const [waterMeterCurrentMinValue, setWaterMeterCurrentMinValue] = useState(0);
+  const [waterMeterCurrentDate, setWaterMeterCurrentDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+
   const [operationNumber, setOperationNumber] = useState();
   const [operationSum, setOperationSum] = useState(0);
   const [operationSumFieldState, setOperationSumFieldState] = useState(false);
@@ -178,21 +176,24 @@ const AddIncome: React.FC<any> = (props) => {
     setOperationSum(parseFloat(value.replace(",", ".")));
   };
 
-  const flatNumberChanged = (event, options, index) => {
-    setFlat(index + 1);
+  useEffect(() => {
+    const index = flat - 1;
     setBalance(parseFloat(basicData[index]?.saldo));
+
     setWaterMeterPreviousValue(basicData[index]?.stan_wodomierza);
     setWaterMeterPreviousDate(
       basicData[index]?.data_odczytu_wodomierza.split("T")[0]
     );
     setWaterMeterPreviousType(basicData[index]?.typ_odczytu);
-    // @ts-ignore
     setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
+    setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
+    setWaterMeterCurrentMinValue(basicData[index]?.stan_wodomierza);
+
     setPaymentType(basicData[index]?.platnosc_przelewem);
     setWaterMeterButtonState(true);
     setShowfeedback(null);
     setShowfeedback2(null);
-    fetchFlatHistory(index + 1);
+    fetchFlatHistory(flat);
 
     if (basicData[index]?.saldo < 0) {
       setOperationSum(-1 * basicData[index]?.saldo);
@@ -204,37 +205,18 @@ const AddIncome: React.FC<any> = (props) => {
         : null
     );
 
-    if (waterMeterValueSelectbox) {
-      waterMeterValueSelectbox.current.value = basicData[index]?.stan_wodomierza;
-      waterMeterValueSelectbox.current.min = basicData[index]?.stan_wodomierza;
-      waterMeterValueSelectbox.current.dispatchEvent(
-        new Event("input", { bubbles: true })
-      );
-    }
-
-    if (numberSelectbox) {
-      numberSelectbox.current.value = basicData[index]?.platnosc_przelewem
-        ? null
-        : Math.max.apply(null, blankNumbers) + 1;
-
-      numberSelectbox.current.placeholder = `numer ${
-        basicData[index]?.platnosc_przelewem ? "wyciągu" : "KP"
-      }`;
-      numberSelectbox.current.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-
-    // document.querySelector("#accountVouchersSelectbox").selectedOptions = [0];
-    // document.querySelector("#accountVouchersSelectbox").dispatchEvent(new Event("input", { bubbles: true }));
-    // document.querySelector("#accountVouchersSelectbox").dispatchEvent(new Event("select", { bubbles: true }));
-  };
-
-  const waterMeterValueChanged = (event, value) => {
-    setWaterMeterCurrentValue(value.replace(",", "."));
-  };
-
-  const waterMeterDateChanged = (event, value) => {
-    setWaterMeterCurrentDate(value);
-  };
+    // if (numberSelectbox) {
+    // numberSelectbox.current.value = basicData[flat]?.platnosc_przelewem
+    //   ? null
+    //   : Math.max.apply(null, blankNumbers) + 1;
+    // numberSelectbox.current.placeholder = `numer ${
+    //   basicData[flat]?.platnosc_przelewem ? "wyciągu" : "KP"
+    // }`;
+    // numberSelectbox.current.dispatchEvent(
+    //   new Event("input", { bubbles: true })
+    // );
+    // }
+  }, [basicData, flat]);
 
   const operationDateChanged = (event, value) => {
     setOperationDate(value);
@@ -244,121 +226,268 @@ const AddIncome: React.FC<any> = (props) => {
     setOperationNumber(value);
   };
 
-  const Message = () => (
-    <MessageBar
-      messageBarType={
-        showfeedback ? MessageBarType.success : MessageBarType.error
-      }
-      isMultiline={false}
-    >
-      {showfeedback ? "Zapisano" : "Wystąpił błąd"}
-    </MessageBar>
-  );
+  // const Message = () => (
+  //   <MessageBar
+  //     messageBarType={
+  //       showfeedback ? MessageBarType.success : MessageBarType.error
+  //     }
+  //     isMultiline={false}
+  //   >
+  //     {showfeedback ? "Zapisano" : "Wystąpił błąd"}
+  //   </MessageBar>
+  // );
 
-  const Message2 = () => (
-    <MessageBar
-      messageBarType={
-        showfeedback2 ? MessageBarType.success : MessageBarType.error
-      }
-      isMultiline={false}
-    >
-      {showfeedback2 ? "Zapisano" : "Wystąpił błąd"}
-    </MessageBar>
-  );
+  // const Message2 = () => (
+  //   <MessageBar
+  //     messageBarType={
+  //       showfeedback2 ? MessageBarType.success : MessageBarType.error
+  //     }
+  //     isMultiline={false}
+  //   >
+  //     {showfeedback2 ? "Zapisano" : "Wystąpił błąd"}
+  //   </MessageBar>
+  // );
 
   return (
     <Layout>
-      <div className="container">
-        <Separator alignContent="start">1. Wybierz numer mieszkania</Separator>
+      <div className="container mx-auto px-4">
+        {basicData && (
+          <Listbox value={flat} onChange={setFlat}>
+            {({ open }) => (
+              <>
+                <Listbox.Label className="block text-sm font-medium leading-6 text-gray-700 mt-6">
+                  1. Wybierz numer mieszkania
+                </Listbox.Label>
+                <div className="relative mt-2">
+                  <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-500 sm:text-sm sm:leading-6">
+                    <span className="ml-3 block truncate">{flat}</span>
 
-        <div className="flex section">
-          <Dropdown
-            onChange={(event, options, index) =>
-              flatNumberChanged(event, options, index)
-            }
-            placeholder="wybierz numer mieszkania"
-            options={basicData.map((obj) => {
-              obj["key"] = obj["numer_mieszkania"];
-              obj["text"] = obj["numer_mieszkania"];
-              return obj;
-            })}
-          />
-        </div>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                      <ChevronUpDownIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
 
-        <div>
-          <Separator alignContent="start">
-            2. Podaj odczyt wodomierza (opcjonalnie)
-          </Separator>
-          {showfeedback != null ? <Message /> : ""}
-          <form>
-            <div className="flex fw">
-              <TextField
-                onChange={waterMeterValueChanged}
-                max={10000}
-                type="number"
-                // @ts-ignore
-                ref={waterMeterValueSelectbox}
-                placeholder="stan wodomierza"
-                suffix="m3"
-              />
-              <TextField
-                onChange={waterMeterDateChanged}
-                type="date"
-                max={
-                  new Date(new Date().getFullYear(), 11, 32)
-                    .toISOString()
-                    .split("T")[0]
-                }
-                // @ts-ignore
-                ref={waterMeterDatepicker}
-                placeholder="wybierz datę odczytu"
-              />
-            </div>
+                  <Transition
+                    show={open}
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {basicData.map((obj) => (
+                        <Listbox.Option
+                          key={obj["numer_mieszkania"]}
+                          className={({ active }) =>
+                            classNames(
+                              active
+                                ? "bg-sky-600 text-white"
+                                : "text-gray-900",
+                              "relative cursor-default select-none py-2 pl-3 pr-9"
+                            )
+                          }
+                          value={obj["numer_mieszkania"]}
+                        >
+                          {({ selected, active }) => (
+                            <>
+                              <span
+                                className={classNames(
+                                  selected ? "font-semibold" : "font-normal",
+                                  "ml-3 block truncate"
+                                )}
+                              >
+                                {obj["numer_mieszkania"]}
+                              </span>
 
-            {waterMeterCurrentValue - waterMeterCurrentValue > 0 && (
-              <Label>
-                zużycie:{" "}
-                {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(3)}{" "}
-                m3
-              </Label>
+                              {selected ? (
+                                <span
+                                  className={classNames(
+                                    active ? "text-white" : "text-sky-600",
+                                    "absolute inset-y-0 right-0 flex items-center pr-4"
+                                  )}
+                                >
+                                  <CheckIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </>
             )}
-            {waterMeterPreviousValue > 0 &&
-              waterMeterPreviousDate != null &&
-              waterMeterPreviousType != null && (
-                <Label>
-                  ostatni odczyt: {waterMeterPreviousValue} m3 z dnia{" "}
-                  {
-                    // @ts-ignore
-                    waterMeterPreviousDate.slice(0, 10)
-                  }{" "}
-                  ({waterMeterPreviousType})
-                </Label>
-              )}
-
-            <div className="flex section buttons">
-              <PrimaryButton
-                disabled={
-                  !(
-                    waterMeterCurrentValue > waterMeterPreviousValue &&
-                    flat != null &&
-                    waterMeterCurrentDate != null &&
-                    waterMeterPreviousDate !== waterMeterCurrentDate &&
-                    waterMeterButtonState
-                  )
-                }
-                onClick={saveWaterMeterValue}
-                id="saveButton"
-                text="Zapisz odczyt"
-              />
+          </Listbox>
+        )}
+        <form>
+          <div className="flex items-end">
+            <div>
+              <label
+                htmlFor="company-website"
+                className="block text-sm font-medium leading-6 text-gray-900 mt-3"
+              >
+                2. Podaj odczyt wodomierza (opcjonalnie)
+              </label>
+              <div className="mt-2 mr-1 flex rounded-md shadow-sm">
+                <input
+                  onChange={(e) =>
+                    setWaterMeterCurrentValue(
+                      parseFloat(e.target.value.replace(",", "."))
+                    )
+                  }
+                  min={waterMeterCurrentMinValue}
+                  max={10000}
+                  value={waterMeterCurrentValue}
+                  type="number"
+                  name="watermeterCurrentValue"
+                  id="watermeterCurrentValue"
+                  className="block w-full flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  placeholder="stan wodomierza"
+                />
+                <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                  m3
+                </span>
+              </div>
             </div>
-          </form>
-        </div>
+            <div>
+              <div className="mt-2 flex rounded-md shadow-sm">
+                <input
+                  onChange={(e) => setWaterMeterCurrentDate(e.target.value)}
+                  max={
+                    new Date(new Date().getFullYear(), 11, 32)
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  type="date"
+                  name="watermeterDate"
+                  id="watermeterDate"
+                  value={waterMeterCurrentDate}
+                  className="block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+          </div>
 
-        <Separator alignContent="start">3. Dowód wpłaty</Separator>
+          {waterMeterCurrentValue - waterMeterPreviousValue > 0 && (
+            <span className="block text-sm font-medium leading-6 text-gray-700 my-3">
+              zużycie:{" "}
+              {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(3)} m3
+            </span>
+          )}
+          {waterMeterPreviousValue > 0 &&
+            waterMeterPreviousDate != null &&
+            waterMeterPreviousType != null && (
+              <span className="block text-sm font-medium leading-6 text-gray-700 my-3">
+                ostatni odczyt: {waterMeterPreviousValue} m3 z dnia{" "}
+                {waterMeterPreviousDate.slice(0, 10)} ({waterMeterPreviousType})
+              </span>
+            )}
+
+          <div className="flex section buttons">
+            <button
+              className="disabled:bg-gray-300 inline-flex justify-center rounded-md bg-sky-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+              disabled={
+                !(
+                  waterMeterCurrentValue > waterMeterPreviousValue &&
+                  flat != null &&
+                  waterMeterCurrentDate != null &&
+                  waterMeterPreviousDate !== waterMeterCurrentDate &&
+                  waterMeterButtonState
+                )
+              }
+              onClick={(e) => saveWaterMeterValue(e)}
+              id="saveButton"
+            >
+              Zapisz odczyt
+            </button>
+          </div>
+        </form>
+
+        {flatHistory && (
+          <div>
+            <div className="text-sm font-medium text-gray-700 my-4">
+              Kartoteka
+            </div>
+
+            <div className="not-prose relative bg-slate-50 overflow-hidden ">
+              <div className="relative overflow-auto">
+                <div className="shadow-sm overflow-hidden my-8">
+                  <table className="border-collapse table-auto w-full text-sm">
+                    <thead>
+                      <tr>
+                        <th className="border-b dark:border-slate-600 font-medium p-4 text-slate-400 dark:text-slate-200 text-left">
+                          Data
+                        </th>
+                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                          Opis
+                        </th>
+                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                          Należność
+                        </th>
+                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                          Wpłata
+                        </th>
+                        <th className="border-b dark:border-slate-600 font-medium p-4  text-slate-400 dark:text-slate-200 text-left">
+                          Saldo
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white dark:bg-slate-800">
+                      {flatHistory.map((row, i) => (
+                        <tr key={i}>
+                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                            {row.data.split("T")[0]}
+                          </td>
+                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                            {row.opis}
+                          </td>
+                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                            {formatter.format(row.naleznosc)}
+                          </td>
+                          <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
+                            {formatter.format(row.wplata)}
+                          </td>
+                          <td
+                            className={classNames(
+                              row.saldo < 0 ? "text-red-500" : "text-slate-500",
+                              "border-b border-slate-200 dark:border-slate-600 p-4 dark:text-slate-400"
+                            )}
+                          >
+                            {formatter.format(row.saldo)}
+                          </td>
+                        </tr>
+                      ))}
+                      {flatHistory.length === 0 && (
+                        <tr>
+                          <td
+                            colSpan={5}
+                            className="text-center border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400"
+                          >
+                            brak operacji
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-xl dark:border-white/5"></div>
+            </div>
+          </div>
+        )}
+
+        {/* <Separator alignContent="start">3. Dowód wpłaty</Separator>
         {showfeedback2 != null ? <Message2 /> : ""}
         <form>
           <div className="flex fw">
-            {/* <Dropdown
+            <Dropdown
             id="accountVouchersSelectbox"
             placeholder="rodzaj dowodu księgowego"
             options={accountVouchers
@@ -368,7 +497,7 @@ const AddIncome: React.FC<any> = (props) => {
                 obj["text"] = obj["opis"];
                 return obj;
               })}
-          /> */}
+          />
 
             <TextField
               onChange={operationNumberChanged}
@@ -433,9 +562,9 @@ const AddIncome: React.FC<any> = (props) => {
           </div>
 
           <div className="flex section buttons">
-            {/* <Link to="/">
+            <Link to="/">
             <DefaultButton text="Anuluj" />
-          </Link> */}
+          </Link>
             <PrimaryButton
               disabled={
                 !(
@@ -453,45 +582,7 @@ const AddIncome: React.FC<any> = (props) => {
               text="Zapisz wpłatę"
             />
           </div>
-        </form>
-        {flat != null && (
-          <div>
-            {" "}
-            <Separator alignContent="start">Kartoteka</Separator>
-            <table className="ms-Table">
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Opis</th>
-                  <th className="sum">Należność</th>
-                  <th className="sum">Wpłata</th>
-                  <th className="sum">Saldo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {flatHistory.map((row) => (
-                  <tr>
-                    <td className="noWrap data">{row.data.split("T")[0]}</td>
-                    <td className="description">{row.opis}</td>
-                    <td className="noWrap sum">
-                      {formatter.format(row.naleznosc)}
-                    </td>
-                    <td className="noWrap sum">
-                      {formatter.format(row.wplata)}
-                    </td>
-                    <td
-                      className={
-                        row.saldo < 0 ? "red noWrap sum" : "noWrap sum"
-                      }
-                    >
-                      {formatter.format(row.saldo)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        </form> */}
       </div>
     </Layout>
   );

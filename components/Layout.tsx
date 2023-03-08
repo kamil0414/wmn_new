@@ -9,7 +9,11 @@ const Layout: React.FC<Props> = (props) => (
   <div id="app">
     <Header />
     <div className="layout">{props.children}</div>
-    <style jsx global>{`
+    {/* <style jsx global>{`
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+      
       html,
       body {
         font-size: 13px;
@@ -140,7 +144,7 @@ const Layout: React.FC<Props> = (props) => (
         text-align: left;
         border-bottom: 1px solid #eaeaea;
       }
-    `}</style>
+    `}</style> */}
   </div>
 );
 

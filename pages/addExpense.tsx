@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import {
-  Dropdown,
-  TextField,
-  PrimaryButton,
-  Checkbox,
-  MessageBar,
-  MessageBarType,
-  DefaultButton,
-} from "@fluentui/react";
+// import {
+//   Dropdown,
+//   TextField,
+//   PrimaryButton,
+//   Checkbox,
+//   MessageBar,
+//   MessageBarType,
+//   DefaultButton,
+// } from "@fluentui/react";
 import Link from "next/link";
 
 const AddExpense: React.FC<any> = (props) => {
@@ -61,16 +61,16 @@ const AddExpense: React.FC<any> = (props) => {
   const [account, setAccount] = useState(null);
   const [sum, setSum] = useState(null);
 
-  const Message = () => (
-    <MessageBar
-      messageBarType={
-        showfeedback ? MessageBarType.success : MessageBarType.error
-      }
-      isMultiline={false}
-    >
-      {showfeedback ? "Zapisano" : "Wystąpił błąd"}
-    </MessageBar>
-  );
+  // const Message = () => (
+    // <MessageBar
+    //   messageBarType={
+    //     showfeedback ? MessageBarType.success : MessageBarType.error
+    //   }
+    //   isMultiline={false}
+    // >
+    //   {showfeedback ? "Zapisano" : "Wystąpił błąd"}
+    // </MessageBar>
+  // );
 
   const saveOperation = () => {
     fetch(`/api/operations`, {
@@ -133,7 +133,7 @@ const AddExpense: React.FC<any> = (props) => {
 
   return (
     <Layout>
-      <div className="container">
+      {/* <div className="container">
         {showfeedback != null ? <Message /> : ""}
         <form>
           <div className="flex fw section">
@@ -243,7 +243,7 @@ const AddExpense: React.FC<any> = (props) => {
             />
           </div>
         </form>
-      </div>
+      </div> */}
     </Layout>
   );
 };

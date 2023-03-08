@@ -1,8 +1,7 @@
-import { initializeIcons } from "@fluentui/react";
+import '../styles/index.css'
 import { AppProps } from "next/app";
 
 const App = ({ Component, pageProps }: AppProps) => {
-  initializeIcons();
   return (
     <Component {...pageProps} />
   );
