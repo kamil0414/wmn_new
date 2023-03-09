@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { classNames, fetcher, formatter, usePrevious } from "../utils";
+import { classNames, fetcher, formatter } from "../utils";
 import useSWR, { useSWRConfig } from "swr";
 import Link from "next/link";
 
@@ -8,28 +8,20 @@ const AddIncome: React.FC<any> = (props) => {
   const { mutate } = useSWRConfig();
 
   const [flat, setFlat] = useState(1);
-  const prevFlat = usePrevious(flat);
 
-  const { data: basicData, error: basicDataError } = useSWR(
-    "/api/basicData",
-    fetcher
-  );
-  const prevBasicData = usePrevious(basicData);
+  const { data: basicData } = useSWR("/api/basicData", fetcher);
 
-  const { data: blankNumbers, error: blankNumbersError } = useSWR(
-    "/api/blankNumbers",
-    fetcher
-  );
-  const prevBlankNumbers = usePrevious(blankNumbers);
+  const { data: blankNumbers } = useSWR("/api/blankNumbers", fetcher);
 
-  const { data: flatHistory, error: flatHistoryError } = useSWR(
-    `/api/flatHistory?flat_number=${flat}`,
-    fetcher
-  );
+  const {
+    data: flatHistory,
+    error: flatHistoryError,
+    isLoading: flatHistoryIsLoading,
+  } = useSWR(`/api/flatHistory?flat_number=${flat}`, fetcher);
 
-  const saveWaterMeterValue = (e) => {
+  const saveWaterMeterValue = async (e) => {
     e.preventDefault();
-    fetch(`/api/waterMeters`, {
+    await fetch(`/api/waterMeters`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,7 +41,7 @@ const AddIncome: React.FC<any> = (props) => {
           setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
           setWaterMeterCurrentValue(waterMeterCurrentValue);
           mutate("/api/basicData");
-          mutate(`/api/flatHistory/?flat_number=${flat}`);
+          mutate(["/api/flatHistory/?flat_number=", flat]);
           setWaterMeterButtonState(false);
           setShowfeedback(true);
         } else {
@@ -61,9 +53,9 @@ const AddIncome: React.FC<any> = (props) => {
       });
   };
 
-  const saveOperation = (e) => {
+  const saveOperation = async (e) => {
     e.preventDefault();
-    fetch(`/api/operations`, {
+    await fetch(`/api/operations`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,8 +81,8 @@ const AddIncome: React.FC<any> = (props) => {
           setShowfeedback2(true);
           mutate("/api/basicData");
           mutate("/api/accountBalance");
-          mutate(`/api/flatHistory/?flat_number=${flat}`);
-
+          mutate(["/api/flatHistory/?flat_number=", flat])
+          
           if (!paymentType) {
             mutate("/api/blankNumbers");
           }
@@ -223,12 +215,12 @@ const AddIncome: React.FC<any> = (props) => {
             </select>
           </div>
         </div>
-        <hr className="mt-6"></hr>
+        <hr className="mt-4"></hr>
 
         <form>
           <label
             htmlFor="company-website"
-            className="block text-sm font-medium leading-6 text-gray-900 mt-6"
+            className="block text-sm font-medium leading-6 text-gray-900 mt-4"
           >
             2. Podaj odczyt wodomierza (opcjonalnie)
           </label>
@@ -241,6 +233,7 @@ const AddIncome: React.FC<any> = (props) => {
                   )
                 }
                 min={waterMeterCurrentMinValue}
+                step="any"
                 value={waterMeterCurrentValue}
                 type="number"
                 name="watermeterCurrentValue"
@@ -306,12 +299,12 @@ const AddIncome: React.FC<any> = (props) => {
           </div>
         </form>
 
-        <hr className="mt-6"></hr>
+        <hr className="mt-4"></hr>
 
         <form>
           <label
             htmlFor="company-website"
-            className="block text-sm font-medium leading-6 text-gray-900 mt-6"
+            className="block text-sm font-medium leading-6 text-gray-900 mt-4"
           >
             3. Dowód wpłaty
           </label>
@@ -404,6 +397,7 @@ const AddIncome: React.FC<any> = (props) => {
                     value={operationSum}
                     type="number"
                     min={0}
+                    step="any"
                     name="operationValue"
                     id="operationValue"
                     className="block w-full flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
@@ -453,9 +447,9 @@ const AddIncome: React.FC<any> = (props) => {
           </div>
         </form>
 
-        <hr className="mt-6"></hr>
+        <hr className="mt-4"></hr>
 
-        <div className="text-sm font-medium text-gray-700 mt-6 mb-2">
+        <div className="text-sm font-medium text-gray-700 mt-4 mb-2">
           Kartoteka
         </div>
 
@@ -513,9 +507,9 @@ const AddIncome: React.FC<any> = (props) => {
                         colSpan={5}
                         className="text-center border-b border-slate-200 p-4 text-slate-500"
                       >
-                        {flatHistory?.length === 0
-                          ? "brak operacji"
-                          : "ładowanie..."}
+                        {flatHistory?.length === 0 ? "brak operacji" : ""}
+                        {flatHistoryIsLoading ? "ładowanie..." : ""}
+                        {flatHistoryError ? flatHistoryError : ""}
                       </td>
                     </tr>
                   )}
