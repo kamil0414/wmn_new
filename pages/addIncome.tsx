@@ -114,7 +114,7 @@ const AddIncome: React.FC<any> = (props) => {
     new Date().toISOString().split("T")[0]
   );
 
-  const [operationNumber, setOperationNumber] = useState();
+  const [operationNumber, setOperationNumber] = useState("");
   const [operationSum, setOperationSum] = useState(0);
   const [operationSumFieldState, setOperationSumFieldState] = useState(false);
   const [defaultOptionChecked, setDefaultOptionChecked] = useState(true);
