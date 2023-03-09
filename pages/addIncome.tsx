@@ -399,19 +399,19 @@ const AddIncome: React.FC<any> = (props) => {
                   <table className="border-collapse table-auto w-full text-sm">
                     <thead>
                       <tr>
-                        <th className="border-b font-medium p-4 text-slate-400 text-left">
+                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
                           Data
                         </th>
-                        <th className="border-b font-medium p-4  text-slate-400 text-left">
+                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
                           Opis
                         </th>
-                        <th className="border-b font-medium p-4  text-slate-400 text-left">
+                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
                           Należność
                         </th>
-                        <th className="border-b font-medium p-4  text-slate-400 text-left">
+                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
                           Wpłata
                         </th>
-                        <th className="border-b font-medium p-4  text-slate-400 text-left">
+                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
                           Saldo
                         </th>
                       </tr>
