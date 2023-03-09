@@ -21,7 +21,7 @@ const Expenses: React.FC<any> = (props) => {
               <table className="border-collapse table-auto w-full text-sm">
                 <thead>
                   <tr>
-                    <th className="border-b font-medium pl-4 pr-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium pl-4 pr-2 pb-2 pt-0 text-slate-400 text-left">
                       Data
                     </th>
                     <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
@@ -33,7 +33,7 @@ const Expenses: React.FC<any> = (props) => {
                     <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                       Opis
                     </th>
-                    <th className="border-b font-medium pl-2 pr-4 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium pl-2 pr-4 pb-2 pt-0 text-slate-400 text-left">
                       Kwota
                     </th>
                   </tr>
@@ -41,7 +41,7 @@ const Expenses: React.FC<any> = (props) => {
                 <tbody className="bg-white ">
                   {expensesHistory?.map((row, i) => (
                     <tr key={i} className={row.czy_bank ? "bg-sky-100" : ""}>
-                      <td className="border-b border-slate-200 pl-4 pr-2 text-slate-500 ">
+                      <td className="border-b border-slate-200 pl-4 pr-2 py-2 text-slate-500 ">
                         {row.data.split("T")[0]}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
@@ -53,7 +53,7 @@ const Expenses: React.FC<any> = (props) => {
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
                         {row.opis}
                       </td>
-                      <td className="border-b border-slate-200 pl-2 pr-4 text-slate-500 ">
+                      <td className="border-b border-slate-200 pl-2 pr-4 py-2 text-slate-500 ">
                         {formatter.format(row.kwota)}
                       </td>
                     </tr>

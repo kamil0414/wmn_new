@@ -399,7 +399,7 @@ const AddIncome: React.FC<any> = (props) => {
                   <table className="border-collapse table-auto w-full text-sm">
                     <thead>
                       <tr>
-                        <th className="border-b font-medium pr-2 pl-4 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium pr-2 pl-4 pt-0 pb-2 text-slate-400 text-left">
                           Data
                         </th>
                         <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
@@ -411,7 +411,7 @@ const AddIncome: React.FC<any> = (props) => {
                         <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                           Wpłata
                         </th>
-                        <th className="border-b font-medium pr-4 pl-2 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium pr-4 pl-2 pt-0 pb-2 text-slate-400 text-left">
                           Saldo
                         </th>
                       </tr>
@@ -419,7 +419,7 @@ const AddIncome: React.FC<any> = (props) => {
                     <tbody className="bg-white">
                       {flatHistory.map((row, i) => (
                         <tr key={i}>
-                          <td className="border-b border-slate-200 pr-2 pl-4 text-slate-500">
+                          <td className="border-b border-slate-200 pr-2 pl-4 py-2 text-slate-500">
                             {row.data.split("T")[0]}
                           </td>
                           <td className="border-b border-slate-200 p-2 text-slate-500">
@@ -428,13 +428,13 @@ const AddIncome: React.FC<any> = (props) => {
                           <td className="border-b border-slate-200 p-2 text-slate-500">
                             {formatter.format(row.naleznosc)}
                           </td>
-                          <td className="border-b border-slate-200 pr-4 pl-2 text-slate-500">
+                          <td className="border-b border-slate-200 pr-4 pl-2 py-2 text-slate-500">
                             {formatter.format(row.wplata)}
                           </td>
                           <td
                             className={classNames(
                               row.saldo < 0 ? "text-red-500" : "text-slate-500",
-                              "border-b border-slate-200 p-4"
+                              "border-b border-slate-200 pr-4 pl-2 py-2"
                             )}
                           >
                             {formatter.format(row.saldo)}
