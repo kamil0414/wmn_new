@@ -399,19 +399,19 @@ const AddIncome: React.FC<any> = (props) => {
                   <table className="border-collapse table-auto w-full text-sm">
                     <thead>
                       <tr>
-                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium pr-2 pl-4 pt-0 text-slate-400 text-left">
                           Data
                         </th>
-                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                           Opis
                         </th>
-                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                           Należność
                         </th>
-                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                           Wpłata
                         </th>
-                        <th className="border-b font-medium p-4 pt-0 text-slate-400 text-left">
+                        <th className="border-b font-medium pr-4 pl-2 pt-0 text-slate-400 text-left">
                           Saldo
                         </th>
                       </tr>
@@ -419,16 +419,16 @@ const AddIncome: React.FC<any> = (props) => {
                     <tbody className="bg-white">
                       {flatHistory.map((row, i) => (
                         <tr key={i}>
-                          <td className="border-b border-slate-200 p-4 text-slate-500">
+                          <td className="border-b border-slate-200 pr-2 pl-4 text-slate-500">
                             {row.data.split("T")[0]}
                           </td>
-                          <td className="border-b border-slate-200 p-4 text-slate-500">
+                          <td className="border-b border-slate-200 p-2 text-slate-500">
                             {row.opis}
                           </td>
-                          <td className="border-b border-slate-200 p-4 text-slate-500">
+                          <td className="border-b border-slate-200 p-2 text-slate-500">
                             {formatter.format(row.naleznosc)}
                           </td>
-                          <td className="border-b border-slate-200 p-4 text-slate-500">
+                          <td className="border-b border-slate-200 pr-4 pl-2 text-slate-500">
                             {formatter.format(row.wplata)}
                           </td>
                           <td
