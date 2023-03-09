@@ -11,8 +11,8 @@ const Expenses: React.FC<any> = (props) => {
 
   return (
     <Layout>
-      <div className="container mx-auto">
-        <div className="text-sm text-gray-700 font-medium my-6">
+      <div className="container mx-auto px-4">
+        <div className="text-sm text-gray-700 font-medium mt-6 mb-2">
           Niebieskim kolorem oznaczone są operacje bankowe.
         </div>
         <div className="not-prose relative bg-slate-50 overflow-hidden ">
