@@ -37,7 +37,7 @@ export default async function handler(
           id_subkonta,
         },
       });
-      res.status(200)
+      res.status(200).json({ message: "Added" });
     }
   } catch (error) {
     console.log(error);
