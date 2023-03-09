@@ -9,55 +9,25 @@ import Layout from "../components/Layout";
 //   MessageBar,
 //   MessageBarType,
 // } from "@fluentui/react";
-import { classNames, formatter } from "../utils";
+import { classNames, fetcher, formatter } from "../utils";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
+import useSWR, { useSWRConfig } from 'swr'
 
 const AddIncome: React.FC<any> = (props) => {
-  useEffect(() => {
-    fetchBasicData();
-    fetchBlankNumbers();
+  const { mutate } = useSWRConfig()
+  const [basicData, setBasicData] = useState([]);
+  const [blankNumbers, setBlankNumbers] = useState();
+  const [flat, setFlat] = useState(1);
 
-    // if (operationDatepicker) {
-    //   operationDatepicker.current.value = new Date().toISOString().split("T")[0];
-    //   operationDatepicker.current.dispatchEvent(new Event("input", { bubbles: true }));
-    // }
-    // @ts-ignore
-    setOperationDate(new Date().toISOString().split("T")[0]);
-  }, []);
+  const { data: basicDataJson, error: basicDataError } = useSWR('/api/basicData', fetcher)
+  useEffect(() => { basicDataJson ? setBasicData(basicDataJson) : null }, [basicDataJson])
 
-  const fetchBasicData = () => {
-    fetch(`/api/basicData`)
-      .then((response) => response.json())
-      .then((json) => {
-        setBasicData(json);
-        if (flat !== 0) {
-          setBalance(parseFloat(json[flat - 1]?.saldo));
-          setOperationSum(-1 * json[flat - 1]?.saldo);
-        }
-      });
-  };
+  const { data: blankNumbersJson, error: blankNumbersError } = useSWR('/api/blankNumbers', fetcher)
+  useEffect(() => { blankNumbersJson ? setBlankNumbers(blankNumbersJson) : null }, [blankNumbersJson])
 
-  const fetchBlankNumbers = () => {
-    fetch(`/api/blankNumbers`)
-      .then((response) => response.json())
-      .then((json) => {
-        setBlankNumbers(json);
-        if (flat != null && !paymentType) {
-          setOperationNumber(Math.max.apply(null, json) + 1);
-          // if (numberSelectbox) {
-          // numberSelectbox.current.value = Math.max.apply(null, json) + 1;
-          // numberSelectbox.current.dispatchEvent(new Event("input", { bubbles: true }));
-          // }
-        }
-      });
-  };
-
-  const fetchFlatHistory = (flat_number) => {
-    fetch(`/api/flatHistory/?flat_number=${flat_number}`)
-      .then((response) => response.json())
-      .then((json) => setFlatHistory(json));
-  };
+  const { data: flatHistoryJson, error: flatHistoryError } = useSWR(`/api/flatHistory/?flat_number=${flat}`, fetcher)
+  useEffect(() => { flatHistoryJson ? setFlatHistory(flatHistoryJson) : null }, [flatHistoryJson])
 
   const saveWaterMeterValue = (e) => {
     e.preventDefault();
@@ -78,8 +48,8 @@ const AddIncome: React.FC<any> = (props) => {
           setWaterMeterPreviousValue(waterMeterCurrentValue);
           setWaterMeterPreviousDate(waterMeterCurrentDate);
           setWaterMeterPreviousType(0);
-          fetchBasicData();
-          fetchFlatHistory(flat);
+          mutate('/api/basicData')
+          mutate(`/api/flatHistory/?flat_number=${flat}`)
           setWaterMeterButtonState(false);
           setShowfeedback(true);
         } else {
@@ -116,12 +86,12 @@ const AddIncome: React.FC<any> = (props) => {
       .then((response) => {
         if (response.ok) {
           setShowfeedback2(true);
-          fetchBasicData();
-          fetchFlatHistory(flat);
+          mutate('/api/basicData')
+          mutate(`/api/flatHistory/?flat_number=${flat}`)
           // fetchAccountBalance();
 
           if (!paymentType) {
-            fetchBlankNumbers();
+            mutate('/api/blankNumbers')
           }
         } else {
           setShowfeedback2(false);
@@ -133,9 +103,7 @@ const AddIncome: React.FC<any> = (props) => {
   };
 
   const [accountsBalance, setAccountsBalance] = useState();
-  const [basicData, setBasicData] = useState([]);
-  const [blankNumbers, setBlankNumbers] = useState();
-  const [flat, setFlat] = useState(1);
+  
   const [paymentType, setPaymentType] = useState();
   const [accountVoucher, setAccountVoucher] = useState();
 
@@ -157,7 +125,7 @@ const AddIncome: React.FC<any> = (props) => {
   const [showfeedback2, setShowfeedback2] = useState(null);
   const [flatHistory, setFlatHistory] = useState([]);
 
-  const [operationDate, setOperationDate] = useState();
+  const [operationDate, setOperationDate] = useState(new Date().toISOString().split("T")[0]);
   const [balance, setBalance] = useState(0);
 
   const defaultOptionClick = () => {
@@ -193,7 +161,7 @@ const AddIncome: React.FC<any> = (props) => {
     setWaterMeterButtonState(true);
     setShowfeedback(null);
     setShowfeedback2(null);
-    fetchFlatHistory(flat);
+    mutate(`/api/flatHistory/?flat_number=${flat}`)
 
     if (basicData[index]?.saldo < 0) {
       setOperationSum(-1 * basicData[index]?.saldo);
@@ -216,7 +184,7 @@ const AddIncome: React.FC<any> = (props) => {
     //   new Event("input", { bubbles: true })
     // );
     // }
-  }, [basicData, flat]);
+  }, [basicData, flat, blankNumbers]);
 
   const operationDateChanged = (event, value) => {
     setOperationDate(value);
