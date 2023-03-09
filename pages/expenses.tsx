@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Layout from "../components/Layout";
-import { formatter } from "../utils";
+import { fetcher, formatter } from "../utils";
+import useSWR from "swr";
 
 const Expenses: React.FC<any> = (props) => {
-  const [expensesHistory, setExpensesHistory] = useState([]);
-
-  useEffect(() => {
-    fetchExpensesHistory();
-  }, []);
-
-  const fetchExpensesHistory = () => {
-    fetch(`/api/operations/?onlyExpenses=true`)
-      .then((response) => response.json())
-      .then((json) => {
-        setExpensesHistory(json);
-      });
-  };
+  const { data: expensesHistory, error: expensesHistoryError } = useSWR(
+    "/api/operations/?onlyExpenses=true",
+    fetcher
+  );
 
   return (
     <Layout>
@@ -47,7 +39,7 @@ const Expenses: React.FC<any> = (props) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white ">
-                  {expensesHistory.map((row, i) => (
+                  {expensesHistory?.map((row, i) => (
                     <tr key={i} className={row.czy_bank ? "bg-sky-100" : ""}>
                       <td className="border-b border-slate-200 p-4 pl-8 text-slate-500 ">
                         {row.data.split("T")[0]}

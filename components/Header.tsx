@@ -1,26 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { classNames, formatter } from "../utils";
+import { classNames, fetcher, formatter } from "../utils";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import useSWR from "swr";
 
 const Header: React.FC = () => {
-  const [accountsBalance, setAccountsBalance] = useState({
-    kasa: 0,
-    bank: 0,
-    razem: 0,
-  });
-
-  const fetchAccountBalance = () => {
-    fetch(`/api/accountBalance`, {})
-      .then((response) => response.json())
-      .then((json) => setAccountsBalance(json));
-  };
-
-  useEffect(() => {
-    fetchAccountBalance();
-  }, []);
+  const { data: accountsBalance, error: accountBalanceError } = useSWR(
+    "/api/accountBalance",
+    fetcher
+  );
 
   const router = useRouter();
 

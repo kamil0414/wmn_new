@@ -9,25 +9,33 @@ import Layout from "../components/Layout";
 //   MessageBar,
 //   MessageBarType,
 // } from "@fluentui/react";
-import { classNames, fetcher, formatter } from "../utils";
+import { classNames, fetcher, formatter, usePrevious } from "../utils";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import useSWR, { useSWRConfig } from 'swr'
+import useSWR, { useSWRConfig } from "swr";
 
 const AddIncome: React.FC<any> = (props) => {
-  const { mutate } = useSWRConfig()
-  const [basicData, setBasicData] = useState([]);
-  const [blankNumbers, setBlankNumbers] = useState();
+  const { mutate } = useSWRConfig();
+
   const [flat, setFlat] = useState(1);
+  const prevFlat = usePrevious(flat);
 
-  const { data: basicDataJson, error: basicDataError } = useSWR('/api/basicData', fetcher)
-  useEffect(() => { basicDataJson ? setBasicData(basicDataJson) : null }, [basicDataJson])
+  const { data: basicData, error: basicDataError } = useSWR(
+    "/api/basicData",
+    fetcher
+  );
+  const prevBasicData = usePrevious(basicData);
 
-  const { data: blankNumbersJson, error: blankNumbersError } = useSWR('/api/blankNumbers', fetcher)
-  useEffect(() => { blankNumbersJson ? setBlankNumbers(blankNumbersJson) : null }, [blankNumbersJson])
+  const { data: blankNumbers, error: blankNumbersError } = useSWR(
+    "/api/blankNumbers",
+    fetcher
+  );
+  const prevBlankNumbers = usePrevious(blankNumbers);
 
-  const { data: flatHistoryJson, error: flatHistoryError } = useSWR(`/api/flatHistory/?flat_number=${flat}`, fetcher)
-  useEffect(() => { flatHistoryJson ? setFlatHistory(flatHistoryJson) : null }, [flatHistoryJson])
+  const { data: flatHistory, error: flatHistoryError } = useSWR(
+    `/api/flatHistory?flat_number=${flat}`,
+    fetcher
+  );
 
   const saveWaterMeterValue = (e) => {
     e.preventDefault();
@@ -48,8 +56,8 @@ const AddIncome: React.FC<any> = (props) => {
           setWaterMeterPreviousValue(waterMeterCurrentValue);
           setWaterMeterPreviousDate(waterMeterCurrentDate);
           setWaterMeterPreviousType(0);
-          mutate('/api/basicData')
-          mutate(`/api/flatHistory/?flat_number=${flat}`)
+          mutate("/api/basicData");
+          mutate(`/api/flatHistory/?flat_number=${flat}`);
           setWaterMeterButtonState(false);
           setShowfeedback(true);
         } else {
@@ -86,12 +94,12 @@ const AddIncome: React.FC<any> = (props) => {
       .then((response) => {
         if (response.ok) {
           setShowfeedback2(true);
-          mutate('/api/basicData')
-          mutate(`/api/flatHistory/?flat_number=${flat}`)
-          // fetchAccountBalance();
+          mutate("/api/basicData");
+          mutate(`/api/flatHistory/?flat_number=${flat}`);
+          mutate("/api/accountBalance");
 
           if (!paymentType) {
-            mutate('/api/blankNumbers')
+            mutate("/api/blankNumbers");
           }
         } else {
           setShowfeedback2(false);
@@ -102,8 +110,6 @@ const AddIncome: React.FC<any> = (props) => {
       });
   };
 
-  const [accountsBalance, setAccountsBalance] = useState();
-  
   const [paymentType, setPaymentType] = useState();
   const [accountVoucher, setAccountVoucher] = useState();
 
@@ -123,9 +129,10 @@ const AddIncome: React.FC<any> = (props) => {
   const [waterMeterButtonState, setWaterMeterButtonState] = useState(true);
   const [showfeedback, setShowfeedback] = useState(null);
   const [showfeedback2, setShowfeedback2] = useState(null);
-  const [flatHistory, setFlatHistory] = useState([]);
 
-  const [operationDate, setOperationDate] = useState(new Date().toISOString().split("T")[0]);
+  const [operationDate, setOperationDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   const [balance, setBalance] = useState(0);
 
   const defaultOptionClick = () => {
@@ -145,45 +152,47 @@ const AddIncome: React.FC<any> = (props) => {
   };
 
   useEffect(() => {
-    const index = flat - 1;
-    setBalance(parseFloat(basicData[index]?.saldo));
-
-    setWaterMeterPreviousValue(basicData[index]?.stan_wodomierza);
-    setWaterMeterPreviousDate(
-      basicData[index]?.data_odczytu_wodomierza.split("T")[0]
-    );
-    setWaterMeterPreviousType(basicData[index]?.typ_odczytu);
-    setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
-    setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
-    setWaterMeterCurrentMinValue(basicData[index]?.stan_wodomierza);
-
-    setPaymentType(basicData[index]?.platnosc_przelewem);
-    setWaterMeterButtonState(true);
-    setShowfeedback(null);
-    setShowfeedback2(null);
-    mutate(`/api/flatHistory/?flat_number=${flat}`)
-
-    if (basicData[index]?.saldo < 0) {
-      setOperationSum(-1 * basicData[index]?.saldo);
+    if (prevFlat !== flat && prevFlat != null) {
+      setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
+      setWaterMeterButtonState(true);
+      setShowfeedback(null);
+      setShowfeedback2(null);
     }
 
-    setOperationNumber(
-      !basicData[index]?.platnosc_przelewem
-        ? Math.max.apply(null, blankNumbers) + 1
-        : null
-    );
+    const index = flat - 1;
 
-    // if (numberSelectbox) {
-    // numberSelectbox.current.value = basicData[flat]?.platnosc_przelewem
-    //   ? null
-    //   : Math.max.apply(null, blankNumbers) + 1;
-    // numberSelectbox.current.placeholder = `numer ${
-    //   basicData[flat]?.platnosc_przelewem ? "wyciągu" : "KP"
-    // }`;
-    // numberSelectbox.current.dispatchEvent(
-    //   new Event("input", { bubbles: true })
-    // );
-    // }
+    if (prevBasicData !== basicData && basicData.length > 0) {
+      setBalance(parseFloat(basicData[index]?.saldo));
+
+      setWaterMeterPreviousValue(basicData[index]?.stan_wodomierza);
+      setWaterMeterPreviousDate(
+        basicData[index]?.data_odczytu_wodomierza.split("T")[0]
+      );
+      setWaterMeterPreviousType(basicData[index]?.typ_odczytu);
+      setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
+      setWaterMeterCurrentMinValue(basicData[index]?.stan_wodomierza);
+
+      setPaymentType(basicData[index]?.platnosc_przelewem);
+
+      if (basicData[index]?.saldo < 0) {
+        setOperationSum(-1 * basicData[index]?.saldo);
+      }
+
+      if (prevBlankNumbers !== blankNumbers && blankNumbers.length > 0) {
+        setOperationNumber(
+          !basicData[index]?.platnosc_przelewem
+            ? Math.max.apply(null, blankNumbers) + 1
+            : null
+        );
+        // numberSelectbox.current.value = basicData[index]?.platnosc_przelewem
+        //   ? null
+        //   : Math.max.apply(null, blankNumbers) + 1;
+        // numberSelectbox.current.placeholder = `numer ${
+        //   basicData[index]?.platnosc_przelewem ? "wyciągu" : "KP"
+        // }`;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicData, flat, blankNumbers]);
 
   const operationDateChanged = (event, value) => {
