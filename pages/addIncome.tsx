@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { classNames, fetcher, formatter } from "../utils";
 import useSWR, { useSWRConfig } from "swr";
-import Link from "next/link";
 
 const AddIncome: React.FC<any> = (props) => {
   const { mutate } = useSWRConfig();
@@ -81,8 +80,8 @@ const AddIncome: React.FC<any> = (props) => {
           setShowfeedback2(true);
           mutate("/api/basicData");
           mutate("/api/accountBalance");
-          mutate(["/api/flatHistory/?flat_number=", flat])
-          
+          mutate(["/api/flatHistory/?flat_number=", flat]);
+
           if (!paymentType) {
             mutate("/api/blankNumbers");
           }
@@ -421,12 +420,6 @@ const AddIncome: React.FC<any> = (props) => {
           </div>
 
           <div className="flex sm:justify-start justify-end">
-            <Link href="/">
-              <button className="mr-2 disabled:bg-gray-300 inline-flex justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500">
-                Anuluj
-              </button>
-            </Link>
-
             <button
               className="disabled:bg-gray-300 inline-flex justify-center rounded-md bg-sky-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
               disabled={
