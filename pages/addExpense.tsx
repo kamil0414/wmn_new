@@ -1,4 +1,3 @@
-import { setDefaultTarget } from "@fluentui/react/lib/components/Layer/Layer.notification";
 import React, { useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import Layout from "../components/Layout";
