@@ -8,89 +8,117 @@ datasource db {
 }
 
 model firmy {
-  id    Int    @id(map: "firmy_pk")
-  nazwa String @db.Char(100)
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model kategorie_wydatkow {
-  id    Int     @db.SmallInt
-  nazwa String? @db.Char(50)
-
-  @@ignore
+  id       Int        @id @db.SmallInt @default(autoincrement())
+  nazwa    String     @unique
+  operacje operacje[]
+  opisy    opisy[]    @relation("firmyToopisy")
 }
 
 model mieszkania {
-  numer                Int     @id(map: "mieszkania_pk") @db.SmallInt
-  metraz               Decimal @db.Decimal(4, 2)
+  numer                Int                  @id @unique @db.SmallInt
+  metraz               Decimal              @db.Decimal(4, 2)
   platnoscprzelewem    Boolean
-  zadeklarowanych_osob Int?    @default(0) @db.SmallInt
+  zadeklarowanych_osob Int                  @default(1) @db.SmallInt
+  naliczenia           naliczenia[]
+  odczyty              odczyty_wodomierzy[]
 }
 
 model naliczenia {
-  numer_mieszkania Int      @db.SmallInt
-  data             DateTime @db.Date
-  opis             String   @db.Char(100)
-  opal             Decimal  @db.Decimal(6, 2)
-  fundusz          Decimal  @db.Decimal(6, 2)
-  woda             Decimal  @db.Decimal(6, 2)
-  id               Int      @id @default(autoincrement())
-  smieci           Decimal? @default(0) @db.Decimal(6, 2)
+  numer_mieszkania Int        @db.SmallInt
+  data             DateTime   @db.Date
+  opis             String
+  opal             Decimal    @db.Money
+  fundusz          Decimal    @db.Money
+  woda             Decimal    @db.Money
+  id               Int        @id @default(autoincrement())
+  smieci           Decimal    @default(0) @db.Money
+  mieszkanie       mieszkania @relation(fields: [numer_mieszkania], references: [numer])
+
+  @@unique([numer_mieszkania, data, opis])
 }
 
 model odczyty_wodomierzy {
-  numer_mieszkania Int      @db.SmallInt
-  data             DateTime @db.Date
-  stan             Decimal  @db.Decimal(7, 3)
-  typ              Int      @db.SmallInt
-  id               Int      @id @default(autoincrement())
+  numer_mieszkania Int           @db.SmallInt
+  data             DateTime      @db.Date
+  stan             Decimal       @db.Decimal(7, 3)
+  typ              Int           @db.SmallInt
+  id               Int           @id @default(autoincrement())
+  mieszkanie       mieszkania    @relation(fields: [numer_mieszkania], references: [numer])
+  typy_odczytow    typy_odczytow @relation(fields: [typ], references: [id])
 
-  @@unique([numer_mieszkania, data], map: "unikalnosc")
+  @@unique([numer_mieszkania, data])
 }
 
 model operacje {
-  id_firmy                         Int
-  data                             DateTime @db.Date
-  rodzaj_i_numer_dowodu_ksiegowego String   @db.Char(50)
-  opis                             String   @db.Char(50)
-  kwota                            Decimal  @db.Decimal(9, 2)
+  id_firmy                         Int                 @db.SmallInt
+  data                             DateTime            @db.Date
+  rodzaj_i_numer_dowodu_ksiegowego String
+  opis                             String?
+  kwota                            Decimal             @db.Money
   czy_bank                         Boolean
-  id_subkonta                      Int      @db.SmallInt
-  id                               Int      @id @default(autoincrement())
-  ilosc                            Decimal? @default(0) @db.Decimal(4, 2)
-  id_kategorii                     Int?     @db.SmallInt
+  id_subkonta                      Int
+  id                               Int                 @id @default(autoincrement())
+  ilosc                            Decimal?            @default(0) @db.Decimal(4, 2)
+  komentarz                        String?
+  firma                            firmy               @relation(fields: [id_firmy], references: [id])
+  id_opisu                         Int?                @db.SmallInt
+  opis_pow                         opisy?              @relation(fields: [id_opisu], references: [id])
+  subkonta                         subkonta            @relation(fields: [id_subkonta], references: [id])
+
+  @@unique([id_firmy, data, rodzaj_i_numer_dowodu_ksiegowego, kwota])
 }
 
 model stawki {
-  data         DateTime @db.Date
-  kwota_brutto Decimal  @db.Decimal(6, 2)
-  typ          Int      @db.SmallInt
-  id           Int      @id @default(autoincrement())
+  data         DateTime    @db.Date
+  kwota_brutto Decimal     @db.Money
+  id           Int         @id @default(autoincrement())
+  id_typu      Int         @db.SmallInt
+  typy_stawek  typy_stawek @relation(fields: [id_typu], references: [id])
+
+  @@unique([data, kwota_brutto, id_typu])
 }
 
 model subkonta {
-  id    Int    @id(map: "subkonta_pk") @db.SmallInt
-  nazwa String @db.Char(50)
+  id                 Int                  @id
+  nazwa              String               @unique
+  kategorie_wydatkow kategorie_wydatkow[]
+  operacje           operacje[]
 }
 
 model typy_dowodow_ksiegowych {
-  id      Int     @id(map: "typy_dowodów_ksiegowych_pk") @db.SmallInt
-  opis    String  @db.VarChar(50)
+  id      Int     @id @db.SmallInt
+  opis    String  @unique
   dowplat Boolean
+  opisy   opisy[] @relation("opisyTotypy_dowodow_ksiegowych")
 }
 
 model typy_odczytow {
-  id   Int    @id(map: "typy_odczytow_pk") @db.SmallInt
-  opis String @db.Char(15)
+  id      Int                  @id @db.SmallInt
+  opis    String               @unique
+  odczyty odczyty_wodomierzy[]
 }
 
 model typy_stawek {
-  id   Int    @id(map: "typy_stawek_pk") @db.SmallInt
-  opis String @db.Char(50)
+  id     Int      @id @db.SmallInt
+  opis   String   @unique
+  stawki stawki[]
 }
 
-model uzytkownicy {
-  username String @db.VarChar(64)
-  password String @db.VarChar(64)
-  id       Int    @id @default(autoincrement())
+model opisy {
+  id                      Int                       @id @default(autoincrement())
+  opis                    String                    @unique
+  ilosc_wymagana          Boolean                   @default(false)
+  firmy                   firmy[]                   @relation("firmyToopisy")
+  id_kategorii_wydatku    Int 
+  kategoria_wydatku       kategorie_wydatkow        @relation(fields: [id_kategorii_wydatku], references: [id])
+  typy_dowodow_ksiegowych typy_dowodow_ksiegowych[] @relation("opisyTotypy_dowodow_ksiegowych")
+  operacje                operacje[]
+}
+
+model kategorie_wydatkow {
+  id          Int        @id @default(autoincrement())
+  nazwa       String     @unique
+  id_subkonta Int
+  subkonta    subkonta   @relation(fields: [id_subkonta], references: [id])
+  opisy       opisy[]
 }

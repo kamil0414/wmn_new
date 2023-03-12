@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "../components/Layout";
-import { fetcher, formatter } from "../utils";
+import { classNames, fetcher, formatter } from "../utils";
 import useSWR from "swr";
 
 const Expenses: React.FC<any> = (props) => {
@@ -33,8 +33,11 @@ const Expenses: React.FC<any> = (props) => {
                     <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                       Opis
                     </th>
-                    <th className="border-b font-medium pl-2 pr-4 pb-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                       Kwota
+                    </th>
+                    <th className="border-b font-medium pl-2 pr-4 pb-2 pt-0 text-slate-400 text-left">
+                      Uwagi
                     </th>
                   </tr>
                 </thead>
@@ -45,16 +48,19 @@ const Expenses: React.FC<any> = (props) => {
                         {row.data.split("T")[0]}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
-                        {row.firma}
+                        {row.firma.nazwa}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
                         {row.rodzaj_i_numer_dowodu_ksiegowego}
                       </td>
-                      <td className="border-b border-slate-200 p-2 text-slate-500 ">
-                        {row.opis}
+                      <td className={classNames(row.opis_pow == null ? "text-red-500" : 'text-slate-500',"border-b border-slate-200 p-2")}>
+                        {row.opis_pow ? `${row.opis_pow?.kategoria_wydatku?.nazwa === row.opis_pow?.opis ? row.opis_pow?.kategoria_wydatku?.nazwa : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`}` : row.opis} {row.ilosc > 0 ? `(${row.ilosc})` : ''}
                       </td>
                       <td className="border-b border-slate-200 pl-2 pr-4 py-2 text-slate-500 ">
                         {formatter.format(row.kwota)}
+                      </td>
+                      <td className="border-b border-slate-200 p-2 text-slate-500 ">
+                        {row.komentarz}
                       </td>
                     </tr>
                   ))}

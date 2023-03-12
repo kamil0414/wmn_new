@@ -94,7 +94,7 @@ const AddIncome: React.FC<any> = (props) => {
       });
   };
 
-  const [paymentType, setPaymentType] = useState();
+  const [paymentType, setPaymentType] = useState(false);
 
   const [waterMeterPreviousValue, setWaterMeterPreviousValue] = useState(0);
   const [waterMeterPreviousDate, setWaterMeterPreviousDate] = useState("");
@@ -164,28 +164,6 @@ const AddIncome: React.FC<any> = (props) => {
       setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
     }
   }, [basicData, flat, blankNumbers]);
-
-  // const Message = () => (
-  //   <MessageBar
-  //     messageBarType={
-  //       showfeedback ? MessageBarType.success : MessageBarType.error
-  //     }
-  //     isMultiline={false}
-  //   >
-  //     {showfeedback ? "Zapisano" : "Wystąpił błąd"}
-  //   </MessageBar>
-  // );
-
-  // const Message2 = () => (
-  //   <MessageBar
-  //     messageBarType={
-  //       showfeedback2 ? MessageBarType.success : MessageBarType.error
-  //     }
-  //     isMultiline={false}
-  //   >
-  //     {showfeedback2 ? "Zapisano" : "Wystąpił błąd"}
-  //   </MessageBar>
-  // );
 
   return (
     <Layout>
@@ -361,7 +339,7 @@ const AddIncome: React.FC<any> = (props) => {
               <label
                 htmlFor="default-radio-1"
                 className="ml-2 text-sm font-medium text-gray-900 "
-              >{`zgodny z naliczeniami (${formatter.format(
+              >{`zgodny z saldem (${formatter.format(
                 -1 * balance
               )})`}</label>
             </div>
