@@ -66,15 +66,15 @@ const Header: React.FC = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <div id="header">
                   <span className="text-sm text-gray-300 font-medium">
-                    Kasa:{" "}
+                    K:{" "}
                     <strong>{formatter.format(accountsBalance?.kasa)}</strong>
                   </span>
                   <span className="text-sm text-gray-300 font-medium ml-6">
-                    Bank:{" "}
+                    B:{" "}
                     <strong>{formatter.format(accountsBalance?.bank)}</strong>
                   </span>
                   <span className="text-sm text-gray-300 font-medium ml-6">
-                    Razem:{" "}
+                    R:{" "}
                     <strong>{formatter.format(accountsBalance?.razem)}</strong>
                   </span>
                 </div>

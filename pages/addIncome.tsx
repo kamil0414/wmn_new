@@ -168,7 +168,7 @@ const AddIncome: React.FC<any> = (props) => {
   return (
     <Layout>
       <div className="container mx-auto px-4">
-        <div className="flex">
+        <div className="flex ">
           <div>
             <label
               htmlFor="countries"
@@ -176,20 +176,22 @@ const AddIncome: React.FC<any> = (props) => {
             >
               1. Wybierz numer mieszkania
             </label>
-            <select
-              onChange={(e) => setFlat(parseInt(e.target.value))}
-              className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
-            >
-              {/* <option selected>Wybierz numer mieszkania</option> */}
-              {basicData?.map((obj) => (
-                <option
-                  key={obj["numer_mieszkania"]}
-                  value={obj["numer_mieszkania"]}
-                >
-                  {obj["numer_mieszkania"]}
-                </option>
-              ))}
-            </select>
+            <div className="rounded-md shadow-sm">
+              <select
+                onChange={(e) => setFlat(parseInt(e.target.value))}
+                className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              >
+                {/* <option selected>Wybierz numer mieszkania</option> */}
+                {basicData?.map((obj) => (
+                  <option
+                    key={obj["numer_mieszkania"]}
+                    value={obj["numer_mieszkania"]}
+                  >
+                    {obj["numer_mieszkania"]}
+                  </option>
+                ))}
+              </select>{" "}
+            </div>
           </div>
         </div>
         <hr className="mt-4"></hr>
@@ -201,8 +203,8 @@ const AddIncome: React.FC<any> = (props) => {
           >
             2. Podaj odczyt wodomierza (opcjonalnie)
           </label>
-          <div className="flex items-end">
-            <div className="mr-1 flex grow sm:flex-none">
+          <div className="flex">
+            <div className="mr-2 mt-2 flex grow sm:flex-none rounded-md shadow-sm">
               <input
                 onChange={(e) =>
                   setWaterMeterCurrentValue(
@@ -215,28 +217,29 @@ const AddIncome: React.FC<any> = (props) => {
                 type="number"
                 name="watermeterCurrentValue"
                 id="watermeterCurrentValue"
-                className="flex-1 rounded-l-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                className="w-full rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 placeholder="stan wodomierza"
               />
-              <span className="inline-flex items-center rounded-none rounded-r-md mt-2 border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+              <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
                 m3
               </span>
             </div>
-
-            <input
-              onChange={(e) => setWaterMeterCurrentDate(e.target.value)}
-              min={
-                new Date(new Date().getFullYear(), 0, 2)
-                  .toISOString()
-                  .split("T")[0]
-              }
-              max={new Date().toISOString().split("T")[0]}
-              type="date"
-              name="watermeterDate"
-              id="watermeterDate"
-              value={waterMeterCurrentDate}
-              className="flex rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
-            />
+            <div className="rounded-md shadow-sm">
+              <input
+                onChange={(e) => setWaterMeterCurrentDate(e.target.value)}
+                min={
+                  new Date(new Date().getFullYear(), 0, 2)
+                    .toISOString()
+                    .split("T")[0]
+                }
+                max={new Date().toISOString().split("T")[0]}
+                type="date"
+                name="watermeterDate"
+                id="watermeterDate"
+                value={waterMeterCurrentDate}
+                className="inline-flex w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              />
+            </div>
           </div>
 
           {waterMeterCurrentValue - waterMeterPreviousValue > 0 && (
@@ -283,8 +286,8 @@ const AddIncome: React.FC<any> = (props) => {
           >
             3. Dowód wpłaty
           </label>
-          <div className="flex items-end">
-            <div className="mt-2 mr-1 flex grow sm:flex-none">
+          <div className="flex">
+            <div className="rounded-md shadow-sm mt-2 mr-2 flex grow sm:flex-none">
               <input
                 onChange={(e) => setOperationNumber(e.target.value)}
                 min={1}
@@ -294,8 +297,8 @@ const AddIncome: React.FC<any> = (props) => {
                 name="operationNumber"
                 id="operationNumber"
                 className={classNames(
-                  paymentType ? "rounded" : "rounded-l-md",
-                  ", flex-1 border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  paymentType ? "rounded-md" : "rounded-l-md",
+                  ", w-full border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 )}
                 placeholder={`numer ${paymentType ? "wyciągu" : "KP"}`}
               />
@@ -305,21 +308,22 @@ const AddIncome: React.FC<any> = (props) => {
                 </span>
               )}
             </div>
-
-            <input
-              onChange={(e) => setOperationDate(e.target.value)}
-              min={
-                new Date(new Date().getFullYear(), 0, 2)
-                  .toISOString()
-                  .split("T")[0]
-              }
-              max={new Date().toISOString().split("T")[0]}
-              type="date"
-              name="operationDate"
-              id="operationDate"
-              value={operationDate}
-              className="rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
-            />
+            <div className="rounded-md shadow-sm">
+              <input
+                onChange={(e) => setOperationDate(e.target.value)}
+                min={
+                  new Date(new Date().getFullYear(), 0, 2)
+                    .toISOString()
+                    .split("T")[0]
+                }
+                max={new Date().toISOString().split("T")[0]}
+                type="date"
+                name="operationDate"
+                id="operationDate"
+                value={operationDate}
+                className="inline-flex rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              />
+            </div>
           </div>
 
           {balance < 0 && (
@@ -358,7 +362,7 @@ const AddIncome: React.FC<any> = (props) => {
 
             {(operationSumFieldState || balance >= 0) && (
               <div className="flex items-center">
-                <div className="flex">
+                <div className="flex rounded-md shadow-sm">
                   <input
                     onChange={(e) =>
                       setOperationSum(
@@ -371,7 +375,7 @@ const AddIncome: React.FC<any> = (props) => {
                     step="any"
                     name="operationValue"
                     id="operationValue"
-                    className="flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                    className="block w-full flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                     placeholder="wpisz kwotę"
                   />
                   <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
@@ -420,7 +424,7 @@ const AddIncome: React.FC<any> = (props) => {
 
         <div className="not-prose relative bg-slate-50 overflow-hidden ">
           <div className="relative overflow-auto">
-            <div className="shadow-sm overflow-hidden my-8">
+            <div className="shadow-sm my-8">
               <table className="border-collapse table-auto w-full text-sm">
                 <thead>
                   <tr>
