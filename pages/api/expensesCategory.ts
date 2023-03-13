@@ -23,14 +23,29 @@ export default async function handler(
                   id: true,
                   nazwa: true,
                 },
+                orderBy: [
+                  {
+                    nazwa: "asc",
+                  },
+                ],
               },
               typy_dowodow_ksiegowych: {
                 select: {
                   id: true,
                   opis: true,
                 },
+                orderBy: [
+                  {
+                    opis: "asc",
+                  },
+                ],
               },
             },
+            orderBy: [
+              {
+                opis: "asc",
+              },
+            ],
           },
         },
         where: {

@@ -193,7 +193,7 @@ const AddExpense: React.FC<any> = (props) => {
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="block w-full rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-l-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 >
                   <option disabled value="">
                     wybierz typ dowodu ksiegowego
@@ -213,13 +213,13 @@ const AddExpense: React.FC<any> = (props) => {
                   autoComplete="off"
                   name="number"
                   id="number"
-                  className="block w-full rounded-md border-0 mt-2 ml-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-r-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                   placeholder="podaj numer dowodu księgowego"
                 />
               </div>
               <div className="flex">
                 {countRequired && (
-                  <div className="flex rounded-md shadow-sm">
+                  <div className="flex">
                     <input
                       onChange={(e) => setCount(parseFloat(e.target.value))}
                       min={1}
@@ -238,7 +238,7 @@ const AddExpense: React.FC<any> = (props) => {
                   </div>
                 )}
 
-                <div className="flex rounded-md shadow-sm">
+                <div className="flex">
                   <input
                     onChange={(e) =>
                       setSum(parseFloat(e.target.value.replace(",", ".")))
