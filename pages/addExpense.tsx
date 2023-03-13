@@ -21,6 +21,7 @@ const AddExpense: React.FC<any> = (props) => {
   const [number, setNumber] = useState("");
   const [date, setDate] = useState("");
   const [count, setCount] = useState(null);
+  const [unit, setUnit] = useState("");
   const [sum, setSum] = useState(null);
   const [comment, setComment] = useState("");
 
@@ -31,6 +32,7 @@ const AddExpense: React.FC<any> = (props) => {
     ilosc_wymagana,
     firmy: companies,
     typy_dowodow_ksiegowych,
+    jednostka_miary
   } = descriptions?.find((e) => e.id === description) || {};
 
   useEffect(() => {
@@ -50,6 +52,7 @@ const AddExpense: React.FC<any> = (props) => {
     }
 
     setAccount(id_subkonta);
+    setUnit('');
 
     setCompany(0);
     setCountRequired(true);
@@ -67,6 +70,7 @@ const AddExpense: React.FC<any> = (props) => {
       setCompany(0);
     }
     setCountRequired(ilosc_wymagana);
+    setUnit(jednostka_miary);
 
     if (typy_dowodow_ksiegowych?.length === 1) {
       setType(typy_dowodow_ksiegowych[0].opis);
@@ -79,7 +83,7 @@ const AddExpense: React.FC<any> = (props) => {
     setSum(null);
     setNumber("");
     setComment("");
-  }, [companies, ilosc_wymagana, typy_dowodow_ksiegowych]);
+  }, [companies, ilosc_wymagana, typy_dowodow_ksiegowych, jednostka_miary]);
 
   const saveOperation = (e) => {
     e.preventDefault();
@@ -215,18 +219,23 @@ const AddExpense: React.FC<any> = (props) => {
               </div>
               <div className="flex">
                 {countRequired && (
-                  <input
-                    onChange={(e) => setCount(parseFloat(e.target.value))}
-                    min={1}
-                    max={1000}
-                    step="any"
-                    type="number"
-                    name="count"
-                    id="count"
-                    value={count}
-                    className="block w-full flex-1 rounded-md border-0 mr-2 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
-                    placeholder="wpisz ilość"
-                  />
+                  <div className="flex rounded-md shadow-sm">
+                    <input
+                      onChange={(e) => setCount(parseFloat(e.target.value))}
+                      min={1}
+                      max={1000}
+                      step="any"
+                      type="number"
+                      name="count"
+                      id="count"
+                      value={count}
+                      className="block w-full flex-1 rounded-l-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                      placeholder="wpisz ilość"
+                    />
+                    <span className="inline-flex mt-2 mr-2 items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                      {unit}
+                    </span>
+                  </div>
                 )}
 
                 <div className="flex rounded-md shadow-sm">

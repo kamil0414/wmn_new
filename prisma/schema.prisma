@@ -8,7 +8,7 @@ datasource db {
 }
 
 model firmy {
-  id       Int        @id @db.SmallInt @default(autoincrement())
+  id       Int        @id @default(autoincrement()) @db.SmallInt
   nazwa    String     @unique
   operacje operacje[]
   opisy    opisy[]    @relation("firmyToopisy")
@@ -50,20 +50,20 @@ model odczyty_wodomierzy {
 }
 
 model operacje {
-  id_firmy                         Int                 @db.SmallInt
-  data                             DateTime            @db.Date
+  id_firmy                         Int      @db.SmallInt
+  data                             DateTime @db.Date
   rodzaj_i_numer_dowodu_ksiegowego String
   opis                             String?
-  kwota                            Decimal             @db.Money
+  kwota                            Decimal  @db.Money
   czy_bank                         Boolean
   id_subkonta                      Int
-  id                               Int                 @id @default(autoincrement())
-  ilosc                            Decimal?            @default(0) @db.Decimal(4, 2)
+  id                               Int      @id @default(autoincrement())
+  ilosc                            Decimal? @default(0) @db.Decimal(4, 2)
   komentarz                        String?
-  firma                            firmy               @relation(fields: [id_firmy], references: [id])
-  id_opisu                         Int?                @db.SmallInt
-  opis_pow                         opisy?              @relation(fields: [id_opisu], references: [id])
-  subkonta                         subkonta            @relation(fields: [id_subkonta], references: [id])
+  id_opisu                         Int?     @db.SmallInt
+  firma                            firmy    @relation(fields: [id_firmy], references: [id])
+  opis_pow                         opisy?   @relation(fields: [id_opisu], references: [id])
+  subkonta                         subkonta @relation(fields: [id_subkonta], references: [id])
 
   @@unique([id_firmy, data, rodzaj_i_numer_dowodu_ksiegowego, kwota])
 }
@@ -108,17 +108,18 @@ model opisy {
   id                      Int                       @id @default(autoincrement())
   opis                    String                    @unique
   ilosc_wymagana          Boolean                   @default(false)
-  firmy                   firmy[]                   @relation("firmyToopisy")
-  id_kategorii_wydatku    Int 
-  kategoria_wydatku       kategorie_wydatkow        @relation(fields: [id_kategorii_wydatku], references: [id])
-  typy_dowodow_ksiegowych typy_dowodow_ksiegowych[] @relation("opisyTotypy_dowodow_ksiegowych")
+  id_kategorii_wydatku    Int
+  jednostka_miary         String?
   operacje                operacje[]
+  kategoria_wydatku       kategorie_wydatkow        @relation(fields: [id_kategorii_wydatku], references: [id])
+  firmy                   firmy[]                   @relation("firmyToopisy")
+  typy_dowodow_ksiegowych typy_dowodow_ksiegowych[] @relation("opisyTotypy_dowodow_ksiegowych")
 }
 
 model kategorie_wydatkow {
-  id          Int        @id @default(autoincrement())
-  nazwa       String     @unique
+  id          Int      @id @default(autoincrement())
+  nazwa       String   @unique
   id_subkonta Int
-  subkonta    subkonta   @relation(fields: [id_subkonta], references: [id])
+  subkonta    subkonta @relation(fields: [id_subkonta], references: [id])
   opisy       opisy[]
 }

@@ -17,40 +17,32 @@ export default async function handler(
               id: true,
               opis: true,
               ilosc_wymagana: true,
+              jednostka_miary: true,
               firmy: {
                 select: {
                   id: true,
-                  nazwa: true
-                }
+                  nazwa: true,
+                },
               },
               typy_dowodow_ksiegowych: {
                 select: {
                   id: true,
-                  opis: true
-                }
+                  opis: true,
+                },
               },
-              // operacje: {
-              //   select: {
-              //     id: true
-              //   }
-              // }
-            }
-          }
+            },
+          },
         },
         where: {
           nazwa: {
-            not: 'Bilans otwarcia'
-          }
+            not: "Bilans otwarcia",
+          },
         },
-        orderBy: {
-          opisy: {
-
-              // operacje: {
-                _count: 'desc'
-              // }
-      
-          }
-        }
+        orderBy: [
+          {
+            nazwa: "asc",
+          },
+        ],
       });
       res.status(200).json(data);
     }
