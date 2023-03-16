@@ -39,10 +39,8 @@ export default async function handler(
               lte: 0,
             },
             data: {
-              // gte: new Date(new Date().getFullYear(), 0, 1),
-              // lte: new Date(new Date().getFullYear(), 11, 31)
-              gte: new Date(new Date().getFullYear() - 1, 0, 1),
-              lte: new Date(new Date().getFullYear() - 1, 11, 31),
+              gte: new Date(parseInt(process.env.YEAR), 0, 1),
+              lte: new Date(parseInt(process.env.YEAR), 11, 31),
             },
           },
           orderBy: [
