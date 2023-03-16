@@ -22,7 +22,7 @@ const Header: React.FC = () => {
     { name: "Dodaj wpłatę", href: "/addIncome" },
     { name: "Dodaj wydatek", href: "/addExpense" },
     { name: "Historia wydatków", href: "/expenses" },
-    { name: "Dokumenty", href: "/api/financialReport" },
+    { name: "Dokumenty", href: "/documents" },
   ];
 
   return (

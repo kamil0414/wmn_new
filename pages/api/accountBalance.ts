@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
+import { getEndDateFromEnv } from "../../utils";
 
 type Data = {
   message?: any;
@@ -10,7 +11,8 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   try {
-    const result = await prisma.$queryRaw`select * from PodajStanKont();`;
+    const endDate = getEndDateFromEnv().toISOString().split('T')[0];
+    const result = await prisma.$queryRawUnsafe(`select * from PodajStanKont(${"'"+endDate+"'"})`);
     res.status(200).json(result[0]);
   } catch (error) {
     console.log(error);

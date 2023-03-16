@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import Layout from "../components/Layout";
-import { fetcher } from "../utils";
+import { getEndDateFromEnv, fetcher, getStartDateFromEnv } from "../utils";
 
 const AddExpense: React.FC<any> = (props) => {
   const { mutate } = useSWRConfig();
@@ -32,7 +32,7 @@ const AddExpense: React.FC<any> = (props) => {
     ilosc_wymagana,
     firmy: companies,
     typy_dowodow_ksiegowych,
-    jednostka_miary
+    jednostka_miary,
   } = descriptions?.find((e) => e.id === description) || {};
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const AddExpense: React.FC<any> = (props) => {
     }
 
     setAccount(id_subkonta);
-    setUnit('');
+    setUnit("");
 
     setCompany(0);
     setCountRequired(true);
@@ -173,16 +173,8 @@ const AddExpense: React.FC<any> = (props) => {
               <div className="flex">
                 <input
                   onChange={(e) => setDate(e.target.value)}
-                  min={
-                    new Date(new Date().getFullYear(), 0, 2)
-                      .toISOString()
-                      .split("T")[0]
-                  }
-                  max={
-                    new Date(new Date().getFullYear(), 11, 32)
-                      .toISOString()
-                      .split("T")[0]
-                  }
+                  min={getStartDateFromEnv()?.toISOString().split("T")[0]}
+                  max={getEndDateFromEnv()?.toISOString().split("T")[0]}
                   type="date"
                   name="date"
                   id="date"

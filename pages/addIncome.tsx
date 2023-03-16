@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { classNames, fetcher, formatter } from "../utils";
+import {
+  classNames,
+  fetcher,
+  formatter,
+  getEndDateFromEnv,
+  getStartDateFromEnv,
+} from "../utils";
 import useSWR, { useSWRConfig } from "swr";
 
 const AddIncome: React.FC<any> = (props) => {
@@ -37,7 +43,7 @@ const AddIncome: React.FC<any> = (props) => {
           setWaterMeterPreviousValue(waterMeterCurrentValue);
           setWaterMeterPreviousDate(waterMeterCurrentDate);
           setWaterMeterPreviousType(0);
-          setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
+          setWaterMeterCurrentDate(getEndDateFromEnv().toISOString().split("T")[0]);
           setWaterMeterCurrentValue(waterMeterCurrentValue);
           mutate("/api/basicData");
           mutate(["/api/flatHistory/?flat_number=", flat]);
@@ -67,7 +73,7 @@ const AddIncome: React.FC<any> = (props) => {
         } ${operationNumber}${
           paymentType
             ? ""
-            : `/${new Date().getFullYear().toString().slice(2, 4)}`
+            : `/${getEndDateFromEnv().getFullYear().toString().slice(2, 4)}`
         }`,
         opis: "Opłaty bieżące",
         kwota: operationSum,
@@ -102,7 +108,7 @@ const AddIncome: React.FC<any> = (props) => {
   const [waterMeterCurrentValue, setWaterMeterCurrentValue] = useState(0);
   const [waterMeterCurrentMinValue, setWaterMeterCurrentMinValue] = useState(0);
   const [waterMeterCurrentDate, setWaterMeterCurrentDate] = useState(
-    new Date().toISOString().split("T")[0]
+    getEndDateFromEnv().toISOString().split("T")[0]
   );
 
   const [operationNumber, setOperationNumber] = useState("");
@@ -114,7 +120,7 @@ const AddIncome: React.FC<any> = (props) => {
   const [showfeedback2, setShowfeedback2] = useState(null);
 
   const [operationDate, setOperationDate] = useState(
-    new Date().toISOString().split("T")[0]
+    getEndDateFromEnv().toISOString().split("T")[0]
   );
   const [balance, setBalance] = useState(0);
 
@@ -133,8 +139,8 @@ const AddIncome: React.FC<any> = (props) => {
   useEffect(() => {
     const index = flat - 1;
 
-    setWaterMeterCurrentDate(new Date().toISOString().split("T")[0]);
-    setOperationDate(new Date().toISOString().split("T")[0]);
+    setWaterMeterCurrentDate(getEndDateFromEnv().toISOString().split("T")[0]);
+    setOperationDate(getEndDateFromEnv().toISOString().split("T")[0]);
     setWaterMeterButtonState(true);
     setShowfeedback(null);
     setShowfeedback2(null);
@@ -228,11 +234,11 @@ const AddIncome: React.FC<any> = (props) => {
               <input
                 onChange={(e) => setWaterMeterCurrentDate(e.target.value)}
                 min={
-                  new Date(new Date().getFullYear(), 0, 2)
+                  getStartDateFromEnv()
                     .toISOString()
                     .split("T")[0]
                 }
-                max={new Date().toISOString().split("T")[0]}
+                max={getEndDateFromEnv().toISOString().split("T")[0]}
                 type="date"
                 name="watermeterDate"
                 id="watermeterDate"
@@ -304,19 +310,15 @@ const AddIncome: React.FC<any> = (props) => {
               />
               {!paymentType && (
                 <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
-                  /{new Date().getFullYear().toString().slice(2, 4)}
+                  /{getEndDateFromEnv().getFullYear().toString().slice(2, 4)}
                 </span>
               )}
             </div>
             <div className="rounded-md shadow-sm">
               <input
                 onChange={(e) => setOperationDate(e.target.value)}
-                min={
-                  new Date(new Date().getFullYear(), 0, 2)
-                    .toISOString()
-                    .split("T")[0]
-                }
-                max={new Date().toISOString().split("T")[0]}
+                min={getStartDateFromEnv().toISOString().split("T")[0]}
+                max={getEndDateFromEnv().toISOString().split("T")[0]}
                 type="date"
                 name="operationDate"
                 id="operationDate"

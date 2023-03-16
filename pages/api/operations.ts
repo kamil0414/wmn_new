@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
+import { getEndDateFromEnv, getStartDateFromEnv } from "../../utils";
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,8 +40,8 @@ export default async function handler(
               lte: 0,
             },
             data: {
-              gte: new Date(parseInt(process.env.YEAR), 0, 1),
-              lte: new Date(parseInt(process.env.YEAR), 11, 31),
+              gte: getStartDateFromEnv(),
+              lte: getEndDateFromEnv(),
             },
           },
           orderBy: [
