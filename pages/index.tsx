@@ -42,7 +42,7 @@ const Index: React.FC<Props> = (props) => {
                         {row.numer_mieszkania}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500">
-                        {new Date(row.ostatnia_wplata).toLocaleDateString()}
+                        {row.ostatnia_wplata ? new Date(row.ostatnia_wplata).toLocaleDateString() : '-'}
                       </td>
                       <td
                         className={classNames(
