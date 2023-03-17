@@ -16,18 +16,23 @@ export default async function handler(_req, res) {
     linebreaks: true,
   });
 
-  const endDate = getEndDateFromEnv().toISOString().split('T')[0];
-  const daneDoSprawozdania =
-    await prisma.$queryRawUnsafe(`select * from podajDaneDoSprawozdania(${"'"+endDate+"'"})`);
-  const stanKont = await prisma.$queryRawUnsafe(`select * from podajStanKont(${"'"+endDate+"'"})`);
-  const wydatkiOpalWodaSmieci =
-    await prisma.$queryRawUnsafe(`select * from podajWydatkiOpalWodaSmieci(${"'"+endDate+"'"})`);
-  const wydatkiFun =
-    await prisma.$queryRawUnsafe(`select * from podajWydatkiFun(${"'"+endDate+"'"})`);
+  const endDate = getEndDateFromEnv().toISOString().split("T")[0];
+  const daneDoSprawozdania = await prisma.$queryRawUnsafe(
+    `select * from podajDaneDoSprawozdania(${"'" + endDate + "'"})`
+  );
+  const stanKont = await prisma.$queryRawUnsafe(
+    `select * from podajStanKont(${"'" + endDate + "'"})`
+  );
+  const wydatkiOpalWodaSmieci = await prisma.$queryRawUnsafe(
+    `select * from podajWydatkiOpalWodaSmieci(${"'" + endDate + "'"})`
+  );
+  const wydatkiFun = await prisma.$queryRawUnsafe(
+    `select * from podajWydatkiFun(${"'" + endDate + "'"})`
+  );
 
   const blad =
-    formatter.format(daneDoSprawozdania[0].bilans) !==
-    formatter.format(stanKont[0].razem);
+    parseFloat(daneDoSprawozdania[0].bilans) !==
+    parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma);
 
   doc.render({
     zalOpal: formatter.format(daneDoSprawozdania[0].zalopal),
@@ -45,13 +50,15 @@ export default async function handler(_req, res) {
     wydF: formatter.format(daneDoSprawozdania[0].wydf),
     prowizje: formatter.format(daneDoSprawozdania[0].prowizje),
     wydRaz: formatter.format(daneDoSprawozdania[0].wydraz),
-    kasa: formatter.format(stanKont[0].kasa),
-    bank: formatter.format(stanKont[0].bank),
+    kasa: formatter.format(stanKont[0]?.suma),
+    bank: formatter.format(stanKont[1]?.suma),
     blad,
     bilans: !blad
       ? formatter.format(daneDoSprawozdania[0].bilans)
       : `NIEZGODNOŚĆ: ${formatter.format(
-          stanKont[0].razem - daneDoSprawozdania[0].bilans
+          parseFloat(stanKont[0]?.suma) +
+            parseFloat(stanKont[1]?.suma) -
+            parseFloat(daneDoSprawozdania[0].bilans)
         )}`,
     wydOpalWoda: wydatkiOpalWodaSmieci,
     wydFun: wydatkiFun,
