@@ -462,7 +462,7 @@ const AddIncome: React.FC<any> = (props) => {
                     <tr
                       key={i}
                       className={classNames(
-                        row.wplata != "0" && "bg-gray-50",
+                        row.wplata != "0" && "bg-sky-100",
                         "hover:bg-gray-200 focus:bg-gray-200"
                       )}
                     >
