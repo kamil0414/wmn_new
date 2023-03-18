@@ -109,6 +109,7 @@ const AddExpense: React.FC<any> = (props) => {
       .then(() => {
         setShowfeedback(true);
         mutate("/api/accountBalance");
+        setCategory(0);
       })
       .catch(() => {
         setShowfeedback(false);
@@ -235,6 +236,7 @@ const AddExpense: React.FC<any> = (props) => {
                     onChange={(e) =>
                       setSum(parseFloat(e.target.value.replace(",", ".")))
                     }
+                    autoComplete="off"
                     value={sum}
                     type="number"
                     min={0}
@@ -311,9 +313,8 @@ const AddExpense: React.FC<any> = (props) => {
                 account != null &&
                 sum != null &&
                 sum >= 0 &&
-                countRequired &&
-                count != null &&
-                count > 0
+                (!countRequired ||
+                  (countRequired && count != null && count > 0))
               )
             }
             onClick={(e) => saveOperation(e)}
@@ -323,12 +324,6 @@ const AddExpense: React.FC<any> = (props) => {
           </button>
         </form>
       </div>
-
-      {/* <span >
-        {company},{date},{description},`$
-        {type === "Wyciąg" ? "Wyciąg nr" : type} ${number}` ,{-1 * sum},
-        {!cashChecked ? "bank" : "kasa"},{account}, {count},{comment}
-      </span> */}
     </Layout>
   );
 };

@@ -44,7 +44,7 @@ const Expenses: React.FC<any> = (props) => {
                 </thead>
                 <tbody className="bg-white ">
                   {expensesHistory?.map((row, i) => (
-                    <tr key={i} className={row.czy_bank ? "bg-sky-100" : ""}>
+                    <tr key={i} className={classNames(row.czy_bank && "bg-sky-100", "hover:bg-gray-200")}>
                       <td className="border-b border-slate-200 pl-4 pr-2 py-2 text-slate-500 ">
                         {row.data.split("T")[0]}
                       </td>
@@ -73,7 +73,7 @@ const Expenses: React.FC<any> = (props) => {
                         {row.ilosc > 0 ? `(${row.ilosc})` : ""}
                       </td>
                       <td className="border-b border-slate-200 pl-2 pr-4 py-2 text-slate-500 ">
-                        {formatter.format(-1 * row.kwota)}
+                        {formatter.format(row.kwota)}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
                         {row.komentarz}

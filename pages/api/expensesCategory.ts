@@ -49,9 +49,16 @@ export default async function handler(
           },
         },
         where: {
-          nazwa: {
-            not: "Bilans otwarcia",
-          },
+          AND: [
+            {
+              nazwa: {
+                not: "Bilans otwarcia",
+              },
+            },
+            {
+              czy_wydatek: true
+            },
+          ]
         },
         orderBy: [
           {

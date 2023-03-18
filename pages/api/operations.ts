@@ -29,16 +29,25 @@ export default async function handler(
                 opis: true,
                 kategoria_wydatku: {
                   select: {
-                    nazwa: true
-                  }
-                }
+                    nazwa: true,
+                  },
+                },
               },
             },
           },
           where: {
-            kwota: {
-              lte: 0,
-            },
+            OR: [
+              {
+                kwota: {
+                  lte: 0,
+                },
+              },
+              {
+                rodzaj_i_numer_dowodu_ksiegowego: {
+                  equals: "Bilans otwarcia",
+                },
+              },
+            ],
             data: {
               gte: getStartDateFromEnv(),
               lte: getEndDateFromEnv(),
@@ -70,7 +79,7 @@ export default async function handler(
         czy_bank,
         id_subkonta,
         ilosc,
-        komentarz
+        komentarz,
       } = req.body;
       await prisma.operacje.create({
         data: {
@@ -82,7 +91,7 @@ export default async function handler(
           czy_bank,
           id_subkonta,
           ilosc,
-          komentarz
+          komentarz,
         },
       });
       res.status(200).json({ message: "Added" });

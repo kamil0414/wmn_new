@@ -58,7 +58,7 @@ model operacje {
   czy_bank                         Boolean
   id_subkonta                      Int
   id                               Int      @id @default(autoincrement())
-  ilosc                            Decimal? @default(0) @db.Decimal(4, 2)
+  ilosc                            Decimal? @default(0) @db.Decimal(6, 2)
   komentarz                        String?
   id_opisu                         Int?     @db.SmallInt
   firma                            firmy    @relation(fields: [id_firmy], references: [id])
@@ -122,4 +122,5 @@ model kategorie_wydatkow {
   id_subkonta Int
   subkonta    subkonta @relation(fields: [id_subkonta], references: [id])
   opisy       opisy[]
+  czy_wydatek Boolean @default(true)
 }
