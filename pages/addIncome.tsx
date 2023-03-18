@@ -24,6 +24,18 @@ const AddIncome: React.FC<any> = (props) => {
     isLoading: flatHistoryIsLoading,
   } = useSWR(`/api/flatHistory?flat_number=${flat}`, fetcher);
 
+  const naleznosciRazem = flatHistory
+    ?.map((el) => el.naleznosc)
+    .reduce((a: string, b: string) => parseFloat(a) + parseFloat(b));
+
+  const wplatyRazem = flatHistory
+    ?.map((el) => el.wplata)
+    .reduce((a: string, b: string) => parseFloat(a) + parseFloat(b));
+
+  const saldo = flatHistory
+    ? parseFloat(flatHistory[flatHistory?.length - 1].saldo)
+    : 0;
+
   const saveWaterMeterValue = async (e) => {
     e.preventDefault();
     await fetch(`/api/waterMeters`, {
@@ -43,7 +55,9 @@ const AddIncome: React.FC<any> = (props) => {
           setWaterMeterPreviousValue(waterMeterCurrentValue);
           setWaterMeterPreviousDate(waterMeterCurrentDate);
           setWaterMeterPreviousType(0);
-          setWaterMeterCurrentDate(getEndDateFromEnv().toISOString().split("T")[0]);
+          setWaterMeterCurrentDate(
+            getEndDateFromEnv().toISOString().split("T")[0]
+          );
           setWaterMeterCurrentValue(waterMeterCurrentValue);
           mutate("/api/basicData");
           mutate(["/api/flatHistory/?flat_number=", flat]);
@@ -178,7 +192,7 @@ const AddIncome: React.FC<any> = (props) => {
           <div>
             <label
               htmlFor="countries"
-              className="block text-sm font-medium leading-6 text-gray-900 mt-6"
+              className="block text-sm font-medium leading-6 text-gray-900 mt-6 print:hidden"
             >
               1. Wybierz numer mieszkania
             </label>
@@ -200,9 +214,9 @@ const AddIncome: React.FC<any> = (props) => {
             </div>
           </div>
         </div>
-        <hr className="mt-4"></hr>
+        <hr className="mt-4 print:hidden"></hr>
 
-        <form>
+        <form className="print:hidden">
           <label
             htmlFor="company-website"
             className="block text-sm font-medium leading-6 text-gray-900 mt-4"
@@ -233,11 +247,7 @@ const AddIncome: React.FC<any> = (props) => {
             <div className="rounded-md shadow-sm">
               <input
                 onChange={(e) => setWaterMeterCurrentDate(e.target.value)}
-                min={
-                  getStartDateFromEnv()
-                    .toISOString()
-                    .split("T")[0]
-                }
+                min={getStartDateFromEnv().toISOString().split("T")[0]}
                 max={getEndDateFromEnv().toISOString().split("T")[0]}
                 type="date"
                 name="watermeterDate"
@@ -283,9 +293,9 @@ const AddIncome: React.FC<any> = (props) => {
           </div>
         </form>
 
-        <hr className="mt-4"></hr>
+        <hr className="mt-4 print:hidden"></hr>
 
-        <form>
+        <form className="print:hidden">
           <label
             htmlFor="company-website"
             className="block text-sm font-medium leading-6 text-gray-900 mt-4"
@@ -418,16 +428,16 @@ const AddIncome: React.FC<any> = (props) => {
           </div>
         </form>
 
-        <hr className="mt-4"></hr>
+        <hr className="mt-4 print:hidden"></hr>
 
         <div className="text-sm font-medium text-gray-700 mt-4 mb-2">
           Kartoteka
         </div>
 
-        <div className="not-prose relative bg-slate-50 overflow-hidden ">
+        <div className="not-prose relative bg-slate-50 overflow-hidden">
           <div className="relative overflow-auto">
             <div className="shadow-sm my-8">
-              <table className="border-collapse table-auto w-full text-sm">
+              <table className="border-collapse table-auto w-full text-sm print:text-sm">
                 <thead>
                   <tr>
                     <th className="border-b font-medium pr-2 pl-4 pt-0 pb-2 text-slate-400 text-left">
@@ -436,42 +446,66 @@ const AddIncome: React.FC<any> = (props) => {
                     <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                       Opis
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-right">
                       Należność
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-right">
                       Wpłata
                     </th>
-                    <th className="border-b font-medium pr-4 pl-2 pt-0 pb-2 text-slate-400 text-left">
+                    <th className="border-b font-medium pr-4 pl-2 pt-0 pb-2 text-slate-400 text-right">
                       Saldo
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white">
                   {flatHistory?.map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-200">
-                      <td className="border-b border-slate-200 pr-2 pl-4 py-2 text-slate-500">
+                    <tr
+                      key={i}
+                      className={classNames(
+                        row.wplata != "0" && "bg-gray-50",
+                        "hover:bg-gray-200 focus:bg-gray-200"
+                      )}
+                    >
+                      <td className="border-b border-slate-200 pr-2 pl-4 py-2 text-slate-500 print:whitespace-nowrap">
                         {row.data.split("T")[0]}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500">
                         {row.opis}
                       </td>
-                      <td className="border-b border-slate-200 p-2 text-slate-500">
+                      <td className="border-b border-slate-200 text-right p-2 text-slate-500">
                         {formatter.format(row.naleznosc)}
                       </td>
-                      <td className="border-b border-slate-200 pr-4 pl-2 py-2 text-slate-500">
+                      <td className="border-b border-slate-200 text-right pr-4 pl-2 py-2 text-slate-500">
                         {formatter.format(row.wplata)}
                       </td>
                       <td
                         className={classNames(
                           row.saldo < 0 ? "text-red-500" : "text-slate-500",
-                          "border-b border-slate-200 pr-4 pl-2 py-2"
+                          "border-b border-slate-200 text-right pr-4 pl-2 py-2"
                         )}
                       >
                         {formatter.format(row.saldo)}
                       </td>
                     </tr>
                   ))}
+                  {flatHistory != null && flatHistory?.length != 0 && (
+                    <tr>
+                      <td></td>
+                      <td className="text-slate-500 text-right p-4">SUMA:</td>
+                      <td className="text-slate-500 text-right p-2">
+                        {formatter.format(naleznosciRazem)}
+                      </td>
+                      <td className="text-slate-500 text-right pr-4 pl-2 py-2">
+                        {formatter.format(wplatyRazem)}
+                      </td>
+                      <td className="text-slate-500 text-right pr-4 pl-2 py-2">
+                        {formatter.format(wplatyRazem - naleznosciRazem) ===
+                        formatter.format(saldo)
+                          ? ""
+                          : "BŁĄD SUM"}
+                      </td>
+                    </tr>
+                  )}
                   {(flatHistory == null || flatHistory?.length === 0) && (
                     <tr>
                       <td
