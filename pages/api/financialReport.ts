@@ -31,8 +31,10 @@ export default async function handler(_req, res) {
   );
 
   const blad =
-    parseFloat(daneDoSprawozdania[0].bilans) !==
-    parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma);
+    formatter.format(parseFloat(daneDoSprawozdania[0].bilans)) !==
+    formatter.format(
+      parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma)
+    );
 
   doc.render({
     zalOpal: formatter.format(daneDoSprawozdania[0].zalopal),
