@@ -34,10 +34,10 @@ const Expenses: React.FC<any> = (props) => {
                     <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
                       Opis
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-right">
                       Kwota
                     </th>
-                    <th className="border-b font-medium pl-2 pr-4 pb-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b font-medium pl-2 pr-4 pb-2 pt-0 text-slate-400">
                       Uwagi
                     </th>
                   </tr>
@@ -72,7 +72,7 @@ const Expenses: React.FC<any> = (props) => {
                           : row.opis}{" "}
                         {row.ilosc > 0 ? `(${row.ilosc})` : ""}
                       </td>
-                      <td className="border-b border-slate-200 pl-2 pr-4 py-2 text-slate-500 ">
+                      <td className="border-b border-slate-200 p-2 py-2 text-slate-500 text-right">
                         {formatter.format(row.kwota)}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">

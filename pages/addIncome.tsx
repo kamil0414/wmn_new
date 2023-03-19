@@ -475,7 +475,7 @@ const AddIncome: React.FC<any> = (props) => {
                       <td className="border-b border-slate-200 text-right p-2 text-slate-500">
                         {formatter.format(row.naleznosc)}
                       </td>
-                      <td className="border-b border-slate-200 text-right pr-4 pl-2 py-2 text-slate-500">
+                      <td className="border-b border-slate-200 text-right p-2 text-slate-500">
                         {formatter.format(row.wplata)}
                       </td>
                       <td
@@ -495,7 +495,7 @@ const AddIncome: React.FC<any> = (props) => {
                       <td className="text-slate-500 text-right p-2">
                         {formatter.format(naleznosciRazem)}
                       </td>
-                      <td className="text-slate-500 text-right pr-4 pl-2 py-2">
+                      <td className="text-slate-500 text-right p-2 py-2">
                         {formatter.format(wplatyRazem)}
                       </td>
                       <td className="text-slate-500 text-right pr-4 pl-2 py-2">
