@@ -89,7 +89,7 @@ const AddIncome: React.FC<any> = (props) => {
             ? ""
             : `/${getEndDateFromEnv().getFullYear().toString().slice(2, 4)}`
         }`,
-        opis: "Opłaty bieżące",
+        id_opisu: 22,
         kwota: operationSum,
         czy_bank: paymentType,
         id_subkonta: 0, // always 0 for incomes
