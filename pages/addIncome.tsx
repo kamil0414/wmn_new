@@ -14,14 +14,15 @@ const AddIncome: React.FC<any> = (props) => {
 
   const [flat, setFlat] = useState(1);
 
-  const { data: basicData } = useSWR("/api/basicData", fetcher);
+  const { data: basicData, mutate: mutateBasicData } = useSWR("/api/basicData", fetcher);
 
-  const { data: blankNumbers } = useSWR("/api/blankNumbers", fetcher);
+  const { data: blankNumbers, mutate: mutateBlankNumbers } = useSWR("/api/blankNumbers", fetcher);
 
   const {
     data: flatHistory,
     error: flatHistoryError,
     isLoading: flatHistoryIsLoading,
+    mutate: mutateFlatHistory
   } = useSWR(`/api/flatHistory?flat_number=${flat}`, fetcher);
 
   const naleznosciRazem = flatHistory
@@ -59,8 +60,8 @@ const AddIncome: React.FC<any> = (props) => {
             getEndDateFromEnv().toISOString().split("T")[0]
           );
           setWaterMeterCurrentValue(waterMeterCurrentValue);
-          mutate("/api/basicData");
-          mutate(["/api/flatHistory/?flat_number=", flat]);
+          mutateBasicData()
+          mutateFlatHistory()
           setWaterMeterButtonState(false);
           setShowfeedback(true);
         } else {
@@ -98,13 +99,13 @@ const AddIncome: React.FC<any> = (props) => {
       .then((response) => {
         if (response.ok) {
           setShowfeedback2(true);
-          mutate("/api/basicData");
+          mutateBasicData()
           mutate("/api/accountBalance");
-          mutate(["/api/flatHistory/?flat_number=", flat]);
+          mutateFlatHistory()
 
           if (!paymentType) {
-            mutate("/api/blankNumbers");
-          }
+            mutateBlankNumbers();
+          }         
         } else {
           setShowfeedback2(false);
         }
@@ -458,9 +459,9 @@ const AddIncome: React.FC<any> = (props) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {flatHistory?.map((row, i) => (
+                  {flatHistory?.map((row) => (
                     <tr
-                      key={i}
+                      key={row.id}
                       className={classNames(
                         row.wplata != "0" && "bg-sky-100",
                         "hover:bg-gray-200 focus:bg-gray-200"

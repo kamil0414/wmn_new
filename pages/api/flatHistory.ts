@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
-import { getEndDateFromEnv } from "../../utils";
+import { getEndDateFromEnv, getStartDateFromEnv } from "../../utils";
 
 type Data = {
   message?: any;
@@ -12,10 +12,32 @@ export default async function handler(
 ) {
   try {
     const { flat_number } = req.query;
+    const result = await prisma.kartoteki.findMany({
+      select: {
+        id: true,
+        data: true,
+        naleznosc: true,
+        opis: true,
+        saldo: true,
+        wplata: true,
+      },
+      where: {
+        AND: [
+          {
+            numer_mieszkania: {
+              equals: parseInt(flat_number),
+            },
+          },
+          {
+            data: {
+              gte: getStartDateFromEnv(),
+              lte: getEndDateFromEnv(),
+            },
+          },
+        ],
+      },
+    });
 
-    const endDate = getEndDateFromEnv().toISOString().split('T')[0];
-    const result = await prisma.$queryRawUnsafe(
-      `select * from PodajKartoteke(${flat_number}, ${"'"+endDate+"'"})`);
     res.status(200).json(result);
   } catch (error) {
     console.log(error);

@@ -36,8 +36,8 @@ const Index: React.FC<Props> = (props) => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {basicData?.map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-200 focus:bg-gray-200">
+                  {basicData?.map((row) => (
+                    <tr key={row.numer_mieszkania} className="hover:bg-gray-200 focus:bg-gray-200">
                       <td className="border-b border-slate-200 pr-2 pl-4 py-2 text-slate-500">
                         {row.numer_mieszkania}
                       </td>

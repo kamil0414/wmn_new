@@ -11,12 +11,21 @@ export default async function handler(
 ) {
   try {
     const { numer_mieszkania, stan, data, typ } = req.body;
-    await prisma.$queryRawUnsafe(
-      `call DodajOdczytWodomierza(${numer_mieszkania}, ${stan}, ${
-        "'" + data + "'"
-      }, ${typ})`
-    );
-    res.status(200).json({ message: "Added" });
+    const { id } = await prisma.odczyty_wodomierzy.create({
+      data: {
+        numer_mieszkania,
+        stan,
+        data: new Date(data),
+        typ,
+      },
+    });
+
+    if (id) {
+      await prisma.$queryRawUnsafe(
+        `call naliczwode(${"'" + data + "'"}, ${numer_mieszkania})`
+      );
+      res.status(200).json({ message: "Added" });
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error });

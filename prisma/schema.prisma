@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -120,7 +121,17 @@ model kategorie_wydatkow {
   id          Int      @id @default(autoincrement())
   nazwa       String   @unique
   id_subkonta Int
+  czy_wydatek Boolean  @default(true)
   subkonta    subkonta @relation(fields: [id_subkonta], references: [id])
   opisy       opisy[]
-  czy_wydatek Boolean @default(true)
+}
+
+view kartoteki {
+  id               Int       @id
+  numer_mieszkania Int       @db.SmallInt
+  data             DateTime  @db.Date
+  opis             String?
+  naleznosc        Decimal   @db.Money
+  wplata           Decimal   @db.Money
+  saldo            Decimal   @db.Money
 }

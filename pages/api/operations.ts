@@ -12,6 +12,7 @@ export default async function handler(
       if (onlyExpenses) {
         const result = await prisma.operacje.findMany({
           select: {
+            id: true,
             data: true,
             czy_bank: true,
             ilosc: true,
