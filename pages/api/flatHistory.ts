@@ -2,13 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prisma";
 import { getEndDateFromEnv, getStartDateFromEnv } from "../../utils";
 
-type Data = {
-  message?: any;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   interface QueryProps {
     flat_number: string;
