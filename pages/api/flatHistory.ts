@@ -10,8 +10,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+  interface QueryProps {
+    flat_number: string;
+  }
+
   try {
-    const { flat_number } = req.query;
+    const { flat_number }: Partial<QueryProps> = req.query;
     const result = await prisma.kartoteki.findMany({
       select: {
         id: true,
