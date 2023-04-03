@@ -31,7 +31,7 @@ export default async function handler(
           {
             data: {
               gte: getStartDateFromEnv(),
-              lte: getEndDateFromEnv(),
+              lte: new Date(Math.max(getEndDateFromEnv().setDate(10), getEndDateFromEnv().getTime()))
             },
           },
         ],
