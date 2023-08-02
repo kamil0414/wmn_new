@@ -1,0 +1,5 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@page { size: auto;  margin: 6mm 12mm; }
