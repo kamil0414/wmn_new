@@ -237,7 +237,6 @@ const AddExpense: React.FC<any> = (props) => {
                       setSum(parseFloat(e.target.value.replace(",", ".")))
                     }
                     autoComplete="off"
-                    value={sum}
                     type="number"
                     min={0}
                     step="any"
