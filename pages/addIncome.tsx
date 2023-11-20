@@ -382,7 +382,6 @@ const AddIncome: React.FC<any> = (props) => {
                         parseFloat(e.target.value.replace(",", "."))
                       )
                     }
-                    value={operationSum}
                     type="number"
                     min={0}
                     step="any"
