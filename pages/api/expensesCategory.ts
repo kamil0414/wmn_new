@@ -3,7 +3,7 @@ import prisma from "../../lib/prisma";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method === "GET") {
@@ -56,9 +56,9 @@ export default async function handler(
               },
             },
             {
-              czy_wydatek: true
+              czy_wydatek: true,
             },
-          ]
+          ],
         },
         orderBy: [
           {
@@ -69,7 +69,6 @@ export default async function handler(
       res.status(200).json(data);
     }
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error });
   }
 }

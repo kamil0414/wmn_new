@@ -4,7 +4,7 @@ import { getEndDateFromEnv, getStartDateFromEnv } from "../../utils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   interface QueryProps {
     flat_number: string;
@@ -25,13 +25,18 @@ export default async function handler(
         AND: [
           {
             numer_mieszkania: {
-              equals: parseInt(flat_number),
+              equals: parseInt(flat_number, 10),
             },
           },
           {
             data: {
               gte: getStartDateFromEnv(),
-              lte: new Date(Math.max(getEndDateFromEnv().setDate(10), getEndDateFromEnv().getTime()))
+              lte: new Date(
+                Math.max(
+                  getEndDateFromEnv().setDate(10),
+                  getEndDateFromEnv().getTime(),
+                ),
+              ),
             },
           },
         ],
@@ -40,7 +45,6 @@ export default async function handler(
 
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error });
   }
 }

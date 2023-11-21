@@ -8,14 +8,15 @@ type Data = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data>,
 ) {
   try {
-    const endDate = getEndDateFromEnv().toISOString().split('T')[0];
-    const result = await prisma.$queryRawUnsafe(`select * from PodajDanePomonicze(${"'"+endDate+"'"})`);
+    const endDate = getEndDateFromEnv().toISOString().split("T")[0];
+    const result = await prisma.$queryRawUnsafe(
+      `select * from PodajDanePomonicze(${`'${endDate}'`})`,
+    );
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error });
   }
 }

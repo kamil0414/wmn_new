@@ -1,10 +1,7 @@
-import React from "react";
-import Layout from "../components/Layout";
 import Link from "next/link";
+import Layout from "../components/Layout";
 
-const Expenses: React.FC<any> = (props) => {
-
-
+function Expenses() {
   return (
     <Layout>
       <div className="container mx-auto mt-10">
@@ -12,6 +9,6 @@ const Expenses: React.FC<any> = (props) => {
       </div>
     </Layout>
   );
-};
+}
 
 export default Expenses;

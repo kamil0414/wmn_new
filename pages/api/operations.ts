@@ -4,7 +4,7 @@ import { getEndDateFromEnv, getStartDateFromEnv } from "../../utils";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     if (req.method === "GET") {
@@ -98,7 +98,6 @@ export default async function handler(
       res.status(200).json({ message: "Added" });
     }
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error });
   }
 }

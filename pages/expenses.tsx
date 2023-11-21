@@ -1,9 +1,8 @@
-import React from "react";
+import useSWR from "swr";
 import Layout from "../components/Layout";
 import { classNames, fetcher, formatter } from "../utils";
-import useSWR from "swr";
 
-const Expenses: React.FC<any> = (props) => {
+function Expenses() {
   const {
     data: expensesHistory,
     error: expensesHistoryError,
@@ -13,39 +12,45 @@ const Expenses: React.FC<any> = (props) => {
   return (
     <Layout>
       <div className="container mx-auto px-4">
-        <div className="text-sm text-gray-700 font-medium mt-6 mb-2">
+        <div className="mb-2 mt-6 text-sm font-medium text-gray-700">
           Niebieskim kolorem oznaczone są operacje bankowe.
         </div>
-        <div className="not-prose relative bg-slate-50 overflow-hidden ">
+        <div className="not-prose relative overflow-hidden bg-slate-50 ">
           <div className="relative overflow-auto">
-            <div className="shadow-sm overflow-hidden my-8">
-              <table className="border-collapse table-auto w-full text-sm">
+            <div className="my-8 overflow-hidden shadow-sm">
+              <table className="w-full table-auto border-collapse text-sm">
                 <thead>
                   <tr>
-                    <th className="border-b font-medium pl-4 pr-2 pb-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b pb-2 pl-4 pr-2 pt-0 text-left font-medium text-slate-400">
                       Data
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                       Firma
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                       Rodzaj i numer dowodu księgowego
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-left">
+                    <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                       Opis
                     </th>
-                    <th className="border-b font-medium p-2 pt-0 text-slate-400 text-right">
+                    <th className="border-b p-2 pt-0 text-right font-medium text-slate-400">
                       Kwota
                     </th>
-                    <th className="border-b font-medium pl-2 pr-4 pb-2 pt-0 text-slate-400">
+                    <th className="border-b pb-2 pl-2 pr-4 pt-0 font-medium text-slate-400">
                       Uwagi
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white ">
                   {expensesHistory?.map((row) => (
-                    <tr key={row.id} className={classNames(row.czy_bank && "bg-sky-100", "hover:bg-gray-200 focus:bg-gray-200")}>
-                      <td className="border-b border-slate-200 pl-4 pr-2 py-2 text-slate-500 ">
+                    <tr
+                      key={row.id}
+                      className={classNames(
+                        row.czy_bank && "bg-sky-100",
+                        "hover:bg-gray-200 focus:bg-gray-200",
+                      )}
+                    >
+                      <td className="border-b border-slate-200 py-2 pl-4 pr-2 text-slate-500 ">
                         {row.data.split("T")[0]}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
@@ -59,7 +64,7 @@ const Expenses: React.FC<any> = (props) => {
                           row.opis_pow == null
                             ? "text-red-500"
                             : "text-slate-500",
-                          "border-b border-slate-200 p-2"
+                          "border-b border-slate-200 p-2",
                         )}
                       >
                         {row.opis_pow
@@ -72,7 +77,7 @@ const Expenses: React.FC<any> = (props) => {
                           : row.opis}{" "}
                         {row.ilosc > 0 ? `(${row.ilosc})` : ""}
                       </td>
-                      <td className="border-b border-slate-200 p-2 py-2 text-slate-500 text-right">
+                      <td className="border-b border-slate-200 p-2 py-2 text-right text-slate-500">
                         {formatter.format(row.kwota)}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
@@ -85,11 +90,11 @@ const Expenses: React.FC<any> = (props) => {
                     <tr>
                       <td
                         colSpan={6}
-                        className="text-center border-b border-slate-200 p-4 text-slate-500"
+                        className="border-b border-slate-200 p-4 text-center text-slate-500"
                       >
                         {expensesHistory?.length === 0 ? "brak operacji" : ""}
                         {expensesHistoryIsLoading ? "ładowanie..." : ""}
-                        {expensesHistoryError ? expensesHistoryError : ""}
+                        {expensesHistoryError || ""}
                       </td>
                     </tr>
                   )}
@@ -97,11 +102,11 @@ const Expenses: React.FC<any> = (props) => {
               </table>
             </div>
           </div>
-          <div className="absolute inset-0 pointer-events-none border border-black/5 rounded-xl"></div>
+          <div className="pointer-events-none absolute inset-0 rounded-xl border border-black/5" />
         </div>
       </div>
     </Layout>
   );
-};
+}
 
 export default Expenses;

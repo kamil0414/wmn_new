@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import Layout from "../components/Layout";
 import { getEndDateFromEnv, fetcher, getStartDateFromEnv } from "../utils";
 
-const AddExpense: React.FC<any> = (props) => {
+function AddExpense() {
   const { mutate } = useSWRConfig();
   const { data: expensesCategory } = useSWR("/api/expensesCategory", fetcher);
-
-  const [showfeedback, setShowfeedback] = useState(null);
-  const [showfeedback2, setShowfeedback2] = useState(null);
 
   const [category, setCategory] = useState(0);
   const [description, setDescription] = useState(0);
@@ -87,7 +84,7 @@ const AddExpense: React.FC<any> = (props) => {
 
   const saveOperation = (e) => {
     e.preventDefault();
-    fetch(`/api/operations`, {
+    fetch("/api/operations", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,15 +102,10 @@ const AddExpense: React.FC<any> = (props) => {
         ilosc: count,
         komentarz: comment,
       }),
-    })
-      .then(() => {
-        setShowfeedback(true);
-        mutate("/api/accountBalance");
-        setCategory(0);
-      })
-      .catch(() => {
-        setShowfeedback(false);
-      });
+    }).then(() => {
+      mutate("/api/accountBalance");
+      setCategory(0);
+    });
   };
 
   return (
@@ -122,8 +114,8 @@ const AddExpense: React.FC<any> = (props) => {
         <form>
           <select
             value={category}
-            onChange={(e) => setCategory(parseInt(e.target.value))}
-            className="block w-full flex-1 rounded-md border-0 mt-6 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+            onChange={(e) => setCategory(parseInt(e.target.value, 10))}
+            className="mt-6 block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
           >
             <option disabled value={0}>
               wybierz kategorię
@@ -144,8 +136,8 @@ const AddExpense: React.FC<any> = (props) => {
               {descriptions?.length > 1 && (
                 <select
                   value={description}
-                  onChange={(e) => setDescription(parseInt(e.target.value))}
-                  className="block w-full flex-1 rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  onChange={(e) => setDescription(parseInt(e.target.value, 10))}
+                  className="mt-2 block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 >
                   <option disabled value={0}>
                     wybierz opis
@@ -159,8 +151,8 @@ const AddExpense: React.FC<any> = (props) => {
               )}
               <select
                 value={company}
-                onChange={(e) => setCompany(parseInt(e.target.value))}
-                className="block w-full flex-1 rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                onChange={(e) => setCompany(parseInt(e.target.value, 10))}
+                className="mt-2 block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option disabled value={0}>
                   wybierz firmę
@@ -180,13 +172,13 @@ const AddExpense: React.FC<any> = (props) => {
                   name="date"
                   id="date"
                   value={date}
-                  className="block w-full rounded-md border-0 mt-2 mr-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="mr-2 mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 />
 
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="block w-full rounded-l-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="mt-2 block w-full rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 >
                   <option disabled value="">
                     wybierz typ dowodu ksiegowego
@@ -206,7 +198,7 @@ const AddExpense: React.FC<any> = (props) => {
                   autoComplete="off"
                   name="number"
                   id="number"
-                  className="block w-full rounded-r-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="mt-2 block w-full rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                   placeholder="podaj numer dowodu księgowego"
                 />
               </div>
@@ -222,10 +214,10 @@ const AddExpense: React.FC<any> = (props) => {
                       name="count"
                       id="count"
                       value={count}
-                      className="block w-full flex-1 rounded-l-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                      className="mt-2 block w-full flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                       placeholder="wpisz ilość"
                     />
-                    <span className="inline-flex mt-2 mr-2 items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                    <span className="mr-2 mt-2 inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
                       {unit}
                     </span>
                   </div>
@@ -237,16 +229,15 @@ const AddExpense: React.FC<any> = (props) => {
                       setSum(parseFloat(e.target.value.replace(",", ".")))
                     }
                     autoComplete="off"
-                    value={sum}
                     type="number"
                     min={0}
                     step="any"
                     name="sum"
                     id="sum"
-                    className="block w-full flex-1 rounded-l-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                     placeholder="wpisz kwotę"
                   />
-                  <span className="inline-flex mt-2 items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                  <span className="mt-2 inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
                     zł
                   </span>
                 </div>
@@ -257,56 +248,51 @@ const AddExpense: React.FC<any> = (props) => {
                 id="comment"
                 value={comment}
                 maxLength={300}
-                className="block w-full flex-1 rounded-md border-0 mt-2 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                className="mt-2 block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                 placeholder="wpisz komentarz (opcjonalnie)"
               />
               <div className="flex flex-col">
-                <div className="flex items-center mt-2">
+                <div className="mt-2 flex items-center">
                   <input
                     onChange={() => setCashChecked(true)}
                     checked={cashChecked}
                     id="default-radio-2"
                     type="radio"
                     name="default-radio"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 "
+                    className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 "
                   />
-                  <label
-                    htmlFor="default-radio-2"
-                    className="ml-2 text-sm font-medium text-gray-900 "
-                  >
+                  <div className="ml-2 text-sm font-medium text-gray-900 ">
                     kasa
-                  </label>
+                  </div>
                 </div>
-                <div className="flex items-center mt-2">
+                <div className="mt-2 flex items-center">
                   <input
                     onChange={() => setCashChecked(false)}
                     checked={!cashChecked}
                     id="default-radio-1"
                     type="radio"
                     name="default-radio"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 "
+                    className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 "
                   />
-                  <label
-                    htmlFor="default-radio-1"
-                    className="ml-2 text-sm font-medium text-gray-900 "
-                  >
+                  <div className="ml-2 text-sm font-medium text-gray-900 ">
                     bank
-                  </label>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           <button
-            className="mt-4 disabled:bg-gray-300 inline-flex justify-center rounded-md bg-sky-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
+            type="button"
+            className="mt-4 inline-flex justify-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-gray-300"
             disabled={
               !(
                 company != null &&
-                company != 0 &&
+                company !== 0 &&
                 date != null &&
                 date !== "" &&
                 description != null &&
-                description != 0 &&
+                description !== 0 &&
                 type != null &&
                 number != null &&
                 number !== "" &&
@@ -326,6 +312,6 @@ const AddExpense: React.FC<any> = (props) => {
       </div>
     </Layout>
   );
-};
+}
 
 export default AddExpense;

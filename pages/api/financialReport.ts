@@ -18,22 +18,22 @@ export default async function handler(_req, res) {
 
   const endDate = getEndDateFromEnv().toISOString().split("T")[0];
   const daneDoSprawozdania = await prisma.$queryRawUnsafe(
-    `select * from podajDaneDoSprawozdania(${"'" + endDate + "'"})`
+    `select * from podajDaneDoSprawozdania(${`'${endDate}'`})`,
   );
   const stanKont = await prisma.$queryRawUnsafe(
-    `select * from podajStanKont(${"'" + endDate + "'"})`
+    `select * from podajStanKont(${`'${endDate}'`})`,
   );
   const wydatkiOpalWodaSmieci = await prisma.$queryRawUnsafe(
-    `select * from podajWydatkiOpalWodaSmieci(${"'" + endDate + "'"})`
+    `select * from podajWydatkiOpalWodaSmieci(${`'${endDate}'`})`,
   );
   const wydatkiFun = await prisma.$queryRawUnsafe(
-    `select * from podajWydatkiFun(${"'" + endDate + "'"})`
+    `select * from podajWydatkiFun(${`'${endDate}'`})`,
   );
 
   const blad =
     formatter.format(parseFloat(daneDoSprawozdania[0].bilans)) !==
     formatter.format(
-      parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma)
+      parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma),
     );
 
   doc.render({
@@ -60,7 +60,7 @@ export default async function handler(_req, res) {
       : `NIEZGODNOŚĆ: ${formatter.format(
           parseFloat(stanKont[0]?.suma) +
             parseFloat(stanKont[1]?.suma) -
-            parseFloat(daneDoSprawozdania[0].bilans)
+            parseFloat(daneDoSprawozdania[0].bilans),
         )}`,
     wydOpalWoda: wydatkiOpalWodaSmieci,
     wydFun: wydatkiFun,
@@ -78,7 +78,7 @@ export default async function handler(_req, res) {
   // res.contentType('application/msword');
   res.setHeader(
     "Content-Disposition",
-    `attachment; filename=Sprawozdanie finansowe ${endDate.split("T")[0]}.docx`
+    `attachment; filename=Sprawozdanie finansowe ${endDate.split("T")[0]}.docx`,
   );
   res.send(buf);
 }

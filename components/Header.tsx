@@ -1,16 +1,12 @@
-import React from "react";
-import { classNames, fetcher, formatter } from "../utils";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import useSWR from "swr";
+import { classNames, fetcher, formatter } from "../utils";
 
-const Header: React.FC = () => {
-  const { data: accountsBalance, error: accountBalanceError } = useSWR(
-    "/api/accountBalance",
-    fetcher
-  );
+function Header() {
+  const { data: accountsBalance } = useSWR("/api/accountBalance", fetcher);
 
   const router = useRouter();
 
@@ -26,13 +22,13 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-10 print:hidden">
+    <Disclosure as="nav" className="sticky top-0 z-10 bg-gray-800 print:hidden">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-8xl px-2 sm:px-6 lg:px-8">
+          <div className="max-w-8xl mx-auto px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button*/}
+                {/* Mobile menu button */}
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -54,7 +50,7 @@ const Header: React.FC = () => {
                           isActive(item.href)
                             ? "bg-gray-900 text-white"
                             : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                          "rounded-md px-3 py-2 text-sm font-medium flex self-center text-center"
+                          "flex self-center rounded-md px-3 py-2 text-center text-sm font-medium",
                         )}
                       >
                         {item.name}
@@ -66,24 +62,24 @@ const Header: React.FC = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {accountsBalance && (
                   <div id="header">
-                    <span className="text-sm text-gray-300 font-medium">
+                    <span className="text-sm font-medium text-gray-300">
                       K:{" "}
                       <strong>
                         {formatter.format(accountsBalance[0].suma)}
                       </strong>
                     </span>
-                    <span className="text-sm text-gray-300 font-medium ml-6">
+                    <span className="ml-6 text-sm font-medium text-gray-300">
                       B:{" "}
                       <strong>
                         {formatter.format(accountsBalance[1].suma)}
                       </strong>
                     </span>
-                    <span className="text-sm text-gray-300 font-medium ml-6">
+                    <span className="ml-6 text-sm font-medium text-gray-300">
                       R:{" "}
                       <strong>
                         {formatter.format(
                           parseFloat(accountsBalance[0].suma) +
-                            parseFloat(accountsBalance[1].suma)
+                            parseFloat(accountsBalance[1].suma),
                         )}
                       </strong>
                     </span>
@@ -94,7 +90,7 @@ const Header: React.FC = () => {
           </div>
 
           <Disclosure.Panel className="sm:hidden">
-            <div className="space-y-1 px-2 pt-2 pb-3">
+            <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -107,7 +103,7 @@ const Header: React.FC = () => {
                       isActive(item.href)
                         ? "bg-gray-900 text-white"
                         : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                      "block rounded-md px-3 py-2 text-base font-medium"
+                      "block rounded-md px-3 py-2 text-base font-medium",
                     )}
                   >
                     {item.name}
@@ -120,6 +116,6 @@ const Header: React.FC = () => {
       )}
     </Disclosure>
   );
-};
+}
 
 export default Header;

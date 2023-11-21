@@ -5,11 +5,13 @@ type Props = {
   children: ReactNode;
 };
 
-const Layout: React.FC<Props> = (props) => (
-  <div id="app">
-    <Header />
-    <div className="layout">{props.children}</div>
-  </div>
-);
+function Layout({ children }: Props) {
+  return (
+    <div id="app">
+      <Header />
+      <div className="layout">{children}</div>
+    </div>
+  );
+}
 
 export default Layout;
