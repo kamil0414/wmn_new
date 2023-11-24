@@ -37,3 +37,5 @@ export const getStartDateFromEnv = () => {
       : new Date().getFullYear();
   return new Date(Date.UTC(year, 0, 1));
 };
+
+export const endDate = getEndDateFromEnv().toISOString().split("T")[0];

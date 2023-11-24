@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "next",
+    "dev": "next --turbo",
     "build": "next build",
     "lint": "next lint",
     "start": "next start",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^5.6.0",
     "@tailwindcss/forms": "^0.5.3",
     "docxtemplater": "^3.34.3",
     "next": "14.0.3",
@@ -44,7 +44,7 @@
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
-    "prisma": "^4.11.0",
+    "prisma": "^5.6.0",
     "tailwindcss": "^3.2.7",
     "typescript": "4.9.5"
   }

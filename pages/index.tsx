@@ -1,14 +1,12 @@
-import useSWR from "swr";
 import Layout from "../components/Layout";
-import { classNames, fetcher, formatter } from "../utils";
+import prisma from "../lib/prisma";
+import { classNames, endDate, formatter } from "../utils";
 
-function Index() {
-  const {
-    data: basicData,
-    error: basicDataError,
-    isLoading: isLoadingBasicData,
-  } = useSWR("/api/basicData", fetcher);
+type IndexProps = {
+  basicData: any;
+};
 
+function Index({ basicData }: IndexProps) {
   return (
     <Layout>
       <div className="container mx-auto px-4">
@@ -63,8 +61,6 @@ function Index() {
                         className="border-b border-slate-200 p-4 text-center text-slate-500"
                       >
                         {basicData?.length === 0 ? "brak operacji" : ""}
-                        {isLoadingBasicData ? "ładowanie..." : ""}
-                        {basicDataError || ""}
                       </td>
                     </tr>
                   )}
@@ -78,5 +74,12 @@ function Index() {
     </Layout>
   );
 }
+
+export const getServerSideProps = async () => {
+  const basicData = await prisma.$queryRawUnsafe(
+    `select * from PodajDanePomonicze(${`'${endDate}'`})`,
+  );
+  return { props: { basicData: JSON.parse(JSON.stringify(basicData)) } };
+};
 
 export default Index;

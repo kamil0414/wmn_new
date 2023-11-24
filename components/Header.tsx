@@ -65,21 +65,21 @@ function Header() {
                     <span className="text-sm font-medium text-gray-300">
                       K:{" "}
                       <strong>
-                        {formatter.format(accountsBalance[0].suma)}
+                        {formatter.format(accountsBalance[0]?.suma)}
                       </strong>
                     </span>
                     <span className="ml-6 text-sm font-medium text-gray-300">
                       B:{" "}
                       <strong>
-                        {formatter.format(accountsBalance[1].suma)}
+                        {formatter.format(accountsBalance[1]?.suma)}
                       </strong>
                     </span>
                     <span className="ml-6 text-sm font-medium text-gray-300">
                       R:{" "}
                       <strong>
                         {formatter.format(
-                          parseFloat(accountsBalance[0].suma) +
-                            parseFloat(accountsBalance[1].suma),
+                          parseFloat(accountsBalance[0]?.suma) +
+                            parseFloat(accountsBalance[1]?.suma),
                         )}
                       </strong>
                     </span>
