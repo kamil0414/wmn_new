@@ -96,7 +96,7 @@ function AddExpense() {
         rodzaj_i_numer_dowodu_ksiegowego: `${
           type === "Wyciąg" ? "Wyciąg nr" : type
         } ${number}`,
-        kwota: -1 * sum,
+        kwota: -1 * (sum ?? 0),
         czy_bank: !cashChecked,
         id_subkonta: account,
         ilosc: count,
