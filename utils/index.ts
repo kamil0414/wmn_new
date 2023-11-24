@@ -20,7 +20,11 @@ export const usePrevious = (value) => {
 
 export const getEndDateFromEnv = () => {
   const envYear = process.env.NEXT_PUBLIC_YEAR;
-  if (envYear && envYear !== new Date().getFullYear().toString()) {
+  if (
+    envYear &&
+    envYear !== "" &&
+    envYear !== new Date().getFullYear().toString()
+  ) {
     return new Date(Date.UTC(parseInt(envYear, 10), 11, 31));
   }
   return new Date();

@@ -1,12 +1,11 @@
+import { InferGetServerSidePropsType } from "next";
 import Layout from "../components/Layout";
 import prisma from "../lib/prisma";
 import { classNames, endDate, formatter } from "../utils";
 
-type IndexProps = {
-  basicData: any;
-};
-
-function Index({ basicData }: IndexProps) {
+function Index({
+  basicData,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout>
       <div className="container mx-auto px-4">

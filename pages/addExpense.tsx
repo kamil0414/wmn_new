@@ -1,36 +1,45 @@
+import { InferGetServerSidePropsType } from "next";
 import { useEffect, useState } from "react";
-import useSWR, { useSWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 import Layout from "../components/Layout";
-import { getEndDateFromEnv, fetcher, getStartDateFromEnv } from "../utils";
+import prisma from "../lib/prisma";
+import { getEndDateFromEnv, getStartDateFromEnv } from "../utils";
 
-function AddExpense() {
+function AddExpense({
+  expensesCategory,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { mutate } = useSWRConfig();
-  const { data: expensesCategory } = useSWR("/api/expensesCategory", fetcher);
 
   const [category, setCategory] = useState(0);
   const [description, setDescription] = useState(0);
   const [company, setCompany] = useState(0);
 
   const [type, setType] = useState("");
-  const [account, setAccount] = useState("");
+  const [account, setAccount] = useState(0);
   const [countRequired, setCountRequired] = useState(true);
   const [cashChecked, setCashChecked] = useState(true);
   const [number, setNumber] = useState("");
   const [date, setDate] = useState("");
   const [count, setCount] = useState(0);
-  const [unit, setUnit] = useState("");
+  const [unit, setUnit] = useState<string | null>("");
   const [sum, setSum] = useState(0);
   const [comment, setComment] = useState("");
 
-  const categoryObj = expensesCategory?.find((e) => e.id === category) || {};
-  const { opisy: descriptions, id_subkonta } = categoryObj;
+  const { opisy: descriptions, id_subkonta } = expensesCategory?.find(
+    (expense) => expense.id === category,
+  ) || { opisy: [], id_subkonta: 0 };
 
   const {
     ilosc_wymagana,
     firmy: companies,
     typy_dowodow_ksiegowych,
     jednostka_miary,
-  } = descriptions?.find((e) => e.id === description) || {};
+  } = descriptions?.find((e) => e.id === description) || {
+    ilosc_wymagana: false,
+    firmy: [],
+    typy_dowodow_ksiegowych: [],
+    jednostka_miary: null,
+  };
 
   useEffect(() => {
     if (descriptions?.length === 1) {
@@ -49,7 +58,7 @@ function AddExpense() {
     }
 
     setAccount(id_subkonta);
-    setUnit("");
+    setUnit(null);
 
     setCompany(0);
     setCountRequired(true);
@@ -132,7 +141,6 @@ function AddExpense() {
 
           {category !== 0 && (
             <div>
-              {" "}
               {descriptions?.length > 1 && (
                 <select
                   value={description}
@@ -313,5 +321,70 @@ function AddExpense() {
     </Layout>
   );
 }
+
+export const getServerSideProps = async () => {
+  const expensesCategory = await prisma.kategorie_wydatkow.findMany({
+    select: {
+      id: true,
+      nazwa: true,
+      id_subkonta: true,
+      opisy: {
+        select: {
+          id: true,
+          opis: true,
+          ilosc_wymagana: true,
+          jednostka_miary: true,
+          firmy: {
+            select: {
+              id: true,
+              nazwa: true,
+            },
+            orderBy: [
+              {
+                nazwa: "asc",
+              },
+            ],
+          },
+          typy_dowodow_ksiegowych: {
+            select: {
+              id: true,
+              opis: true,
+            },
+            orderBy: [
+              {
+                opis: "asc",
+              },
+            ],
+          },
+        },
+        orderBy: [
+          {
+            opis: "asc",
+          },
+        ],
+      },
+    },
+    where: {
+      AND: [
+        {
+          nazwa: {
+            not: "Bilans otwarcia",
+          },
+        },
+        {
+          czy_wydatek: true,
+        },
+      ],
+    },
+    orderBy: [
+      {
+        nazwa: "asc",
+      },
+    ],
+  });
+  return {
+    props: { expensesCategory: JSON.parse(JSON.stringify(expensesCategory)) },
+  };
+};
 
 export default AddExpense;

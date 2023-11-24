@@ -1,14 +1,16 @@
-import useSWR from "swr";
+import { InferGetServerSidePropsType } from "next";
 import Layout from "../components/Layout";
-import { classNames, fetcher, formatter } from "../utils";
+import prisma from "../lib/prisma";
+import {
+  classNames,
+  formatter,
+  getEndDateFromEnv,
+  getStartDateFromEnv,
+} from "../utils";
 
-function Expenses() {
-  const {
-    data: expensesHistory,
-    error: expensesHistoryError,
-    isLoading: expensesHistoryIsLoading,
-  } = useSWR("/api/operations?onlyExpenses=true", fetcher);
-
+function Expenses({
+  expensesHistory,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout>
       <div className="container mx-auto px-4">
@@ -51,7 +53,7 @@ function Expenses() {
                       )}
                     >
                       <td className="border-b border-slate-200 py-2 pl-4 pr-2 text-slate-500 ">
-                        {row.data.split("T")[0]}
+                        {row.data.toString().split("T")[0]}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
                         {row.firma.nazwa}
@@ -74,11 +76,11 @@ function Expenses() {
                                 ? row.opis_pow?.kategoria_wydatku?.nazwa
                                 : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`
                             }`
-                          : row.opis}{" "}
-                        {row.ilosc > 0 ? `(${row.ilosc})` : ""}
+                          : row.opis}
+                        {parseInt(row.ilosc, 10) > 0 ? ` (${row.ilosc})` : ""}
                       </td>
                       <td className="border-b border-slate-200 p-2 py-2 text-right text-slate-500">
-                        {formatter.format(row.kwota)}
+                        {formatter.format(parseFloat(row.kwota))}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500 ">
                         {row.komentarz}
@@ -93,8 +95,6 @@ function Expenses() {
                         className="border-b border-slate-200 p-4 text-center text-slate-500"
                       >
                         {expensesHistory?.length === 0 ? "brak operacji" : ""}
-                        {expensesHistoryIsLoading ? "ładowanie..." : ""}
-                        {expensesHistoryError || ""}
                       </td>
                     </tr>
                   )}
@@ -108,5 +108,69 @@ function Expenses() {
     </Layout>
   );
 }
+
+export const getServerSideProps = async () => {
+  const expensesHistory = await prisma.operacje.findMany({
+    select: {
+      id: true,
+      data: true,
+      czy_bank: true,
+      ilosc: true,
+      opis: true,
+      kwota: true,
+      rodzaj_i_numer_dowodu_ksiegowego: true,
+      komentarz: true,
+      firma: {
+        select: {
+          nazwa: true,
+        },
+      },
+      opis_pow: {
+        select: {
+          opis: true,
+          kategoria_wydatku: {
+            select: {
+              nazwa: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      OR: [
+        {
+          kwota: {
+            lte: 0,
+          },
+        },
+        {
+          rodzaj_i_numer_dowodu_ksiegowego: {
+            equals: "Bilans otwarcia",
+          },
+        },
+      ],
+      data: {
+        gte: getStartDateFromEnv(),
+        lte: getEndDateFromEnv(),
+      },
+    },
+    orderBy: [
+      {
+        data: "asc",
+      },
+      {
+        rodzaj_i_numer_dowodu_ksiegowego: "asc",
+      },
+      {
+        firma: {
+          nazwa: "asc",
+        },
+      },
+    ],
+  });
+  return {
+    props: { expensesHistory: JSON.parse(JSON.stringify(expensesHistory)) },
+  };
+};
 
 export default Expenses;
