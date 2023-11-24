@@ -17,10 +17,10 @@ export default async function handler(_req, res) {
   });
 
   const endDate = getEndDateFromEnv().toISOString().split("T")[0];
-  const daneDoSprawozdania = await prisma.$queryRawUnsafe(
+  const daneDoSprawozdania: any = await prisma.$queryRawUnsafe(
     `select * from podajDaneDoSprawozdania(${`'${endDate}'`})`,
   );
-  const stanKont = await prisma.$queryRawUnsafe(
+  const stanKont: any = await prisma.$queryRawUnsafe(
     `select * from podajStanKont(${`'${endDate}'`})`,
   );
   const wydatkiOpalWodaSmieci = await prisma.$queryRawUnsafe(

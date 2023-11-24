@@ -17,9 +17,9 @@ function AddExpense() {
   const [cashChecked, setCashChecked] = useState(true);
   const [number, setNumber] = useState("");
   const [date, setDate] = useState("");
-  const [count, setCount] = useState(null);
+  const [count, setCount] = useState(0);
   const [unit, setUnit] = useState("");
-  const [sum, setSum] = useState(null);
+  const [sum, setSum] = useState(0);
   const [comment, setComment] = useState("");
 
   const categoryObj = expensesCategory?.find((e) => e.id === category) || {};
@@ -54,8 +54,8 @@ function AddExpense() {
     setCompany(0);
     setCountRequired(true);
     setDate("");
-    setCount(null);
-    setSum(null);
+    setCount(0);
+    setSum(0);
     setNumber("");
     setComment("");
   }, [category, descriptions, id_subkonta]);
@@ -76,8 +76,8 @@ function AddExpense() {
     }
 
     setDate("");
-    setCount(null);
-    setSum(null);
+    setCount(0);
+    setSum(0);
     setNumber("");
     setComment("");
   }, [companies, ilosc_wymagana, typy_dowodow_ksiegowych, jednostka_miary]);
@@ -96,7 +96,7 @@ function AddExpense() {
         rodzaj_i_numer_dowodu_ksiegowego: `${
           type === "Wyciąg" ? "Wyciąg nr" : type
         } ${number}`,
-        kwota: -1 * (sum ?? 0),
+        kwota: -1 * sum,
         czy_bank: !cashChecked,
         id_subkonta: account,
         ilosc: count,

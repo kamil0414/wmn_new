@@ -15,6 +15,7 @@ export default async function handler(
       await prisma.$queryRaw`select * from PodajTypyDowodowKsiegowych(${
         (!onlyIncomes).toString() === "false"
       });`;
+    // @ts-ignore
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ message: error });

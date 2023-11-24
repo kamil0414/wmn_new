@@ -12,6 +12,9 @@ export default async function handler(
 
   try {
     const { flat_number }: Partial<QueryProps> = req.query;
+    if (!flat_number) {
+      return res.status(200).json([]);
+    }
     const result = await prisma.kartoteki.findMany({
       select: {
         id: true,
