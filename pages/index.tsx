@@ -1,11 +1,11 @@
 import { InferGetServerSidePropsType } from "next";
 import Layout from "../components/Layout";
 import prisma from "../lib/prisma";
-import { classNames, endDate, formatter } from "../utils";
+import { classNames, formatter } from "../utils";
 
 function Index({
   basicData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getStaticProps>) {
   return (
     <Layout>
       <div className="container mx-auto px-4">
@@ -39,8 +39,8 @@ function Index({
                         {row.numer_mieszkania}
                       </td>
                       <td className="border-b border-slate-200 p-2 text-slate-500">
-                        {row.ostatnia_wplata
-                          ? new Date(row.ostatnia_wplata).toLocaleDateString()
+                        {row.data
+                          ? new Date(row.data).toLocaleDateString()
                           : "-"}
                       </td>
                       <td
@@ -74,10 +74,8 @@ function Index({
   );
 }
 
-export const getServerSideProps = async () => {
-  const basicData = await prisma.$queryRawUnsafe(
-    `select * from PodajDanePomonicze(${`'${endDate}'`})`,
-  );
+export const getStaticProps = async () => {
+  const basicData = await prisma.salda.findMany();
   return { props: { basicData: JSON.parse(JSON.stringify(basicData)) } };
 };
 

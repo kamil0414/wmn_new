@@ -135,3 +135,9 @@ view kartoteki {
   wplata           Decimal  @db.Money
   saldo            Decimal  @db.Money
 }
+
+view salda {
+  numer_mieszkania Int       @id @db.SmallInt
+  data             DateTime? @db.Date
+  saldo            Decimal   @db.Money
+}
