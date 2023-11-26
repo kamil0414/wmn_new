@@ -45,13 +45,11 @@ function Index({
                       </td>
                       <td
                         className={classNames(
-                          row.saldo.toNumber() < 0
-                            ? "text-red-500"
-                            : "text-slate-500",
+                          row.saldo < 0 ? "text-red-500" : "text-slate-500",
                           "border-b border-slate-200 py-2 pl-2 pr-4",
                         )}
                       >
-                        {formatter.format(row.saldo.toNumber())}
+                        {formatter.format(row.saldo)}
                       </td>
                     </tr>
                   ))}
