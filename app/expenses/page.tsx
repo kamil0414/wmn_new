@@ -107,7 +107,7 @@ export default async function Expenses() {
                     )}
                   >
                     <td className="border-b border-slate-200 py-2 pl-4 pr-2 text-right text-slate-500">
-                      {row.data.toLocaleDateString()}
+                      {row.data.toLocaleDateString("pl-PL")}
                     </td>
                     <td className="border-b border-slate-200 p-2 text-slate-500 ">
                       {row.firma.nazwa}

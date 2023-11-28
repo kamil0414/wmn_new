@@ -36,7 +36,9 @@ export default async function Home() {
                       {row.numer_mieszkania}
                     </td>
                     <td className="border-b border-slate-200 p-2 text-slate-500">
-                      {row.data ? new Date(row.data).toLocaleDateString() : "-"}
+                      {row.data
+                        ? new Date(row.data).toLocaleDateString("pl-PL")
+                        : "-"}
                     </td>
                     <td
                       className={classNames(
