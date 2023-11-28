@@ -353,7 +353,7 @@ function AddIncomeForm({
 
               {operationSum > 0 && balance + operationSum < 0 && (
                 <span className="ml-2 block text-sm font-medium leading-6 text-gray-900">
-                  pozostanie do zapłaty:
+                  pozostanie do zapłaty:{" "}
                   <strong>
                     {formatter.format(-1 * (balance + operationSum))}
                   </strong>
@@ -386,7 +386,7 @@ function AddIncomeForm({
 
       <hr className="mt-4 print:hidden" />
 
-      <div className="mb-2 mt-4 text-sm font-medium text-gray-700">
+      <div className="mb-2 mt-4 text-left text-sm font-medium text-gray-700">
         Kartoteka
       </div>
 
