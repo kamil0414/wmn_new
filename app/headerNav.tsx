@@ -1,17 +1,22 @@
+"use client";
+
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import useSWR from "swr";
-import { classNames, fetcher, formatter } from "../utils";
+import { classNames, formatter } from "../utils";
 
-function Header() {
-  const { data: accountsBalance } = useSWR("/api/accountBalance", fetcher);
+function HeaderNav({
+  accountState,
+  cashState,
+}: {
+  accountState: number;
+  cashState: number;
+}) {
+  const pathname = usePathname();
 
-  const router = useRouter();
-
-  const isActive: (pathname: string) => boolean = (pathname) =>
-    router.pathname === pathname;
+  const isActive: (pathname: string) => boolean = (itemPathname) =>
+    pathname === itemPathname;
 
   const navigation = [
     { name: "Dashboard", href: "/" },
@@ -60,31 +65,20 @@ function Header() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {accountsBalance && (
-                  <div id="header">
-                    <span className="text-sm font-medium text-gray-300">
-                      K:{" "}
-                      <strong>
-                        {formatter.format(accountsBalance[0]?.suma)}
-                      </strong>
-                    </span>
-                    <span className="ml-6 text-sm font-medium text-gray-300">
-                      B:{" "}
-                      <strong>
-                        {formatter.format(accountsBalance[1]?.suma)}
-                      </strong>
-                    </span>
-                    <span className="ml-6 text-sm font-medium text-gray-300">
-                      R:{" "}
-                      <strong>
-                        {formatter.format(
-                          parseFloat(accountsBalance[0]?.suma) +
-                            parseFloat(accountsBalance[1]?.suma),
-                        )}
-                      </strong>
-                    </span>
-                  </div>
-                )}
+                <div id="header">
+                  <span className="text-sm font-medium text-gray-300">
+                    K: <strong>{formatter.format(cashState)}</strong>
+                  </span>
+                  <span className="ml-6 text-sm font-medium text-gray-300">
+                    B: <strong>{formatter.format(accountState)}</strong>
+                  </span>
+                  <span className="ml-6 text-sm font-medium text-gray-300">
+                    R:{" "}
+                    <strong>
+                      {formatter.format(accountState + cashState)}
+                    </strong>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -118,4 +112,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default HeaderNav;

@@ -1,11 +1,13 @@
-import { readFileSync } from "fs";
-import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
+import { readFileSync } from "fs";
 import path from "path";
-import prisma from "../../lib/prisma";
-import { getEndDateFromEnv, formatter } from "../../utils";
+import PizZip from "pizzip";
+import prisma from "../../../../lib/prisma";
+import { getEndDateFromEnv, formatter } from "../../../../utils";
 
-export default async function handler(_req, res) {
+/* eslint-disable import/prefer-default-export */
+
+export async function GET() {
   const file = path.join(process.cwd(), "templates", "financialReport.docx");
   const content = readFileSync(file, "binary");
 
@@ -75,10 +77,11 @@ export default async function handler(_req, res) {
     compression: "DEFLATE",
   });
 
-  // res.contentType('application/msword');
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename=Sprawozdanie finansowe ${endDate.split("T")[0]}.docx`,
-  );
-  res.send(buf);
+  return new Response(buf, {
+    headers: {
+      "content-disposition": `attachment; filename=Sprawozdanie finansowe ${
+        endDate.split("T")[0]
+      }.docx`,
+    },
+  });
 }

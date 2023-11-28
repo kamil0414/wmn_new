@@ -1,13 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSWRConfig } from "swr";
+import { useEffect, useRef, useState } from "react";
 import { getStartDateFromEnv, getEndDateFromEnv } from "../../utils";
+import saveExpense from "./actions";
 
-// @ts-ignore
-function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
-  const { mutate } = useSWRConfig();
+interface expensesCategory {
+  id_subkonta: number;
+  id: number;
+  opisy: {
+    opis: string;
+    id: number;
+    ilosc_wymagana: boolean;
+    firmy: {
+      id: number;
+      nazwa: string;
+    }[];
+    typy_dowodow_ksiegowych: {
+      opis: string;
+      id: number;
+    }[];
+    jednostka_miary: string | null;
+  }[];
+  nazwa: string;
+}
 
+function AddExpenseForm({
+  expensesCategory,
+}: {
+  expensesCategory: expensesCategory[];
+}) {
   const [category, setCategory] = useState(0);
   const [description, setDescription] = useState(0);
   const [company, setCompany] = useState(0);
@@ -22,6 +43,7 @@ function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
   const [unit, setUnit] = useState<string | null>("");
   const [sum, setSum] = useState(0);
   const [comment, setComment] = useState("");
+  const sumInput = useRef<HTMLInputElement>(null);
 
   const { opisy: descriptions, id_subkonta } = expensesCategory?.find(
     (expense) => expense.id === category,
@@ -63,6 +85,9 @@ function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
     setDate("");
     setCount(0);
     setSum(0);
+    if (sumInput.current) {
+      sumInput.current.value = "0";
+    }
     setNumber("");
     setComment("");
   }, [category, descriptions, id_subkonta]);
@@ -85,39 +110,34 @@ function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
     setDate("");
     setCount(0);
     setSum(0);
+    if (sumInput.current) {
+      sumInput.current.value = "0";
+    }
     setNumber("");
     setComment("");
   }, [companies, ilosc_wymagana, typy_dowodow_ksiegowych, jednostka_miary]);
 
-  const saveOperation = (e) => {
-    e.preventDefault();
-    fetch("/api/operations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id_firmy: company,
-        data: date,
-        id_opisu: description,
-        rodzaj_i_numer_dowodu_ksiegowego: `${
-          type === "Wyciąg" ? "Wyciąg nr" : type
-        } ${number}`,
-        kwota: -1 * sum,
-        czy_bank: !cashChecked,
-        id_subkonta: account,
-        ilosc: count,
-        komentarz: comment,
-      }),
+  const saveOperation = () => {
+    saveExpense({
+      id_firmy: company,
+      data: new Date(date),
+      id_opisu: description,
+      rodzaj_i_numer_dowodu_ksiegowego: `${
+        type === "Wyciąg" ? "Wyciąg nr" : type
+      } ${number}`,
+      kwota: -1 * sum,
+      czy_bank: !cashChecked,
+      id_subkonta: account,
+      ilosc: count,
+      komentarz: comment,
     }).then(() => {
-      mutate("/api/accountBalance");
       setCategory(0);
     });
   };
 
   return (
     <div className="container mx-auto px-4">
-      <form>
+      <form action={saveOperation}>
         <select
           value={category}
           onChange={(e) => setCategory(parseInt(e.target.value, 10))}
@@ -230,6 +250,7 @@ function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
 
               <div className="flex">
                 <input
+                  ref={sumInput}
                   onChange={(e) =>
                     setSum(parseFloat(e.target.value.replace(",", ".")))
                   }
@@ -286,9 +307,8 @@ function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
             </div>
           </div>
         )}
-
         <button
-          type="button"
+          type="submit"
           className="mt-4 inline-flex justify-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-gray-300"
           disabled={
             !(
@@ -303,11 +323,10 @@ function AddExpenseForm({ expensesCategory }: { expensesCategory: any[] }) {
               number !== "" &&
               account != null &&
               sum != null &&
-              sum >= 0 &&
+              sum > 0 &&
               (!countRequired || (countRequired && count != null && count > 0))
             )
           }
-          onClick={(e) => saveOperation(e)}
           id="saveButton"
         >
           Zapisz wydatek

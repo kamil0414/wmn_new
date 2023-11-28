@@ -141,3 +141,7 @@ view salda {
   data             DateTime? @db.Date
   saldo            Decimal   @db.Money
 }
+
+view numeryKP {
+  nr Int @id
+}
