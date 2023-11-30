@@ -406,7 +406,7 @@ function AddIncomeForm({
                   .filter((el) => el.numer_mieszkania === flat)
                   .map((row) => (
                     <>
-                      {!row.isDuplicated || true ? (
+                      {!row.isDuplicated ? (
                         <tr key={`head_${row.id}`}>
                           <td
                             colSpan={3}

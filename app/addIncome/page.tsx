@@ -30,9 +30,7 @@ async function AddIncome() {
         ),
       },
     },
-    orderBy: {
-      data: "desc",
-    },
+    orderBy: [{ numer_mieszkania: "asc" }, { data: "desc" }],
   });
 
   const flatHistory = flatHistoryRaw.map((el, index, array) => {
