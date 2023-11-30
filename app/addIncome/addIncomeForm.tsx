@@ -404,6 +404,14 @@ function AddIncomeForm({
               <tbody className="bg-white">
                 {flatHistory
                   .filter((el) => el.numer_mieszkania === flat)
+                  .map((el, index, array) => {
+                    const isDuplicated = array
+                      .slice(0, index)
+                      .some(
+                        (prevEl) => prevEl.data.getTime() === el.data.getTime(),
+                      );
+                    return { ...el, isDuplicated };
+                  })
                   .map((row) => (
                     <>
                       {!row.isDuplicated ? (

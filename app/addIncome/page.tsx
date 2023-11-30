@@ -9,7 +9,7 @@ async function AddIncome() {
 
   const blankNumbers = await prisma.numeryKP.findMany();
 
-  const flatHistoryRaw = await prisma.kartoteki.findMany({
+  const flatHistory = await prisma.kartoteki.findMany({
     select: {
       id: true,
       data: true,
@@ -30,14 +30,7 @@ async function AddIncome() {
         ),
       },
     },
-    orderBy: [{ numer_mieszkania: "asc" }, { data: "desc" }],
-  });
-
-  const flatHistory = flatHistoryRaw.map((el, index, array) => {
-    const isDuplicated = array
-      .slice(0, index)
-      .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
-    return { ...el, isDuplicated };
+    orderBy: [{ data: "desc" }],
   });
 
   return (
