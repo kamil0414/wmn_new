@@ -38,7 +38,7 @@ const saveExpense = async ({
         komentarz,
       },
     });
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return { message: `Added ${expense}` };
   } catch (e) {
     return { message: `Error ${e}` };

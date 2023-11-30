@@ -29,7 +29,7 @@ export const saveWater = async ({
           data.toISOString().split("T")[0]
         }'`}, ${numer_mieszkania})`,
       );
-      revalidatePath("/");
+      revalidatePath("/", "layout");
       return { message: `Added ${id}` };
     }
     return { message: `Error occured` };
@@ -67,7 +67,7 @@ export const saveIncome = async ({
         id_subkonta,
       },
     });
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return { message: `Added ${income}` };
   } catch (e) {
     return { message: `Error ${e}` };
