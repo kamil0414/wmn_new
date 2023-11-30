@@ -116,7 +116,7 @@ export default async function Expenses() {
                       ""
                     )}
                     <tr key={row.id}>
-                      <td className="border-b border-slate-200 p-2 sm:px-6 sm:py-2 ">
+                      <td className="border-b border-slate-200 p-2 pl-4  sm:px-6 sm:py-2 ">
                         <div className="flex grow flex-col items-start gap-x-3 sm:flex-row">
                           <span className="mb-1 font-medium sm:mb-0">
                             {formatter.format(-1 * row.kwota.toNumber())}
