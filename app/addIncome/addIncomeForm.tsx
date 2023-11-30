@@ -7,7 +7,7 @@ import {
   classNames,
   formatter,
 } from "../../utils";
-import { saveIncome, saveWater } from "./actions";
+import { deleteIncome, saveIncome, saveWater } from "./actions";
 
 interface FlatHistoryInterface {
   id: number;
@@ -17,6 +17,7 @@ interface FlatHistoryInterface {
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
+  isDuplicated: boolean;
 }
 
 function AddIncomeForm({
@@ -158,6 +159,12 @@ function AddIncomeForm({
       setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
     }
   }, [basicData, flat, blankNumbers]);
+
+  const deleteConfirm = (id: number) => {
+    if (confirm("Usunąć wpłatę?")) {
+      deleteIncome(id);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4">
@@ -393,83 +400,99 @@ function AddIncomeForm({
       <div className="not-prose relative overflow-hidden bg-slate-50">
         <div className="relative overflow-auto">
           <div className="my-8 shadow-sm">
-            <table className="w-full table-auto border-collapse text-sm print:text-sm">
-              <thead>
-                <tr>
-                  <th className="border-b pb-2 pl-4 pr-2 pt-0 text-left font-medium text-slate-400">
-                    Data
-                  </th>
-                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
-                    Opis
-                  </th>
-                  <th className="border-b p-2 pt-0 text-right font-medium text-slate-400">
-                    Należność
-                  </th>
-                  <th className="border-b p-2 pt-0 text-right font-medium text-slate-400">
-                    Wpłata
-                  </th>
-                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-right font-medium text-slate-400">
-                    Saldo
-                  </th>
-                </tr>
-              </thead>
+            <table className="w-full table-fixed border-collapse text-sm print:text-sm">
               <tbody className="bg-white">
                 {flatHistory
                   .filter((el) => el.numer_mieszkania === flat)
                   .map((row) => (
-                    <tr
-                      key={row.id}
-                      className={classNames(
-                        row.wplata !== 0 && "bg-sky-100",
-                        "hover:bg-gray-200 focus:bg-gray-200",
+                    <>
+                      {!row.isDuplicated || true ? (
+                        <tr key={`head_${row.id}`}>
+                          <td
+                            colSpan={3}
+                            className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 font-semibold"
+                          >
+                            {row.data.toLocaleDateString("pl-PL", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </td>
+                        </tr>
+                      ) : (
+                        ""
                       )}
-                    >
-                      <td className="border-b border-slate-200 py-2 pl-4 pr-2 text-slate-500 print:whitespace-nowrap">
-                        {row.data.toLocaleDateString("pl-PL")}
-                      </td>
-                      <td className="border-b border-slate-200 p-2 text-slate-500">
-                        {row.opis}
-                      </td>
-                      <td className="border-b border-slate-200 p-2 text-right text-slate-500">
-                        {formatter.format(row.naleznosc)}
-                      </td>
-                      <td className="border-b border-slate-200 p-2 text-right text-slate-500">
-                        {formatter.format(row.wplata)}
-                      </td>
-                      <td
+                      <tr
+                        key={row.id}
                         className={classNames(
-                          row?.saldo < 0 ? "text-red-500" : "text-slate-500",
-                          "border-b border-slate-200 py-2 pl-2 pr-4 text-right",
+                          row.wplata !== 0 && "bg-sky-50",
+                          " hover:bg-gray-100 focus:bg-gray-100",
                         )}
                       >
-                        {formatter.format(row?.saldo)}
-                      </td>
-                    </tr>
+                        <td
+                          className={classNames(
+                            row.wplata !== 0 && "text-sky-800",
+                            "min-h-[57px] border-b border-slate-200 p-2 pl-6 text-left font-medium",
+                          )}
+                        >
+                          {formatter.format(row.wplata - row.naleznosc)}
+                        </td>
+                        <td className="border-b border-slate-200 p-2 text-xs print:whitespace-nowrap sm:pl-6">
+                          {row.opis}
+                        </td>
+
+                        <td className="border-b border-slate-200 p-2">
+                          <div className="align-center flex flex-col items-end">
+                            {row.wplata > 0 ? (
+                              <form
+                                className="mb-1 text-right"
+                                action={() => deleteConfirm(row.id)}
+                              >
+                                <button
+                                  type="submit"
+                                  className="font-medium text-sky-600"
+                                >
+                                  Usuń
+                                </button>
+                              </form>
+                            ) : (
+                              ""
+                            )}
+                            <div
+                              className={classNames(
+                                row?.saldo < 0 ? "text-red-500" : "",
+                                "text-right text-xs ",
+                              )}
+                            >
+                              S:&nbsp;{formatter.format(row?.saldo)}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </>
                   ))}
-                {flatHistory != null && flatHistory?.length !== 0 && (
+                {/* {flatHistory != null && flatHistory?.length !== 0 && (
                   <tr>
-                    <td colSpan={2} className="p-4 text-right text-slate-500">
-                      SUMA:
-                    </td>
-                    <td className="p-2 text-right text-slate-500">
-                      {formatter.format(naleznosciRazem)}
-                    </td>
-                    <td className="p-2 py-2 text-right text-slate-500">
-                      {formatter.format(wplatyRazem)}
-                    </td>
-                    <td className="py-2 pl-2 pr-4 text-right text-slate-500">
+                    <td className="p-4 text-right ">
+                      {" "}
                       {formatter.format(wplatyRazem - naleznosciRazem) ===
                       formatter.format(saldo)
-                        ? ""
+                        ? "SUMA"
                         : "BŁĄD SUM"}
                     </td>
+                    <td className="p-2 text-right ">
+                      {formatter.format(naleznosciRazem)}
+                    </td>
+                    <td className="p-2 py-2 text-right text-sm">
+                      {formatter.format(wplatyRazem)}
+                    </td>
                   </tr>
-                )}
+                )} */}
                 {(flatHistory == null || flatHistory?.length === 0) && (
                   <tr>
                     <td
                       colSpan={5}
-                      className="border-b border-slate-200 p-4 text-center text-slate-500"
+                      className="border-b border-slate-200 p-4 text-center "
                     >
                       {flatHistory?.length === 0 ? "brak operacji" : ""}
                     </td>

@@ -115,7 +115,10 @@ export default async function Expenses() {
                     ) : (
                       ""
                     )}
-                    <tr key={row.id}>
+                    <tr
+                      key={row.id}
+                      className="hover:bg-gray-100 focus:bg-gray-100"
+                    >
                       <td className="border-b border-slate-200 p-2 pl-4  sm:px-6 sm:py-2 ">
                         <div className="flex grow flex-col items-start gap-x-3 sm:flex-row">
                           <span className="mb-1 font-medium sm:mb-0">
@@ -162,7 +165,7 @@ export default async function Expenses() {
 
                       <td className="border-b border-slate-200 p-2 text-right sm:px-6 sm:py-2">
                         <div className="flex flex-col">
-                          <ActionButtons id={row.id} />
+                          <ActionButtons className="mb-1" id={row.id} />
                           <span className=" text-xs text-slate-500">
                             {row.rodzaj_i_numer_dowodu_ksiegowego}
                           </span>

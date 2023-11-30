@@ -73,3 +73,20 @@ export const saveIncome = async ({
     return { message: `Error ${e}` };
   }
 };
+
+export const deleteIncome = async (id: number) => {
+  try {
+    const income = await prisma.operacje.update({
+      where: {
+        id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
+    revalidatePath("/", "layout");
+    return { message: `Deleted ${income}` };
+  } catch (e) {
+    return { message: `Error ${e}` };
+  }
+};

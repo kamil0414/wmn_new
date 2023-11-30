@@ -8,12 +8,16 @@ const deleteConfirm = (id: number) => {
   }
 };
 
-export const ActionButtons = ({ id }: { id: number }) => (
-  <div className="mb-1">
-    <form action={() => deleteConfirm(id)}>
-      <button type="submit" className="font-medium text-sky-600">
-        Usuń
-      </button>
-    </form>
-  </div>
+export const ActionButtons = ({
+  id,
+  className,
+}: {
+  id: number;
+  className?: string;
+}) => (
+  <form className={className ?? ""} action={() => deleteConfirm(id)}>
+    <button type="submit" className="font-medium text-sky-600">
+      Usuń
+    </button>
+  </form>
 );
