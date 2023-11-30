@@ -17,7 +17,6 @@ interface FlatHistoryInterface {
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
-  isDuplicated: boolean;
 }
 
 function AddIncomeForm({
