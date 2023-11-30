@@ -11,7 +11,7 @@ const deleteConfirm = (id: number) => {
 export const ActionButtons = ({ id }: { id: number }) => (
   <div className="mb-1">
     <form action={() => deleteConfirm(id)}>
-      <button type="submit" className="font-medium text-indigo-600">
+      <button type="submit" className="font-medium text-sky-600">
         Usuń
       </button>
     </form>

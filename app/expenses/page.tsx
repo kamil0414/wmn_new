@@ -88,7 +88,7 @@ export default async function Expenses() {
                     <div className="flex items-center justify-between  px-5 pb-8">
                       <div className="text-base font-semibold">Wydatki</div>
                       <Link href="/addExpense">
-                        <div className="pointer-events-auto rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                        <div className="pointer-events-auto rounded-md bg-sky-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-sky-500">
                           Dodaj nowy
                         </div>
                       </Link>
@@ -122,7 +122,7 @@ export default async function Expenses() {
                             {formatter.format(-1 * row.kwota.toNumber())}
                           </span>
                           {row.czy_bank ? (
-                            <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                            <span className="inline-flex items-center rounded-md bg-sky-50 px-2 py-1 text-xs font-medium text-sky-700 ring-1 ring-inset ring-sky-700/10">
                               Bank
                             </span>
                           ) : (
