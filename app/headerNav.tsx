@@ -65,19 +65,25 @@ function HeaderNav({
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <div id="header">
-                  <span className="text-sm font-medium text-gray-300">
-                    K: <strong>{formatter.format(cashState)}</strong>
-                  </span>
-                  <span className="ml-6 text-sm font-medium text-gray-300">
-                    B: <strong>{formatter.format(accountState)}</strong>
-                  </span>
-                  <span className="ml-6 text-sm font-medium text-gray-300">
-                    R:{" "}
-                    <strong>
+                <div id="header" className="flex gap-x-3 sm:gap-x-5">
+                  <div className=" text-gray-300">
+                    <span className="text-xs">K: </span>
+                    <span className="text-sm font-semibold">
+                      {formatter.format(cashState)}
+                    </span>
+                  </div>
+                  <div className=" text-gray-300">
+                    <span className="text-xs">B: </span>
+                    <span className="text-sm font-semibold">
+                      {formatter.format(accountState)}
+                    </span>
+                  </div>
+                  <div className=" text-gray-300">
+                    <span className="text-xs">R: </span>
+                    <span className="text-sm font-semibold">
                       {formatter.format(accountState + cashState)}
-                    </strong>
-                  </span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

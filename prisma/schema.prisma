@@ -65,6 +65,7 @@ model operacje {
   firma                            firmy    @relation(fields: [id_firmy], references: [id])
   opis_pow                         opisy?   @relation(fields: [id_opisu], references: [id])
   subkonta                         subkonta @relation(fields: [id_subkonta], references: [id])
+  is_deleted                       Boolean  @default(false)
 
   @@unique([id_firmy, data, rodzaj_i_numer_dowodu_ksiegowego, kwota])
 }

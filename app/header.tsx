@@ -14,6 +14,7 @@ async function Header() {
         gte: getStartDateFromEnv(),
         lte: getEndDateFromEnv(),
       },
+      is_deleted: false,
     },
   });
 

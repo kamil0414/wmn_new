@@ -1,3 +1,4 @@
+import Link from "next/link";
 import prisma from "../../lib/prisma";
 import {
   getStartDateFromEnv,
@@ -5,6 +6,7 @@ import {
   classNames,
   formatter,
 } from "../../utils";
+import { ActionButtons } from "./actionButtons";
 
 export default async function Expenses() {
   const expensesHistory = await prisma.operacje.findMany({
@@ -50,10 +52,11 @@ export default async function Expenses() {
         gte: getStartDateFromEnv(),
         lte: getEndDateFromEnv(),
       },
+      is_deleted: false,
     },
     orderBy: [
       {
-        data: "asc",
+        data: "desc",
       },
       {
         rodzaj_i_numer_dowodu_ksiegowego: "asc",
@@ -66,90 +69,118 @@ export default async function Expenses() {
     ],
   });
 
+  const expensesHistoryGrouped = expensesHistory.map((el, index, array) => {
+    const isDuplicated = array
+      .slice(0, index)
+      .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
+    return { ...el, isDuplicated };
+  });
+
   return (
     <div className="container mx-auto px-4">
-      <div className="mb-2 mt-6 text-sm font-medium text-gray-700">
-        Niebieskim kolorem oznaczone są operacje bankowe.
-      </div>
-      <div className="not-prose relative overflow-hidden bg-slate-50 ">
+      <div className="relative mb-2 mt-6 overflow-hidden">
         <div className="relative overflow-auto">
           <div className="my-8 overflow-hidden shadow-sm">
-            <table className="w-full table-auto border-collapse text-sm">
+            <table className="w-full table-fixed border-collapse text-sm">
               <thead>
                 <tr>
-                  <th className="border-b pb-2 pl-4 pr-2 pt-0 text-left font-medium text-slate-400">
-                    Data
-                  </th>
-                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
-                    Firma
-                  </th>
-                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
-                    Rodzaj i numer dowodu księgowego
-                  </th>
-                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
-                    Opis
-                  </th>
-                  <th className="border-b p-2 pt-0 text-right font-medium text-slate-400">
-                    Kwota
-                  </th>
-                  <th className="border-b pb-2 pl-2 pr-4 pt-0 font-medium text-slate-400">
-                    Uwagi
-                  </th>
+                  <td colSpan={3}>
+                    <div className="flex items-center justify-between  px-5 pb-8">
+                      <div className="text-base font-semibold">Wydatki</div>
+                      <Link href="/addExpense">
+                        <div className="pointer-events-auto rounded-md bg-indigo-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-indigo-500">
+                          Dodaj nowy
+                        </div>
+                      </Link>
+                    </div>
+                  </td>
                 </tr>
               </thead>
-              <tbody className="bg-white ">
-                {expensesHistory?.map((row) => (
-                  <tr
-                    key={row.id}
-                    className={classNames(
-                      row.czy_bank && "bg-sky-100",
-                      "hover:bg-gray-200 focus:bg-gray-200",
+              <tbody className="bg-white">
+                {expensesHistoryGrouped.map((row) => (
+                  <>
+                    {!row.isDuplicated ? (
+                      <tr key={`head_${row.id}`}>
+                        <td
+                          colSpan={3}
+                          className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 font-semibold"
+                        >
+                          {row.data.toLocaleDateString("pl-PL", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </td>
+                      </tr>
+                    ) : (
+                      ""
                     )}
-                  >
-                    <td className="border-b border-slate-200 py-2 pl-4 pr-2 text-right text-slate-500">
-                      {row.data.toLocaleDateString("pl-PL")}
-                    </td>
-                    <td className="border-b border-slate-200 p-2 text-slate-500 ">
-                      {row.firma.nazwa}
-                    </td>
-                    <td className="border-b border-slate-200 p-2 text-slate-500 ">
-                      {row.rodzaj_i_numer_dowodu_ksiegowego}
-                    </td>
-                    <td
-                      className={classNames(
-                        row.opis_pow == null
-                          ? "text-red-500"
-                          : "text-slate-500",
-                        "border-b border-slate-200 p-2",
-                      )}
-                    >
-                      {row.opis_pow
-                        ? `${
-                            row.opis_pow?.kategoria_wydatku?.nazwa ===
-                            row.opis_pow?.opis
-                              ? row.opis_pow?.kategoria_wydatku?.nazwa
-                              : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`
-                          }`
-                        : row.opis}
-                      {row.ilosc && row.ilosc.toNumber() > 0
-                        ? ` (${row.ilosc})`
-                        : ""}
-                    </td>
-                    <td className="border-b border-slate-200 p-2 py-2 text-right text-slate-500">
-                      {formatter.format(row.kwota.toNumber())}
-                    </td>
-                    <td className="border-b border-slate-200 p-2 text-slate-500 ">
-                      {row.komentarz}
-                    </td>
-                  </tr>
+                    <tr key={row.id}>
+                      <td className="border-b border-slate-200 p-2 sm:px-6 sm:py-2 ">
+                        <div className="flex grow flex-col items-start gap-x-3 sm:flex-row">
+                          <span className="mb-1 font-medium sm:mb-0">
+                            {formatter.format(-1 * row.kwota.toNumber())}
+                          </span>
+                          {row.czy_bank ? (
+                            <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                              Bank
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </td>
+                      <td className="border-b border-slate-200 p-2 sm:px-6 sm:py-2 ">
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col">
+                            <span
+                              className={`${classNames(
+                                row.opis_pow == null ? "text-red-500" : "",
+                              )} mb-1`}
+                            >
+                              {row.opis_pow
+                                ? `${
+                                    row.opis_pow?.kategoria_wydatku?.nazwa ===
+                                    row.opis_pow?.opis
+                                      ? row.opis_pow?.kategoria_wydatku?.nazwa
+                                      : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`
+                                  }`
+                                : row.opis}
+                              {row.ilosc && row.ilosc.toNumber() > 0
+                                ? ` (${row.ilosc})`
+                                : ""}
+                            </span>
+                            <span className="text-xs text-slate-500">
+                              {row.firma.nazwa}
+                            </span>
+                          </div>
+                          <span className="hidden sm:block">
+                            {row.komentarz}
+                          </span>
+                        </div>
+                      </td>
+
+                      <td className="border-b border-slate-200 p-2 text-right sm:px-6 sm:py-2">
+                        <div className="flex flex-col">
+                          <ActionButtons id={row.id} />
+                          <span className=" text-xs text-slate-500">
+                            {row.rodzaj_i_numer_dowodu_ksiegowego}
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  </>
                 ))}
-                {(expensesHistory == null || expensesHistory?.length === 0) && (
+                {(expensesHistoryGrouped == null ||
+                  expensesHistoryGrouped?.length === 0) && (
                   <tr>
                     <td
-                      colSpan={6}
+                      colSpan={3}
                       className="border-b border-slate-200 p-4 text-center text-slate-500"
                     >
-                      {expensesHistory?.length === 0 ? "brak operacji" : ""}
+                      {expensesHistoryGrouped?.length === 0
+                        ? "brak operacji"
+                        : ""}
                     </td>
                   </tr>
                 )}
