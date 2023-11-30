@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.scss";
 import Header from "./header";
 
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "WMN",
   description: "WMN",
