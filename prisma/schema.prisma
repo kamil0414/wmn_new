@@ -128,13 +128,14 @@ model kategorie_wydatkow {
 }
 
 view kartoteki {
-  id               Int      @id
-  numer_mieszkania Int      @db.SmallInt
-  data             DateTime @db.Date
-  opis             String?
-  naleznosc        Decimal  @db.Money
-  wplata           Decimal  @db.Money
-  saldo            Decimal  @db.Money
+  id                               Int      @id
+  numer_mieszkania                 Int      @db.SmallInt
+  data                             DateTime @db.Date
+  opis                             String?
+  rodzaj_i_numer_dowodu_ksiegowego String?
+  naleznosc                        Decimal  @db.Money
+  wplata                           Decimal  @db.Money
+  saldo                            Decimal  @db.Money
 }
 
 view salda {

@@ -15,6 +15,7 @@ async function AddIncome() {
       data: true,
       naleznosc: true,
       opis: true,
+      rodzaj_i_numer_dowodu_ksiegowego: true,
       saldo: true,
       wplata: true,
       numer_mieszkania: true,
@@ -30,7 +31,7 @@ async function AddIncome() {
         ),
       },
     },
-    orderBy: [{ data: "desc" }],
+    orderBy: [{ numer_mieszkania: "asc" }, { data: "desc" }, { opis: "desc" }],
   });
 
   return (

@@ -14,6 +14,7 @@ interface FlatHistoryInterface {
   data: Date;
   naleznosc: number;
   opis: string | null;
+  rodzaj_i_numer_dowodu_ksiegowego: string | null;
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
@@ -167,7 +168,7 @@ function AddIncomeForm({
 
   return (
     <div className="container mx-auto px-4">
-      <div className="flex ">
+      <div className="flex">
         <div>
           <div className="mt-6 block text-sm font-medium leading-6 text-gray-900 print:hidden">
             1. Wybierz numer mieszkania
@@ -182,7 +183,7 @@ function AddIncomeForm({
                   {obj.numer_mieszkania}
                 </option>
               ))}
-            </select>{" "}
+            </select>
           </div>
         </div>
       </div>
@@ -311,11 +312,11 @@ function AddIncomeForm({
               id="default-radio-1"
               type="radio"
               name="default-radio"
-              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 "
+              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
             />
             <label
               htmlFor="default-radio-1"
-              className="ml-2 text-sm font-medium text-gray-900 "
+              className="ml-2 text-sm font-medium text-gray-900"
             >{`zgodny z saldem (${formatter.format(-1 * balance)})`}</label>
           </div>
         )}
@@ -327,9 +328,9 @@ function AddIncomeForm({
               id="default-radio-2"
               type="radio"
               name="default-radio"
-              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 "
+              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
             />
-            <div className="ml-2 text-sm font-medium text-gray-900 ">
+            <div className="ml-2 text-sm font-medium text-gray-900">
               inna kwota
             </div>
           </div>
@@ -433,18 +434,32 @@ function AddIncomeForm({
                         key={row.id}
                         className={classNames(
                           row.wplata !== 0 && "bg-sky-50",
-                          " hover:bg-gray-100 focus:bg-gray-100",
+                          "hover:bg-gray-100 focus:bg-gray-100",
                         )}
                       >
-                        <td
-                          className={classNames(
-                            row.wplata !== 0 && "text-sky-800",
-                            "min-h-[57px] border-b border-slate-200 p-2 pl-6 text-left font-medium",
-                          )}
-                        >
-                          {formatter.format(row.wplata - row.naleznosc)}
+                        <td className="border-b border-slate-200 p-2 pl-6">
+                          <div className="inline-flex flex-col items-start">
+                            <div
+                              className={classNames(
+                                row.wplata !== 0 && "text-sky-800",
+                                "mb-1 font-medium",
+                              )}
+                            >
+                              {formatter.format(row.wplata - row.naleznosc)}
+                            </div>
+                            <div
+                              className={classNames(
+                                row.saldo < 0
+                                  ? "text-red-500"
+                                  : "text-slate-500",
+                                "text-xs",
+                              )}
+                            >
+                              {formatter.format(row.saldo)}
+                            </div>
+                          </div>
                         </td>
-                        <td className="border-b border-slate-200 p-2 text-xs print:whitespace-nowrap sm:pl-6">
+                        <td className="border-b border-slate-200 p-2 print:whitespace-nowrap sm:pl-6">
                           {row.opis}
                         </td>
 
@@ -465,13 +480,8 @@ function AddIncomeForm({
                             ) : (
                               ""
                             )}
-                            <div
-                              className={classNames(
-                                row?.saldo < 0 ? "text-red-500" : "",
-                                "text-right text-xs ",
-                              )}
-                            >
-                              S:&nbsp;{formatter.format(row?.saldo)}
+                            <div className={classNames("text-right text-xs")}>
+                              {row.rodzaj_i_numer_dowodu_ksiegowego}
                             </div>
                           </div>
                         </td>
@@ -480,14 +490,14 @@ function AddIncomeForm({
                   ))}
                 {/* {flatHistory != null && flatHistory?.length !== 0 && (
                   <tr>
-                    <td className="p-4 text-right ">
-                      {" "}
+                    <td className="p-4 text-right">
+                      {""}
                       {formatter.format(wplatyRazem - naleznosciRazem) ===
                       formatter.format(saldo)
-                        ? "SUMA"
-                        : "BŁĄD SUM"}
+                        ?"SUMA"
+                        :"BŁĄD SUM"}
                     </td>
-                    <td className="p-2 text-right ">
+                    <td className="p-2 text-right">
                       {formatter.format(naleznosciRazem)}
                     </td>
                     <td className="p-2 py-2 text-right text-sm">
@@ -499,7 +509,7 @@ function AddIncomeForm({
                   <tr>
                     <td
                       colSpan={5}
-                      className="border-b border-slate-200 p-4 text-center "
+                      className="border-b border-slate-200 p-4 text-center"
                     >
                       {flatHistory?.length === 0 ? "brak operacji" : ""}
                     </td>
