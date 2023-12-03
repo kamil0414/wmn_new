@@ -39,6 +39,7 @@ function AddExpenseForm({
   const [cashChecked, setCashChecked] = useState(true);
   const [number, setNumber] = useState("");
   const [date, setDate] = useState("");
+  const [otherCompanyName, setOtherCompanyName] = useState("");
   const [count, setCount] = useState(0);
   const [unit, setUnit] = useState<string | null>("");
   const [sum, setSum] = useState(0);
@@ -90,6 +91,7 @@ function AddExpenseForm({
     }
     setNumber("");
     setComment("");
+    setOtherCompanyName("");
   }, [category, descriptions, id_subkonta]);
 
   useEffect(() => {
@@ -115,6 +117,7 @@ function AddExpenseForm({
     }
     setNumber("");
     setComment("");
+    setOtherCompanyName("");
   }, [companies, ilosc_wymagana, typy_dowodow_ksiegowych, jednostka_miary]);
 
   const saveOperation = () => {
@@ -130,6 +133,7 @@ function AddExpenseForm({
       id_subkonta: account,
       ilosc: count,
       komentarz: comment,
+      nazwaNowejFirmy: otherCompanyName,
     }).then(() => {
       setCategory(0);
     });
@@ -151,9 +155,6 @@ function AddExpenseForm({
               {obj.nazwa}
             </option>
           ))}
-          <option value={-1} key={-1}>
-            Inna
-          </option>
         </select>
 
         {category !== 0 && (
@@ -174,20 +175,37 @@ function AddExpenseForm({
                 ))}
               </select>
             )}
-            <select
-              value={company}
-              onChange={(e) => setCompany(parseInt(e.target.value, 10))}
-              className="mt-2 block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
-            >
-              <option disabled value={0}>
-                wybierz firmę
-              </option>
-              {companies?.map((obj) => (
-                <option key={obj.id} value={obj.id}>
-                  {obj.nazwa}
+            <div className="flex">
+              <select
+                value={company}
+                onChange={(e) => setCompany(parseInt(e.target.value, 10))}
+                className="mt-2 block w-full flex-1 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              >
+                <option disabled value={0}>
+                  wybierz firmę
                 </option>
-              ))}
-            </select>
+                {companies?.map((obj) => (
+                  <option key={obj.id} value={obj.id}>
+                    {obj.nazwa}
+                  </option>
+                ))}
+                <option value={-1} key="Inna">
+                  Inna
+                </option>
+              </select>
+              {company === -1 && (
+                <input
+                  onChange={(e) => setOtherCompanyName(e.target.value)}
+                  autoComplete="off"
+                  placeholder="wpisz nazwę firmy"
+                  type="text"
+                  name="otherCompany"
+                  id="otherCompany"
+                  value={otherCompanyName}
+                  className="ml-2 mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                />
+              )}
+            </div>
             <div className="flex">
               <input
                 onChange={(e) => setDate(e.target.value)}
@@ -314,6 +332,10 @@ function AddExpenseForm({
             !(
               company != null &&
               company !== 0 &&
+              (company !== -1 ||
+                (company === -1 &&
+                  otherCompanyName != null &&
+                  otherCompanyName !== "")) &&
               date != null &&
               date !== "" &&
               description != null &&
