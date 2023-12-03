@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getStartDateFromEnv, getEndDateFromEnv } from "../../utils";
+import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import saveExpense from "./actions";
 
 interface expensesCategory {

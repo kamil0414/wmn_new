@@ -1,11 +1,11 @@
 import Link from "next/link";
-import prisma from "../../lib/prisma";
+import prisma from "@/lib/prisma";
 import {
   getStartDateFromEnv,
   getEndDateFromEnv,
   classNames,
   formatter,
-} from "../../utils";
+} from "@/utils/index";
 import { ActionButtons } from "./actionButtons";
 
 export default async function Expenses() {

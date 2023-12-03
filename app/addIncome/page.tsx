@@ -1,5 +1,5 @@
-import prisma from "../../lib/prisma";
-import { getStartDateFromEnv, getEndDateFromEnv } from "../../utils";
+import prisma from "@/lib/prisma";
+import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import AddIncomeForm from "./addIncomeForm";
 
 async function AddIncome() {

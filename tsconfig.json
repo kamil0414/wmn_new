@@ -23,6 +23,12 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@/app/*": ["./app/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/utils/*": ["./utils/*"]
+    },
     "strictNullChecks": true
   },
   "exclude": [

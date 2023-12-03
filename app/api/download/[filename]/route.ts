@@ -2,8 +2,8 @@ import Docxtemplater from "docxtemplater";
 import { readFileSync } from "fs";
 import path from "path";
 import PizZip from "pizzip";
-import prisma from "../../../../lib/prisma";
-import { getEndDateFromEnv, formatter } from "../../../../utils";
+import prisma from "@/lib/prisma";
+import { getEndDateFromEnv, formatter } from "@/utils/index";
 
 /* eslint-disable import/prefer-default-export */
 

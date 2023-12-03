@@ -1,5 +1,5 @@
-import prisma from "../lib/prisma";
-import { classNames, formatter } from "../utils";
+import prisma from "@/lib/prisma";
+import { classNames, formatter } from "@/utils/index";
 
 export default async function Home() {
   const basicData = await prisma.salda.findMany();

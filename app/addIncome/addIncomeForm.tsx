@@ -6,7 +6,7 @@ import {
   getStartDateFromEnv,
   classNames,
   formatter,
-} from "../../utils";
+} from "@/utils/index";
 import { deleteIncome, saveIncome, saveWater } from "./actions";
 
 interface FlatHistoryInterface {

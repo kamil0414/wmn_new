@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma";
+import prisma from "@/lib/prisma";
 import AddExpenseForm from "./addExpenseForm";
 
 async function AddExpense() {

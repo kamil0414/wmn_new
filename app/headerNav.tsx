@@ -4,7 +4,7 @@ import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { classNames, formatter } from "../utils";
+import { classNames, formatter } from "@/utils/index";
 
 function HeaderNav({
   accountState,

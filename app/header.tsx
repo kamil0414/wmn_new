@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import prisma from "../lib/prisma";
-import { getStartDateFromEnv, getEndDateFromEnv } from "../utils";
+import prisma from "@/lib/prisma";
+import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import HeaderNav from "./headerNav";
 
 async function Header() {
