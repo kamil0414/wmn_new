@@ -18,7 +18,6 @@
   "license": "MIT",
   "dependencies": {
     "@headlessui/react": "^1.7.13",
-    "@heroicons/react": "^2.0.16",
     "@prisma/client": "^5.6.0",
     "@tailwindcss/forms": "^0.5.3",
     "docxtemplater": "^3.42.2",
@@ -27,8 +26,7 @@
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.69.5",
-    "scss": "^0.2.4",
-    "swr": "^2.1.0"
+    "scss": "^0.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

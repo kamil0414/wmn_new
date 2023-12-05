@@ -25,8 +25,9 @@
     ],
     "paths": {
       "@/app/*": ["./app/*"],
-      "@/components/*": ["./components/*"],
+      "@/atoms/*": ["./components/atoms/*"],
       "@/lib/*": ["./lib/*"],
+      "@/organisms/*": ["./components/organisms/*"],
       "@/utils/*": ["./utils/*"]
     },
     "strictNullChecks": true

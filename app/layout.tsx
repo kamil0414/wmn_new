@@ -1,7 +1,7 @@
+import Header from "@/organisms/header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
-import Header from "./header";
 
 export const revalidate = 0;
 
