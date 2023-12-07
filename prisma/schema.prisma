@@ -8,49 +8,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model firmy {
+model firma {
   id       Int        @id @default(autoincrement()) @db.SmallInt
   nazwa    String     @unique
-  operacje operacje[]
-  opisy    opisy[]    @relation("firmyToopisy")
+  operacje operacja[]
+  opisy    opis[]     @relation("firmyToopisy")
+
+  @@map("firmy")
 }
 
-model mieszkania {
-  numer                Int                  @id @unique @db.SmallInt
-  metraz               Decimal              @db.Decimal(4, 2)
+model mieszkanie {
+  numer                Int                 @id @unique @db.SmallInt
+  metraz               Decimal             @db.Decimal(4, 2)
   platnoscprzelewem    Boolean
-  zadeklarowanych_osob Int                  @default(1) @db.SmallInt
-  naliczenia           naliczenia[]
-  odczyty              odczyty_wodomierzy[]
+  zadeklarowanych_osob Int                 @default(1) @db.SmallInt
+  naliczenia           naliczenie[]
+  odczyty              odczyt_wodomierza[]
+
+  @@map("mieszkania")
 }
 
-model naliczenia {
-  numer_mieszkania Int        @db.SmallInt
-  data             DateTime   @db.Date
-  opis             String
-  opal             Decimal    @db.Money
-  fundusz          Decimal    @db.Money
-  woda             Decimal    @db.Money
-  id               Int        @id @default(autoincrement())
-  smieci           Decimal    @default(0) @db.Money
-  mieszkanie       mieszkania @relation(fields: [numer_mieszkania], references: [numer])
+model naliczenie {
+  numer_mieszkania               Int                @db.SmallInt
+  data                           DateTime           @db.Date
+  opis                           String
+  opal                           Decimal            @db.Money
+  fundusz                        Decimal            @db.Money
+  woda                           Decimal            @db.Money
+  id                             Int                @id @default(autoincrement())
+  smieci                         Decimal            @default(0) @db.Money
+  mieszkanie                     mieszkanie         @relation(fields: [numer_mieszkania], references: [numer])
+  id_poprzedniego_stanu_licznika Int?               @db.SmallInt
+  poprzedni_stan_licznika        odczyt_wodomierza? @relation(name: "poprzedni_stan_licznika", fields: [id_poprzedniego_stanu_licznika], references: [id])
+  id_stanu_licznika              Int?               @db.SmallInt
+  stan_licznika                  odczyt_wodomierza? @relation(name: "stan_licznika", fields: [id_stanu_licznika], references: [id])
+
+  is_deleted Boolean @default(false)
 
   @@unique([numer_mieszkania, data, opis])
+  @@map("naliczenia")
 }
 
-model odczyty_wodomierzy {
-  numer_mieszkania Int           @db.SmallInt
-  data             DateTime      @db.Date
-  stan             Decimal       @db.Decimal(7, 3)
-  typ              Int           @db.SmallInt
-  id               Int           @id @default(autoincrement())
-  mieszkanie       mieszkania    @relation(fields: [numer_mieszkania], references: [numer])
-  typy_odczytow    typy_odczytow @relation(fields: [typ], references: [id])
+model odczyt_wodomierza {
+  numer_mieszkania Int          @db.SmallInt
+  data             DateTime     @db.Date
+  stan             Decimal      @db.Decimal(7, 3)
+  typ              Int          @db.SmallInt
+  id               Int          @id @default(autoincrement())
+  mieszkanie       mieszkanie   @relation(fields: [numer_mieszkania], references: [numer])
+  typy_odczytow    typ_odczytu  @relation(fields: [typ], references: [id])
+  is_deleted       Boolean      @default(false)
+  naliczenia_poprz naliczenie[] @relation("poprzedni_stan_licznika")
+  naliczenia       naliczenie[] @relation("stan_licznika")
 
   @@unique([numer_mieszkania, data])
+  @@map("odczyty_wodomierzy")
 }
 
-model operacje {
+model operacja {
   id_firmy                         Int      @db.SmallInt
   data                             DateTime @db.Date
   rodzaj_i_numer_dowodu_ksiegowego String
@@ -62,72 +77,86 @@ model operacje {
   ilosc                            Decimal? @default(0) @db.Decimal(6, 2)
   komentarz                        String?
   id_opisu                         Int?     @db.SmallInt
-  firma                            firmy    @relation(fields: [id_firmy], references: [id])
-  opis_pow                         opisy?   @relation(fields: [id_opisu], references: [id])
-  subkonta                         subkonta @relation(fields: [id_subkonta], references: [id])
+  firma                            firma    @relation(fields: [id_firmy], references: [id])
+  opis_pow                         opis?    @relation(fields: [id_opisu], references: [id])
+  subkonta                         subkonto @relation(fields: [id_subkonta], references: [id])
   is_deleted                       Boolean  @default(false)
 
   @@unique([id_firmy, data, rodzaj_i_numer_dowodu_ksiegowego, kwota])
+  @@map("operacje")
 }
 
-model stawki {
-  data         DateTime    @db.Date
-  kwota_brutto Decimal     @db.Money
-  id           Int         @id @default(autoincrement())
-  id_typu      Int         @db.SmallInt
-  typy_stawek  typy_stawek @relation(fields: [id_typu], references: [id])
+model stawka {
+  data         DateTime   @db.Date
+  kwota_brutto Decimal    @db.Money
+  id           Int        @id @default(autoincrement())
+  id_typu      Int        @db.SmallInt
+  typy_stawek  typ_stawki @relation(fields: [id_typu], references: [id])
 
   @@unique([data, kwota_brutto, id_typu])
+  @@map("stawki")
 }
 
-model subkonta {
-  id                 Int                  @id
-  nazwa              String               @unique
-  kategorie_wydatkow kategorie_wydatkow[]
-  operacje           operacje[]
+model subkonto {
+  id                 Int                 @id
+  nazwa              String              @unique
+  kategorie_wydatkow kategoria_wydatku[]
+  operacje           operacja[]
+
+  @@map("subkonta")
 }
 
-model typy_dowodow_ksiegowych {
+model typ_dowodu_ksiegowego {
   id      Int     @id @db.SmallInt
   opis    String  @unique
   dowplat Boolean
-  opisy   opisy[] @relation("opisyTotypy_dowodow_ksiegowych")
+  opisy   opis[]  @relation("opisyTotypy_dowodow_ksiegowych")
+
+  @@map("typy_dowodow_ksiegowych")
 }
 
-model typy_odczytow {
-  id      Int                  @id @db.SmallInt
-  opis    String               @unique
-  odczyty odczyty_wodomierzy[]
+model typ_odczytu {
+  id      Int                 @id @db.SmallInt
+  opis    String              @unique
+  odczyty odczyt_wodomierza[]
+
+  @@map("typy_odczytow")
 }
 
-model typy_stawek {
+model typ_stawki {
   id     Int      @id @db.SmallInt
   opis   String   @unique
-  stawki stawki[]
+  stawki stawka[]
+
+  @@map("typy_stawek")
 }
 
-model opisy {
-  id                      Int                       @id @default(autoincrement())
-  opis                    String                    @unique
-  ilosc_wymagana          Boolean                   @default(false)
+model opis {
+  id                      Int                     @id @default(autoincrement())
+  opis                    String                  @unique
+  ilosc_wymagana          Boolean                 @default(false)
   id_kategorii_wydatku    Int
   jednostka_miary         String?
-  operacje                operacje[]
-  kategoria_wydatku       kategorie_wydatkow        @relation(fields: [id_kategorii_wydatku], references: [id])
-  firmy                   firmy[]                   @relation("firmyToopisy")
-  typy_dowodow_ksiegowych typy_dowodow_ksiegowych[] @relation("opisyTotypy_dowodow_ksiegowych")
+  operacje                operacja[]
+  kategoria_wydatku       kategoria_wydatku       @relation(fields: [id_kategorii_wydatku], references: [id])
+  firmy                   firma[]                 @relation("firmyToopisy")
+  typy_dowodow_ksiegowych typ_dowodu_ksiegowego[] @relation("opisyTotypy_dowodow_ksiegowych")
+
+  @@map("opisy")
 }
 
-model kategorie_wydatkow {
+model kategoria_wydatku {
   id          Int      @id @default(autoincrement())
   nazwa       String   @unique
   id_subkonta Int
   czy_wydatek Boolean  @default(true)
-  subkonta    subkonta @relation(fields: [id_subkonta], references: [id])
-  opisy       opisy[]
+  subkonta    subkonto @relation(fields: [id_subkonta], references: [id])
+  opisy       opis[]
+
+  @@map("kategorie_wydatkow")
 }
 
-view kartoteki {
+view kartoteka {
   id                               Int      @id
   numer_mieszkania                 Int      @db.SmallInt
   data                             DateTime @db.Date
@@ -136,14 +165,22 @@ view kartoteki {
   naleznosc                        Decimal  @db.Money
   wplata                           Decimal  @db.Money
   saldo                            Decimal  @db.Money
+  poprzedni_stan_licznika          Decimal? @db.Decimal(7, 3)
+  stan_licznika                    Decimal? @db.Decimal(7, 3)
+
+  @@map("kartoteki")
 }
 
-view salda {
+view saldo {
   numer_mieszkania Int       @id @db.SmallInt
   data             DateTime? @db.Date
   saldo            Decimal   @db.Money
+
+  @@map("salda")
 }
 
-view numeryKP {
+view numerKP {
   nr Int @id
+
+  @@map("numeryKP")
 }

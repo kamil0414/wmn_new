@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 
 const deleteExpense = async (id: number) => {
   try {
-    const expense = await prisma.operacje.update({
+    const expense = await prisma.operacja.update({
       where: {
         id,
       },

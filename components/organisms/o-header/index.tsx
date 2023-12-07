@@ -9,7 +9,7 @@ import Links from "./links";
 import Menu from "./menu";
 
 async function OHeader() {
-  const operationSums = await prisma.operacje.groupBy({
+  const operationSums = await prisma.operacja.groupBy({
     by: ["czy_bank"],
     _sum: {
       kwota: true,

@@ -7,9 +7,9 @@ async function AddIncome() {
     `select * from PodajDanePomonicze()`,
   );
 
-  const blankNumbers = await prisma.numeryKP.findMany();
+  const blankNumbers = await prisma.numerKP.findMany();
 
-  const flatHistory = await prisma.kartoteki.findMany({
+  const flatHistory = await prisma.kartoteka.findMany({
     select: {
       id: true,
       data: true,
@@ -19,6 +19,8 @@ async function AddIncome() {
       saldo: true,
       wplata: true,
       numer_mieszkania: true,
+      poprzedni_stan_licznika: true,
+      stan_licznika: true,
     },
     where: {
       data: {
@@ -49,6 +51,8 @@ async function AddIncome() {
         naleznosc: el.naleznosc.toNumber(),
         saldo: el.saldo.toNumber(),
         wplata: el.wplata.toNumber(),
+        poprzedni_stan_licznika: el.poprzedni_stan_licznika?.toNumber(),
+        stan_licznika: el.stan_licznika?.toNumber(),
       }))}
     />
   );

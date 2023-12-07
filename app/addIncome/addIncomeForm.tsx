@@ -18,6 +18,8 @@ interface FlatHistoryInterface {
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
+  poprzedni_stan_licznika: number;
+  stan_licznika: number;
 }
 
 function AddIncomeForm({
@@ -160,9 +162,9 @@ function AddIncomeForm({
     }
   }, [basicData, flat, blankNumbers]);
 
-  const deleteConfirm = (id: number) => {
-    if (confirm("Usunąć wpłatę?")) {
-      deleteIncome(id);
+  const deleteConfirm = (id: number, isWaterBill: boolean) => {
+    if (confirm(`Usunąć ${!isWaterBill ? "wpłatę" : "naliczenie"}?`)) {
+      deleteIncome(id, isWaterBill);
     }
   };
 
@@ -465,10 +467,17 @@ function AddIncomeForm({
 
                         <td className="border-b border-slate-200 p-2">
                           <div className="align-center flex flex-col items-end">
-                            {row.wplata > 0 ? (
+                            {row.wplata > 0 ||
+                            row.stan_licznika === waterMeterCurrentValue ? (
                               <form
                                 className="mb-1 text-right"
-                                action={() => deleteConfirm(row.id)}
+                                action={() =>
+                                  deleteConfirm(
+                                    row.id,
+                                    row.stan_licznika ===
+                                      waterMeterCurrentValue,
+                                  )
+                                }
                               >
                                 <button
                                   type="submit"

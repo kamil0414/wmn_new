@@ -9,7 +9,7 @@ import {
 import { ActionButtons } from "./actionButtons";
 
 export default async function Expenses() {
-  const expensesHistory = await prisma.operacje.findMany({
+  const expensesHistory = await prisma.operacja.findMany({
     select: {
       id: true,
       data: true,

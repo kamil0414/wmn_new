@@ -30,12 +30,12 @@ const saveExpense = async ({
     let id_firmyCond = id_firmy;
 
     if (nazwaNowejFirmy != null && nazwaNowejFirmy !== "") {
-      const { id } = await prisma.firmy.create({
+      const { id } = await prisma.firma.create({
         data: {
           nazwa: nazwaNowejFirmy,
         },
       });
-      await prisma.opisy.update({
+      await prisma.opis.update({
         data: {
           firmy: {
             connect: {
@@ -50,7 +50,7 @@ const saveExpense = async ({
       id_firmyCond = id;
     }
 
-    const expense = await prisma.operacje.create({
+    const expense = await prisma.operacja.create({
       data: {
         id_firmy: id_firmyCond,
         data,

@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { classNames, formatter } from "@/utils/index";
 
 export default async function Home() {
-  const basicData = await prisma.salda.findMany();
+  const basicData = await prisma.saldo.findMany();
 
   return (
     <div className="container mx-auto px-4">

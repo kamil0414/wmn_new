@@ -15,7 +15,7 @@ export const saveWater = async ({
   typ: number;
 }) => {
   try {
-    const { id } = await prisma.odczyty_wodomierzy.create({
+    const { id } = await prisma.odczyt_wodomierza.create({
       data: {
         numer_mieszkania,
         stan,
@@ -56,7 +56,7 @@ export const saveIncome = async ({
   id_subkonta: number;
 }) => {
   try {
-    const income = await prisma.operacje.create({
+    const income = await prisma.operacja.create({
       data: {
         id_firmy,
         data,
@@ -74,18 +74,39 @@ export const saveIncome = async ({
   }
 };
 
-export const deleteIncome = async (id: number) => {
+export const deleteIncome = async (id: number, isWaterBill: boolean) => {
   try {
-    const income = await prisma.operacje.update({
-      where: {
-        id,
-      },
-      data: {
-        is_deleted: true,
-      },
-    });
-    revalidatePath("/", "layout");
-    return { message: `Deleted ${income}` };
+    if (!isWaterBill) {
+      const income = await prisma.operacja.update({
+        where: {
+          id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+      revalidatePath("/", "layout");
+      return { message: `Deleted ${income}` };
+    } else {
+      const bill = await prisma.naliczenie.update({
+        where: {
+          id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+      await prisma.odczyt_wodomierza.update({
+        where: {
+          id: bill.id_stanu_licznika,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+      revalidatePath("/addIncome");
+      return { message: `Deleted ${bill}` };
+    }
   } catch (e) {
     return { message: `Error ${e}` };
   }
