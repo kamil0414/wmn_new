@@ -96,14 +96,16 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           is_deleted: true,
         },
       });
-      await prisma.odczyt_wodomierza.update({
-        where: {
-          id: bill.id_stanu_licznika,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
+      if (bill.id_stanu_licznika) {
+        await prisma.odczyt_wodomierza.update({
+          where: {
+            id: bill.id_stanu_licznika,
+          },
+          data: {
+            is_deleted: true,
+          },
+        });
+      }
       revalidatePath("/addIncome");
       return { message: `Deleted ${bill}` };
     }

@@ -18,8 +18,8 @@ interface FlatHistoryInterface {
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
-  poprzedni_stan_licznika: number;
-  stan_licznika: number;
+  poprzedni_stan_licznika?: number;
+  stan_licznika?: number;
 }
 
 function AddIncomeForm({
