@@ -12,7 +12,7 @@ export default async function Home() {
       <div className="not-prose relative overflow-hidden bg-slate-50 ">
         <div className="relative overflow-auto">
           <div className="my-8 shadow-sm">
-            <table className="w-full table-auto border-collapse text-sm">
+            <table className="w-full table-fixed border-collapse text-sm">
               <thead>
                 <tr>
                   <th className="border-b pb-2 pl-4 pr-2 pt-0 text-left font-medium text-slate-400">
@@ -30,7 +30,7 @@ export default async function Home() {
                 {basicData?.map((row) => (
                   <tr
                     key={row.numer_mieszkania}
-                    className="hover:bg-gray-200 focus:bg-gray-200"
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     <td className="border-b border-slate-200 py-2 pl-4 pr-2 text-slate-500">
                       {row.numer_mieszkania}
