@@ -27,8 +27,9 @@
       "@/app/*": ["./app/*"],
       "@/atoms/*": ["./components/atoms/*"],
       "@/lib/*": ["./lib/*"],
+      "@/molecues/*": ["./components/molecues/*"],
       "@/organisms/*": ["./components/organisms/*"],
-      "@/utils/*": ["./utils/*"]
+      "@/utils/*": ["./components/utils/*"]
     },
     "strictNullChecks": true
   },

@@ -1,4 +1,4 @@
-import Spinner from "@/atoms/spinner";
+import Spinner from "@/organisms/spinner";
 
 export default function Loading() {
   return <Spinner></Spinner>;
