@@ -1,5 +1,5 @@
-import Spinner from "@/organisms/spinner";
+import OSpinner from "@/organisms/o-spinner";
 
 export default function Loading() {
-  return <Spinner></Spinner>;
+  return <OSpinner></OSpinner>;
 }
