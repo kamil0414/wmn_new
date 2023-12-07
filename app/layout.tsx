@@ -1,4 +1,4 @@
-import Header from "@/organisms/header";
+import OHeader from "@/organisms/o-header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="pl-PL">
       <body className={inter.className}>
-        <Header />
+        <OHeader />
         <div className="layout">{children}</div>
       </body>
     </html>

@@ -29,6 +29,7 @@
       "@/lib/*": ["./lib/*"],
       "@/molecues/*": ["./components/molecues/*"],
       "@/organisms/*": ["./components/organisms/*"],
+      "@/svg/*": ["./public/svg/*"],
       "@/utils/*": ["./components/utils/*"]
     },
     "strictNullChecks": true

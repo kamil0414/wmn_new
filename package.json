@@ -17,7 +17,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@headlessui/react": "^1.7.13",
     "@prisma/client": "^5.6.0",
     "@tailwindcss/forms": "^0.5.3",
     "docxtemplater": "^3.42.2",
@@ -29,6 +28,7 @@
     "scss": "^0.2.4"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.39",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
