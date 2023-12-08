@@ -6,7 +6,7 @@ import { classNames } from "@/utils/index";
 
 function Links() {
   const navigation = [
-    { name: "Salda mieszkań", href: "/" },
+    { name: "Salda mieszkań", href: "/dashboard" },
     { name: "Dodaj wpłatę", href: "/incomes/add" },
     { name: "Dodaj wydatek", href: "/expenses/add" },
     { name: "Wydatki", href: "/expenses" },

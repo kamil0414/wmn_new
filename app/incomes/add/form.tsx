@@ -172,13 +172,13 @@ function AddIncomeForm({
     <div className="container mx-auto px-4">
       <div className="flex">
         <div>
-          <div className="mt-6 block text-sm font-medium leading-6 text-gray-900 print:hidden">
+          <div className="mt-6 block text-sm font-medium leading-6 text-slate-900 print:hidden">
             1. Wybierz numer mieszkania
           </div>
           <div className="rounded-md shadow-sm">
             <select
               onChange={(e) => setFlat(parseInt(e.target.value, 10))}
-              className="mt-2 block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              className="mt-2 block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
             >
               {basicData?.map((obj) => (
                 <option key={obj.numer_mieszkania} value={obj.numer_mieszkania}>
@@ -192,11 +192,11 @@ function AddIncomeForm({
       <hr className="mt-4 print:hidden" />
 
       <form className="print:hidden" action={saveWaterMeterValue}>
-        <div className="mt-4 block text-sm font-medium leading-6 text-gray-900">
+        <div className="mt-4 block text-sm font-medium leading-6 text-slate-900">
           2. Podaj odczyt wodomierza (opcjonalnie)
         </div>
-        <div className="flex">
-          <div className="mr-2 mt-2 flex grow rounded-md shadow-sm sm:flex-none">
+        <div className="flex gap-x-2">
+          <div className="mt-2 flex w-[135px] rounded-md shadow-sm sm:flex-none">
             <input
               onChange={(e) =>
                 setWaterMeterCurrentValue(
@@ -209,10 +209,10 @@ function AddIncomeForm({
               type="number"
               name="watermeterCurrentValue"
               id="watermeterCurrentValue"
-              className="w-full rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              className="w-full rounded-l-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               placeholder="stan wodomierza"
             />
-            <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+            <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 text-slate-500 sm:text-sm">
               m3
             </span>
           </div>
@@ -225,13 +225,13 @@ function AddIncomeForm({
               name="watermeterDate"
               id="watermeterDate"
               value={waterMeterCurrentDate}
-              className="mt-2 inline-flex w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              className="mt-2  inline-flex w-[135px] rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
 
         {waterMeterCurrentValue - waterMeterPreviousValue > 0 && (
-          <span className="my-2 block text-sm font-medium leading-6 text-gray-700">
+          <span className="my-2 block text-sm font-medium leading-6 text-slate-700">
             zużycie:{" "}
             <strong>
               {(waterMeterCurrentValue - waterMeterPreviousValue).toFixed(3)} m3
@@ -239,7 +239,7 @@ function AddIncomeForm({
           </span>
         )}
 
-        <span className="my-2 block text-sm font-medium leading-6 text-gray-700">
+        <span className="my-2 block text-sm font-medium leading-6 text-slate-700">
           ostatni odczyt: <strong>{waterMeterPreviousValue} m3</strong> z dnia{" "}
           {waterMeterPreviousDate.slice(0, 10)} ({waterMeterPreviousType})
         </span>
@@ -247,7 +247,7 @@ function AddIncomeForm({
         <div className="flex justify-end sm:justify-start">
           <button
             type="submit"
-            className="inline-flex justify-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-gray-300"
+            className="inline-flex justify-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-slate-300"
             disabled={
               !(
                 waterMeterCurrentValue > waterMeterPreviousValue &&
@@ -267,11 +267,11 @@ function AddIncomeForm({
       <hr className="mt-4 print:hidden" />
 
       <form className="print:hidden" action={saveOperation}>
-        <div className="mt-4 block text-sm font-medium leading-6 text-gray-900">
+        <div className="mt-4 block text-sm font-medium leading-6 text-slate-900">
           3. Dowód wpłaty
         </div>
         <div className="flex">
-          <div className="mr-2 mt-2 flex grow rounded-md shadow-sm sm:flex-none">
+          <div className="mr-2 mt-2 flex w-[135px] rounded-md shadow-sm sm:flex-none">
             <input
               onChange={(e) => setOperationNumber(e.target.value)}
               min={1}
@@ -282,12 +282,12 @@ function AddIncomeForm({
               id="operationNumber"
               className={classNames(
                 paymentType ? "rounded-md" : "rounded-l-md",
-                ", w-full border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6",
+                "w-full border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6",
               )}
               placeholder={`numer ${paymentType ? "wyciągu" : "KP"}`}
             />
             {!paymentType && (
-              <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+              <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 text-slate-500 sm:text-sm">
                 /{getEndDateFromEnv().getFullYear().toString().slice(2, 4)}
               </span>
             )}
@@ -301,7 +301,7 @@ function AddIncomeForm({
               name="operationDate"
               id="operationDate"
               value={operationDate}
-              className="mt-2 inline-flex rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+              className="mt-2 inline-flex w-[135px] rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
@@ -314,11 +314,11 @@ function AddIncomeForm({
               id="default-radio-1"
               type="radio"
               name="default-radio"
-              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              className="h-4 w-4 border-slate-300 bg-slate-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
             />
             <label
               htmlFor="default-radio-1"
-              className="ml-2 text-sm font-medium text-gray-900"
+              className="ml-2 text-sm font-medium text-slate-900"
             >{`zgodny z saldem (${formatter.format(-1 * balance)})`}</label>
           </div>
         )}
@@ -330,9 +330,9 @@ function AddIncomeForm({
               id="default-radio-2"
               type="radio"
               name="default-radio"
-              className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
+              className="h-4 w-4 border-slate-300 bg-slate-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
             />
-            <div className="ml-2 text-sm font-medium text-gray-900">
+            <div className="ml-2 text-sm font-medium text-slate-900">
               inna kwota
             </div>
           </div>
@@ -352,16 +352,16 @@ function AddIncomeForm({
                   step="any"
                   name="operationValue"
                   id="operationValue"
-                  className="block w-full flex-1 rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
+                  className="block w-full flex-1 rounded-l-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
                   placeholder="wpisz kwotę"
                 />
-                <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 text-slate-500 sm:text-sm">
                   zł
                 </span>
               </div>
 
               {operationSum > 0 && balance + operationSum < 0 && (
-                <span className="ml-2 block text-sm font-medium leading-6 text-gray-900">
+                <span className="ml-2 block text-sm font-medium leading-6 text-slate-900">
                   pozostanie do zapłaty:{" "}
                   <strong>
                     {formatter.format(-1 * (balance + operationSum))}
@@ -375,7 +375,7 @@ function AddIncomeForm({
         <div className="flex justify-end sm:justify-start">
           <button
             type="submit"
-            className="inline-flex justify-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-gray-300"
+            className="inline-flex justify-center rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-slate-300"
             disabled={
               !(
                 flat != null &&
@@ -393,16 +393,19 @@ function AddIncomeForm({
         </div>
       </form>
 
-      <hr className="mt-4 print:hidden" />
-
-      <div className="mb-2 mt-4 text-left text-sm font-medium text-gray-700">
-        Kartoteka
-      </div>
-
-      <div className="not-prose relative overflow-hidden bg-slate-50">
+      <div className="relative mb-2 mt-6 overflow-hidden">
         <div className="relative overflow-auto">
-          <div className="my-8 shadow-sm">
+          <div className="my-8 overflow-hidden shadow-sm">
             <table className="w-full table-fixed border-collapse text-sm print:text-sm">
+              <thead>
+                <tr>
+                  <td colSpan={3} className="border-b border-slate-100">
+                    <div className="flex items-center justify-between  px-5 pb-8">
+                      <div className="text-base font-semibold">Kartoteka</div>
+                    </div>
+                  </td>
+                </tr>
+              </thead>
               <tbody className="bg-white">
                 {flatHistory
                   .filter((el) => el.numer_mieszkania === flat)
@@ -489,7 +492,7 @@ function AddIncomeForm({
                             ) : (
                               ""
                             )}
-                            <div className={classNames("text-right text-xs")}>
+                            <div className="text-right text-xs">
                               {row.typ_dowodu_ksiegowego}{" "}
                               {row.numer_dowodu_ksiegowego}
                             </div>

@@ -1,5 +1,9 @@
-import OSpinner from "@/organisms/o-spinner";
+import Link from "next/link";
 
 export default function Loading() {
-  return <OSpinner></OSpinner>;
+  return (
+    <div className="container mx-auto mt-10">
+      <Link href="/api/download/financialReport">Sprawozdanie finansowe</Link>
+    </div>
+  );
 }
