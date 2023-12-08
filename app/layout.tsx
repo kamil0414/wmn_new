@@ -2,6 +2,7 @@ import OHeader from "@/organisms/o-header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const revalidate = 0;
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <OHeader />
         <div className="layout">{children}</div>
+        <SpeedInsights />
       </body>
     </html>
   );
