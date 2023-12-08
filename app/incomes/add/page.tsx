@@ -15,7 +15,7 @@ async function AddIncome() {
       data: true,
       naleznosc: true,
       opis: true,
-      rodzaj_dowodu_ksiegowego: true,
+      typ_dowodu_ksiegowego: true,
       numer_dowodu_ksiegowego: true,
       saldo: true,
       wplata: true,

@@ -158,17 +158,17 @@ model kategoria_wydatku {
 }
 
 view kartoteka {
-  id                       Int      @id
-  numer_mieszkania         Int      @db.SmallInt
-  data                     DateTime @db.Date
-  opis                     String?
-  rodzaj_dowodu_ksiegowego String?
-  numer_dowodu_ksiegowego  String?
-  naleznosc                Decimal  @db.Money
-  wplata                   Decimal  @db.Money
-  saldo                    Decimal  @db.Money
-  poprzedni_stan_licznika  Decimal? @db.Decimal
-  stan_licznika            Decimal? @db.Decimal
+  id                      Int      @id
+  numer_mieszkania        Int      @db.SmallInt
+  data                    DateTime @db.Date
+  opis                    String?
+  typ_dowodu_ksiegowego   String?
+  numer_dowodu_ksiegowego String?
+  naleznosc               Decimal  @db.Money
+  wplata                  Decimal  @db.Money
+  saldo                   Decimal  @db.Money
+  poprzedni_stan_licznika Decimal? @db.Decimal
+  stan_licznika           Decimal? @db.Decimal
 
   @@map("kartoteki")
 }

@@ -14,7 +14,7 @@ interface FlatHistoryInterface {
   data: Date;
   naleznosc: number;
   opis: string | null;
-  rodzaj_dowodu_ksiegowego: string | null;
+  typ_dowodu_ksiegowego: string | null;
   numer_dowodu_ksiegowego: string | null;
   saldo: number;
   wplata: number;
@@ -490,7 +490,7 @@ function AddIncomeForm({
                               ""
                             )}
                             <div className={classNames("text-right text-xs")}>
-                              {row.rodzaj_dowodu_ksiegowego}{" "}
+                              {row.typ_dowodu_ksiegowego}{" "}
                               {row.numer_dowodu_ksiegowego}
                             </div>
                           </div>

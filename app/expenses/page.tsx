@@ -47,8 +47,8 @@ export default async function Expenses() {
           },
         },
         {
-          id_typu_dowodu_ksiegowego: {
-            equals: 100,
+          id_opisu: {
+            in: [11, 21, 25],
           },
         },
       ],
