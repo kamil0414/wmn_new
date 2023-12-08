@@ -4,6 +4,14 @@ import { classNames, formatter } from "@/utils/index";
 export default async function Home() {
   const basicData = await prisma.saldo.findMany();
 
+  const sumaNaleznosci = basicData.reduce(
+    (accumulator, currentValue) =>
+      currentValue.saldo.toNumber() < 0
+        ? accumulator - currentValue.saldo.toNumber()
+        : 0,
+    0,
+  );
+
   return (
     <div className="container mx-auto px-4">
       <div className="mb-2 mt-6 text-sm font-medium text-gray-700">
@@ -63,6 +71,20 @@ export default async function Home() {
                   </tr>
                 )}
               </tbody>
+              {sumaNaleznosci > 0 && (
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th className="py-2 pl-2 text-right font-normal text-slate-400">
+                      Suma należności:
+                    </th>
+
+                    <th className="py-2 pl-2 pr-4 text-left font-normal text-red-500">
+                      {formatter.format(sumaNaleznosci)}
+                    </th>
+                  </tr>
+                </tfoot>
+              )}
             </table>
           </div>
         </div>
