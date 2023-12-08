@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
-import AddIncomeForm from "./addIncomeForm";
+import AddIncomeForm from "./form";
 
 async function AddIncome() {
   const basicData: any = await prisma.$queryRawUnsafe(
@@ -15,7 +15,8 @@ async function AddIncome() {
       data: true,
       naleznosc: true,
       opis: true,
-      rodzaj_i_numer_dowodu_ksiegowego: true,
+      rodzaj_dowodu_ksiegowego: true,
+      numer_dowodu_ksiegowego: true,
       saldo: true,
       wplata: true,
       numer_mieszkania: true,

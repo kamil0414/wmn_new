@@ -14,7 +14,8 @@ interface FlatHistoryInterface {
   data: Date;
   naleznosc: number;
   opis: string | null;
-  rodzaj_i_numer_dowodu_ksiegowego: string | null;
+  rodzaj_dowodu_ksiegowego: string | null;
+  numer_dowodu_ksiegowego: string | null;
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
@@ -90,9 +91,8 @@ function AddIncomeForm({
       id_firmy: flat,
       data: new Date(operationDate),
       id_opisu: 22,
-      rodzaj_i_numer_dowodu_ksiegowego: `${
-        paymentType ? "Wyciąg nr" : "KP"
-      } ${operationNumber}${
+      id_typu_dowodu_ksiegowego: paymentType ? 1 : 0,
+      numer_dowodu_ksiegowego: `${operationNumber}${
         paymentType
           ? ""
           : `/${getEndDateFromEnv().getFullYear().toString().slice(2, 4)}`
@@ -481,7 +481,7 @@ function AddIncomeForm({
                               >
                                 <button
                                   type="submit"
-                                  className="font-medium text-sky-600"
+                                  className="font-medium text-red-600"
                                 >
                                   Usuń
                                 </button>
@@ -490,7 +490,8 @@ function AddIncomeForm({
                               ""
                             )}
                             <div className={classNames("text-right text-xs")}>
-                              {row.rodzaj_i_numer_dowodu_ksiegowego}
+                              {row.rodzaj_dowodu_ksiegowego}{" "}
+                              {row.numer_dowodu_ksiegowego}
                             </div>
                           </div>
                         </td>

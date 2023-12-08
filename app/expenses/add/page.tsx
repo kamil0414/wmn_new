@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import AddExpenseForm from "./addExpenseForm";
+import ExpenseForm from "../form";
 
 async function AddExpense() {
   const expensesCategory = await prisma.kategoria_wydatku.findMany({
@@ -62,6 +62,6 @@ async function AddExpense() {
     ],
   });
 
-  return <AddExpenseForm expensesCategory={expensesCategory} />;
+  return <ExpenseForm expensesCategory={expensesCategory} />;
 }
 export default AddExpense;

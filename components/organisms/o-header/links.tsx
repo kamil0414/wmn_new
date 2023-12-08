@@ -6,10 +6,10 @@ import { classNames } from "@/utils/index";
 
 function Links() {
   const navigation = [
-    { name: "Dashboard", href: "/" },
-    { name: "Dodaj wpłatę", href: "/addIncome" },
-    { name: "Dodaj wydatek", href: "/addExpense" },
-    { name: "Historia wydatków", href: "/expenses" },
+    { name: "Salda mieszkań", href: "/" },
+    { name: "Dodaj wpłatę", href: "/incomes/add" },
+    { name: "Dodaj wydatek", href: "/expenses/add" },
+    { name: "Wydatki", href: "/expenses" },
     { name: "Dokumenty", href: "/documents" },
   ];
 

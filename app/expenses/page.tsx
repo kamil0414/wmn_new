@@ -17,7 +17,12 @@ export default async function Expenses() {
       ilosc: true,
       opis: true,
       kwota: true,
-      rodzaj_i_numer_dowodu_ksiegowego: true,
+      typ_dowodu_ksiegowego: {
+        select: {
+          opis: true,
+        },
+      },
+      numer_dowodu_ksiegowego: true,
       komentarz: true,
       firma: {
         select: {
@@ -43,7 +48,7 @@ export default async function Expenses() {
           },
         },
         {
-          rodzaj_i_numer_dowodu_ksiegowego: {
+          numer_dowodu_ksiegowego: {
             equals: "Bilans otwarcia",
           },
         },
@@ -59,7 +64,7 @@ export default async function Expenses() {
         data: "desc",
       },
       {
-        rodzaj_i_numer_dowodu_ksiegowego: "asc",
+        numer_dowodu_ksiegowego: "asc",
       },
       {
         firma: {
@@ -87,7 +92,7 @@ export default async function Expenses() {
                   <td colSpan={3}>
                     <div className="flex items-center justify-between  px-5 pb-8">
                       <div className="text-base font-semibold">Wydatki</div>
-                      <Link href="/addExpense">
+                      <Link href="/expenses/add">
                         <div className="pointer-events-auto rounded-md bg-sky-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-sky-500">
                           Dodaj nowy
                         </div>
@@ -164,10 +169,14 @@ export default async function Expenses() {
                       </td>
 
                       <td className="border-b border-slate-200 p-2 text-right sm:px-6 sm:py-2">
-                        <div className="flex flex-col">
-                          <ActionButtons className="mb-1" id={row.id} />
-                          <span className=" text-xs text-slate-500">
-                            {row.rodzaj_i_numer_dowodu_ksiegowego}
+                        <div className="flex flex-col items-end">
+                          <ActionButtons
+                            className="mb-1 flex gap-x-3"
+                            id={row.id}
+                          />
+                          <span className="text-xs text-slate-500">
+                            {row.typ_dowodu_ksiegowego.opis}{" "}
+                            {row.numer_dowodu_ksiegowego}
                           </span>
                         </div>
                       </td>

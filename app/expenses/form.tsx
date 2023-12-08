@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
-import saveExpense from "./actions";
+import saveExpense from "./add/actions";
 
 interface expensesCategory {
   id_subkonta: number;
@@ -24,7 +24,7 @@ interface expensesCategory {
   nazwa: string;
 }
 
-function AddExpenseForm({
+function ExpenseForm({
   expensesCategory,
 }: {
   expensesCategory: expensesCategory[];
@@ -33,7 +33,7 @@ function AddExpenseForm({
   const [description, setDescription] = useState(0);
   const [company, setCompany] = useState(0);
 
-  const [type, setType] = useState("");
+  const [type, setType] = useState(2);
   const [account, setAccount] = useState(0);
   const [countRequired, setCountRequired] = useState(true);
   const [cashChecked, setCashChecked] = useState(true);
@@ -73,9 +73,9 @@ function AddExpenseForm({
       descriptions?.length === 1 &&
       descriptions[0].typy_dowodow_ksiegowych?.length === 1
     ) {
-      setType(descriptions[0].typy_dowodow_ksiegowych[0].opis);
+      setType(descriptions[0].typy_dowodow_ksiegowych[0].id);
     } else {
-      setType("");
+      setType(2);
     }
 
     setAccount(id_subkonta);
@@ -104,9 +104,9 @@ function AddExpenseForm({
     setUnit(jednostka_miary);
 
     if (typy_dowodow_ksiegowych?.length === 1) {
-      setType(typy_dowodow_ksiegowych[0].opis);
+      setType(typy_dowodow_ksiegowych[0].id);
     } else {
-      setType("");
+      setType(2);
     }
 
     setDate("");
@@ -125,9 +125,8 @@ function AddExpenseForm({
       id_firmy: company,
       data: new Date(date),
       id_opisu: description,
-      rodzaj_i_numer_dowodu_ksiegowego: `${
-        type === "Wyciąg" ? "Wyciąg nr" : type
-      } ${number}`,
+      id_typu_dowodu_ksiegowego: type,
+      numer_dowodu_ksiegowego: number,
       kwota: -1 * sum,
       czy_bank: !cashChecked,
       id_subkonta: account,
@@ -220,14 +219,14 @@ function AddExpenseForm({
 
               <select
                 value={type}
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) => setType(parseInt(e.target.value))}
                 className="mt-2 block w-full rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option disabled value="">
                   wybierz typ dowodu ksiegowego
                 </option>
                 {typy_dowodow_ksiegowych?.map((obj) => (
-                  <option key={obj.id} value={obj.opis}>
+                  <option key={obj.id} value={obj.id}>
                     {obj.opis}
                   </option>
                 ))}
@@ -357,4 +356,4 @@ function AddExpenseForm({
     </div>
   );
 }
-export default AddExpenseForm;
+export default ExpenseForm;

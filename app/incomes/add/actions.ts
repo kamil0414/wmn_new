@@ -42,7 +42,8 @@ export const saveIncome = async ({
   id_firmy,
   data,
   id_opisu,
-  rodzaj_i_numer_dowodu_ksiegowego,
+  id_typu_dowodu_ksiegowego,
+  numer_dowodu_ksiegowego,
   kwota,
   czy_bank,
   id_subkonta,
@@ -50,7 +51,8 @@ export const saveIncome = async ({
   id_firmy: number;
   data: Date;
   id_opisu: number;
-  rodzaj_i_numer_dowodu_ksiegowego: string;
+  id_typu_dowodu_ksiegowego: number;
+  numer_dowodu_ksiegowego: string;
   kwota: number;
   czy_bank: boolean;
   id_subkonta: number;
@@ -61,7 +63,8 @@ export const saveIncome = async ({
         id_firmy,
         data,
         id_opisu,
-        rodzaj_i_numer_dowodu_ksiegowego,
+        id_typu_dowodu_ksiegowego,
+        numer_dowodu_ksiegowego,
         kwota,
         czy_bank,
         id_subkonta,
