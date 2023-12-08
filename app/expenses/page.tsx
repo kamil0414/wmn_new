@@ -15,7 +15,6 @@ export default async function Expenses() {
       data: true,
       czy_bank: true,
       ilosc: true,
-      opis: true,
       kwota: true,
       typ_dowodu_ksiegowego: {
         select: {
@@ -48,8 +47,8 @@ export default async function Expenses() {
           },
         },
         {
-          numer_dowodu_ksiegowego: {
-            equals: "Bilans otwarcia",
+          id_typu_dowodu_ksiegowego: {
+            equals: 100,
           },
         },
       ],
@@ -146,14 +145,10 @@ export default async function Expenses() {
                                 row.opis_pow == null ? "text-red-500" : "",
                               )} mb-1`}
                             >
-                              {row.opis_pow
-                                ? `${
-                                    row.opis_pow?.kategoria_wydatku?.nazwa ===
-                                    row.opis_pow?.opis
-                                      ? row.opis_pow?.kategoria_wydatku?.nazwa
-                                      : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`
-                                  }`
-                                : row.opis}
+                              {row.opis_pow?.kategoria_wydatku?.nazwa ===
+                              row.opis_pow?.opis
+                                ? row.opis_pow?.kategoria_wydatku?.nazwa
+                                : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`}
                               {row.ilosc && row.ilosc.toNumber() > 0
                                 ? ` (${row.ilosc})`
                                 : ""}

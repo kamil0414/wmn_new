@@ -70,17 +70,16 @@ model operacja {
   id_typu_dowodu_ksiegowego Int                   @default(0)
   typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
   numer_dowodu_ksiegowego   String
-  opis                      String?
   kwota                     Decimal               @db.Money
   czy_bank                  Boolean
   id_subkonta               Int
   id                        Int                   @id @default(autoincrement())
   ilosc                     Decimal?              @default(0) @db.Decimal(6, 2)
   komentarz                 String?
-  id_opisu                  Int?                  @db.SmallInt
+  id_opisu                  Int                   @db.SmallInt
   is_deleted                Boolean               @default(false)
   firma                     firma                 @relation(fields: [id_firmy], references: [id])
-  opis_pow                  opis?                 @relation(fields: [id_opisu], references: [id])
+  opis_pow                  opis                  @relation(fields: [id_opisu], references: [id])
   subkonta                  subkonto              @relation(fields: [id_subkonta], references: [id])
 
   @@unique([id_firmy, data, id_typu_dowodu_ksiegowego, numer_dowodu_ksiegowego, kwota])
