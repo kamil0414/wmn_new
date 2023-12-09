@@ -84,12 +84,10 @@ export const upsertExpense = async ({
         komentarz,
       },
     });
-
-    console.log({ message: `${id ? "Updated" : "Added"} expense` });
+    revalidatePath("/", "layout");
   } catch (e) {
-    console.log({ message: `Error ${e}` });
+    return { message: `Error ${e}` };
   }
-  revalidatePath("/", "layout");
   if (id) {
     redirect(`/expenses`);
   }
@@ -105,9 +103,8 @@ export const deleteExpense = async (id: number) => {
         is_deleted: true,
       },
     });
-    console.log({ message: `Deleted ${expense}` });
+    revalidatePath("/", "layout");
   } catch (e) {
-    console.log({ message: `Error ${e}` });
+    return { message: `Error ${e}` };
   }
-  revalidatePath("/", "layout");
 };

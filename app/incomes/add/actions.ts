@@ -29,13 +29,11 @@ export const saveWater = async ({
           data.toISOString().split("T")[0]
         }'`}, ${numer_mieszkania})`,
       );
-      console.log({ message: `Added water count` });
+      revalidatePath("/", "layout");
     }
-    console.log({ message: `Error occured` });
   } catch (e) {
-    console.log({ message: `Error ${e}` });
+    return { message: `Error ${e}` };
   }
-  revalidatePath("/", "layout");
 };
 
 export const saveIncome = async ({
@@ -71,9 +69,8 @@ export const saveIncome = async ({
       },
     });
     revalidatePath("/", "layout");
-    console.log({ message: `Added income` });
   } catch (e) {
-    console.log({ message: `Error ${e}` });
+    return { message: `Error ${e}` };
   }
 };
 
@@ -89,7 +86,6 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
         },
       });
       revalidatePath("/", "layout");
-      console.log({ message: `Deleted ${income}` });
     } else {
       const bill = await prisma.naliczenie.update({
         where: {
@@ -110,9 +106,8 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
         });
       }
       revalidatePath("/addIncome");
-      console.log({ message: `Deleted ${bill}` });
     }
   } catch (e) {
-    console.log({ message: `Error ${e}` });
+    return { message: `Error ${e}` };
   }
 };

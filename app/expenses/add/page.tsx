@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import ExpenseForm from "../form";
 
 async function AddExpense() {
-  const expensesCategory = await prisma.kategoria_opisu.findMany({
+  const categories = await prisma.kategoria_opisu.findMany({
     select: {
       id: true,
       nazwa: true,
@@ -65,7 +65,7 @@ async function AddExpense() {
 
   return (
     <div className="container mx-auto px-4">
-      <ExpenseForm className="mt-6" expensesCategory={expensesCategory} />
+      <ExpenseForm className="mt-6" categories={categories} />
     </div>
   );
 }

@@ -70,37 +70,45 @@ function AddIncomeForm({
     .filter((el) => el.numer_mieszkania === flat)
     .slice(-1)[0];
 
-  const saveWaterMeterValue = () => {
-    saveWater({
+  const saveWaterMeterValue = async () => {
+    const response = await saveWater({
       numer_mieszkania: flat,
       data: new Date(waterMeterCurrentDate),
       stan: waterMeterCurrentValue,
       typ: 0,
-    }).then(() => {
+    });
+
+    if (response?.message) {
+      alert(response?.message);
+    } else {
       setWaterMeterPreviousValue(waterMeterCurrentValue);
       setWaterMeterPreviousDate(waterMeterCurrentDate);
       setWaterMeterPreviousType(0);
       setWaterMeterCurrentDate(getEndDateFromEnv().toISOString().split("T")[0]);
       setWaterMeterCurrentValue(waterMeterCurrentValue);
       setWaterMeterButtonState(false);
-    });
+    }
   };
 
-  const saveOperation = () => {
-    saveIncome({
+  const saveOperation = async () => {
+    const response = await saveIncome({
       id_firmy: flat,
       data: new Date(operationDate),
       id_opisu: 22,
       id_typu_dowodu_ksiegowego: paymentType ? 1 : 0,
       numer_dowodu_ksiegowego: `${operationNumber}${
-        paymentType
-          ? ""
-          : `/${getEndDateFromEnv().getFullYear().toString().slice(2, 4)}`
+        !paymentType
+          ? `/${getEndDateFromEnv().getFullYear().toString().slice(2, 4)}`
+          : ""
       }`,
       kwota: operationSum,
       czy_bank: paymentType,
       id_subkonta: 0,
     });
+
+    if (response?.message) {
+      alert(response?.message);
+    }
   };
 
   const defaultOptionClick = () => {
@@ -162,9 +170,13 @@ function AddIncomeForm({
     }
   }, [basicData, flat, blankNumbers]);
 
-  const deleteConfirm = (id: number, isWaterBill: boolean) => {
+  const deleteConfirm = async (id: number, isWaterBill: boolean) => {
     if (confirm(`Usunąć ${!isWaterBill ? "wpłatę" : "naliczenie"}?`)) {
-      deleteIncome(id, isWaterBill);
+      const response = await deleteIncome(id, isWaterBill);
+
+      if (response?.message) {
+        alert(response?.message);
+      }
     }
   };
 

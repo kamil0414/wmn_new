@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { deleteExpense } from "./actions";
 
-const deleteConfirm = (id: number) => {
+const deleteConfirm = async (id: number) => {
   if (confirm("Usunąć wydatek?")) {
-    deleteExpense(id);
+    const response = await deleteExpense(id);
+
+    if (response?.message) {
+      alert(response?.message);
+    }
   }
 };
 

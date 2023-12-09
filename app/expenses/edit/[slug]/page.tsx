@@ -32,7 +32,7 @@ async function EditExpense({ params }: { params: { slug: string } }) {
     },
   });
 
-  const expensesCategory = await prisma.kategoria_opisu.findMany({
+  const categories = await prisma.kategoria_opisu.findMany({
     select: {
       id: true,
       nazwa: true,
@@ -97,7 +97,7 @@ async function EditExpense({ params }: { params: { slug: string } }) {
     <div className="container mx-auto px-4">
       <ExpenseForm
         className="mt-6"
-        expensesCategory={expensesCategory}
+        categories={categories}
         id={id}
         selectedCategory={record?.opis_pow?.kategoria_opisu.id}
         selectedDescription={record?.opis_pow?.id}

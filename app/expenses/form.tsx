@@ -8,30 +8,36 @@ import {
 } from "@/utils/index";
 import { upsertExpense } from "./actions";
 
-interface expensesCategory {
+interface Company {
+  id: number;
+  nazwa: string;
+}
+
+interface Type {
+  opis: string;
+  id: number;
+}
+
+interface Description {
+  opis: string;
+  id: number;
+  ilosc_wymagana: boolean;
+  firmy: Company[];
+  typy_dowodow_ksiegowych: Type[];
+  jednostka_miary: string | null;
+}
+
+interface Category {
   id_subkonta: number;
   czy_zawsze_bank: boolean;
   id: number;
-  opisy: {
-    opis: string;
-    id: number;
-    ilosc_wymagana: boolean;
-    firmy: {
-      id: number;
-      nazwa: string;
-    }[];
-    typy_dowodow_ksiegowych: {
-      opis: string;
-      id: number;
-    }[];
-    jednostka_miary: string | null;
-  }[];
+  opisy: Description[];
   nazwa: string;
 }
 
 function ExpenseForm({
   className,
-  expensesCategory,
+  categories,
   id,
   selectedCategory,
   selectedDescription,
@@ -45,7 +51,7 @@ function ExpenseForm({
   selectedCash,
 }: {
   className?: string;
-  expensesCategory: expensesCategory[];
+  categories: Category[];
   id?: number;
   selectedCategory?: number;
   selectedDescription?: number;
@@ -58,13 +64,13 @@ function ExpenseForm({
   selectedComment?: string;
   selectedCash?: boolean;
 }) {
-  const [category, setCategory] = useState(selectedCategory ?? 0);
-  const [description, setDescription] = useState(selectedDescription ?? 0);
-  const [company, setCompany] = useState(selectedCompany ?? 0);
+  const [category, setCategory] = useState(selectedCategory ?? -1);
+  const [description, setDescription] = useState(selectedDescription ?? -1);
+  const [company, setCompany] = useState(selectedCompany ?? -1);
   const [otherCompanyName, setOtherCompanyName] = useState("");
 
   const [date, setDate] = useState(selectedDate ?? "");
-  const [type, setType] = useState(selectedType ?? 2);
+  const [type, setType] = useState(selectedType ?? -1);
   const [number, setNumber] = useState(selectedNumber ?? "");
 
   const [count, setCount] = useState(selectedCount ?? 0);
@@ -74,32 +80,17 @@ function ExpenseForm({
 
   const [cashChecked, setCashChecked] = useState(selectedCash ?? true);
 
+  const [descriptions, setDescriptions] = useState<Description[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [types, setTypes] = useState<Type[]>([]);
+
+  const [alwaysBank, setAlwaysBank] = useState(false);
   const [account, setAccount] = useState(0);
   const [countRequired, setCountRequired] = useState(false);
   const [unit, setUnit] = useState<string | null>("");
 
   const sumInput = useRef<HTMLInputElement>(null);
-
-  const {
-    opisy: descriptions,
-    id_subkonta,
-    czy_zawsze_bank,
-  } = expensesCategory?.find((expense) => expense.id === category) || {
-    opisy: [],
-    id_subkonta: 0,
-  };
-
-  const {
-    ilosc_wymagana,
-    firmy: companies,
-    typy_dowodow_ksiegowych,
-    jednostka_miary,
-  } = descriptions?.find((e) => e.id === description) || {
-    ilosc_wymagana: false,
-    firmy: [],
-    typy_dowodow_ksiegowych: [],
-    jednostka_miary: null,
-  };
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (sumInput.current) {
@@ -108,10 +99,50 @@ function ExpenseForm({
   }, [selectedSum]);
 
   useEffect(() => {
+    const { opisy, id_subkonta, czy_zawsze_bank } = categories?.find(
+      (expense) => expense.id === category,
+    ) || {
+      opisy: [],
+      id_subkonta: 0,
+      czy_zawsze_bank: false,
+    };
+
+    setDescriptions(opisy);
+    setAccount(id_subkonta);
+    setAlwaysBank(czy_zawsze_bank);
+    setCashChecked(!czy_zawsze_bank);
+  }, [categories, category]);
+
+  useEffect(() => {
+    const { ilosc_wymagana, firmy, typy_dowodow_ksiegowych, jednostka_miary } =
+      descriptions?.find((e) => e.id === description) || {
+        ilosc_wymagana: false,
+        firmy: [],
+        typy_dowodow_ksiegowych: [],
+        jednostka_miary: null,
+      };
+
+    setCountRequired(ilosc_wymagana);
+    if (!ilosc_wymagana) {
+      setCount(0);
+    } else {
+      setCount(selectedCount ?? 0);
+    }
+    setCompanies(firmy);
+    setTypes(typy_dowodow_ksiegowych);
+    setUnit(jednostka_miary);
+  }, [descriptions, description, selectedCount]);
+
+  useEffect(() => {
     if (descriptions?.length === 1) {
       setDescription(descriptions[0].id);
+    } else if (
+      selectedDescription &&
+      descriptions?.find((e) => e.id === selectedDescription)
+    ) {
+      setDescription(selectedDescription);
     } else {
-      setDescription(selectedDescription ?? 0);
+      setDescription(-1);
     }
   }, [selectedDescription, descriptions]);
 
@@ -120,42 +151,37 @@ function ExpenseForm({
   }, [description]);
 
   useEffect(() => {
-    setAccount(id_subkonta);
-  }, [id_subkonta]);
-
-  useEffect(() => {
-    setCashChecked(!czy_zawsze_bank);
-  }, [czy_zawsze_bank]);
-
-  useEffect(() => {
-    setCountRequired(ilosc_wymagana);
-    if (!ilosc_wymagana) {
-      setCount(0);
-    }
-  }, [ilosc_wymagana]);
-
-  useEffect(() => {
     if (companies?.length === 1) {
       setCompany(companies[0].id);
+    } else if (
+      selectedCompany &&
+      companies?.find((e) => e.id === selectedCompany)
+    ) {
+      setCompany(selectedCompany);
     } else {
-      setCompany(selectedCompany ?? 0);
+      setCompany(-1);
     }
-  }, [companies, selectedCompany]);
+  }, [selectedCompany, companies]);
 
   useEffect(() => {
-    if (typy_dowodow_ksiegowych?.length === 1) {
-      setType(typy_dowodow_ksiegowych[0].id);
+    if (types?.length === 1) {
+      setType(types[0].id);
+    } else if (selectedType && types?.find((e) => e.id === selectedType)) {
+      setType(selectedType);
     } else {
-      setType(selectedType ?? 2);
+      setType(-1);
     }
-  }, [selectedType, typy_dowodow_ksiegowych]);
+  }, [selectedType, types]);
 
+  // after form submit clear sum field
   useEffect(() => {
-    setUnit(jednostka_miary);
-  }, [jednostka_miary]);
+    if (sumInput.current) {
+      sumInput.current.value = sum.toString();
+    }
+  }, [sum]);
 
-  const saveOperation = () => {
-    upsertExpense({
+  const saveOperation = async () => {
+    const response = await upsertExpense({
       id,
       id_firmy: company,
       data: new Date(date),
@@ -168,9 +194,17 @@ function ExpenseForm({
       ilosc: count,
       komentarz: comment,
       nazwaNowejFirmy: otherCompanyName,
-    }).then(() => {
-      setCategory(0);
     });
+
+    if (response?.message) {
+      alert(response?.message);
+    } else {
+      setCategory(-1);
+      setDate("");
+      setNumber("");
+      setSum(0);
+      setComment("");
+    }
   };
 
   return (
@@ -186,17 +220,17 @@ function ExpenseForm({
         onChange={(e) => setCategory(parseInt(e.target.value, 10))}
         className="rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
       >
-        <option disabled value={0}>
+        <option disabled value={-1}>
           wybierz kategorię
         </option>
-        {expensesCategory?.map((obj) => (
+        {categories?.map((obj) => (
           <option key={obj.id} value={obj.id}>
             {obj.nazwa}
           </option>
         ))}
       </select>
 
-      {category !== 0 && (
+      {category !== -1 && (
         <div className="flex flex-col gap-y-3 sm:gap-y-2">
           {descriptions?.length > 1 && (
             <select
@@ -204,7 +238,7 @@ function ExpenseForm({
               onChange={(e) => setDescription(parseInt(e.target.value, 10))}
               className="rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
             >
-              <option disabled value={0}>
+              <option disabled value={-1}>
                 wybierz opis
               </option>
               {descriptions?.map((obj) => (
@@ -220,7 +254,7 @@ function ExpenseForm({
               onChange={(e) => setCompany(parseInt(e.target.value, 10))}
               className="w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
             >
-              <option disabled value={0}>
+              <option disabled value={-1}>
                 wybierz firmę
               </option>
               {companies?.map((obj) => (
@@ -262,10 +296,10 @@ function ExpenseForm({
                 onChange={(e) => setType(parseInt(e.target.value))}
                 className="-mr-[1px] w-full rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
-                <option disabled value={0}>
+                <option disabled value={-1}>
                   wybierz typ dowodu ksiegowego
                 </option>
-                {typy_dowodow_ksiegowych?.map((obj) => (
+                {types?.map((obj) => (
                   <option key={obj.id} value={obj.id}>
                     {obj.opis}
                   </option>
@@ -342,7 +376,7 @@ function ExpenseForm({
             placeholder="wpisz komentarz (opcjonalnie)"
           />
           <div className="mt-2 flex flex-col gap-y-3 sm:gap-y-2">
-            {!czy_zawsze_bank && (
+            {!alwaysBank && (
               <div className="flex items-center">
                 <input
                   onChange={() => setCashChecked(true)}
@@ -352,7 +386,10 @@ function ExpenseForm({
                   name="default-radio"
                   className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
                 />
-                <div className="ml-2 text-sm font-medium text-gray-900">
+                <div
+                  onClick={() => setCashChecked(true)}
+                  className="ml-2 cursor-pointer text-sm font-medium text-gray-900"
+                >
                   kasa
                 </div>
               </div>
@@ -366,7 +403,12 @@ function ExpenseForm({
                 name="default-radio"
                 className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
               />
-              <div className="ml-2 text-sm font-medium text-gray-900">bank</div>
+              <div
+                onClick={() => setCashChecked(false)}
+                className="ml-2 cursor-pointer text-sm font-medium text-gray-900"
+              >
+                bank
+              </div>
             </div>
           </div>
         </div>
@@ -377,7 +419,6 @@ function ExpenseForm({
         disabled={
           !(
             company != null &&
-            company !== 0 &&
             (company !== -1 ||
               (company === -1 &&
                 otherCompanyName != null &&
@@ -385,8 +426,9 @@ function ExpenseForm({
             date != null &&
             date !== "" &&
             description != null &&
-            description !== 0 &&
+            description !== -1 &&
             type != null &&
+            type !== -1 &&
             number != null &&
             number !== "" &&
             account != null &&
