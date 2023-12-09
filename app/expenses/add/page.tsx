@@ -65,7 +65,7 @@ async function AddExpense() {
 
   return (
     <div className="container mx-auto px-4">
-      <ExpenseForm expensesCategory={expensesCategory} />
+      <ExpenseForm className="mt-6" expensesCategory={expensesCategory} />
     </div>
   );
 }
