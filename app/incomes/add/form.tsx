@@ -203,6 +203,9 @@ function AddIncomeForm({
                   parseFloat(e.target.value.replace(",", ".")),
                 )
               }
+              onKeyDown={(evt) =>
+                ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
+              }
               min={waterMeterCurrentMinValue}
               step="any"
               value={waterMeterCurrentValue}
@@ -274,6 +277,9 @@ function AddIncomeForm({
           <div className="mr-2 mt-2 flex w-[135px] rounded-md shadow-sm sm:flex-none">
             <input
               onChange={(e) => setOperationNumber(e.target.value)}
+              onKeyDown={(evt) =>
+                ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
+              }
               min={1}
               max={10000}
               value={operationNumber}
@@ -346,6 +352,10 @@ function AddIncomeForm({
                     setOperationSum(
                       parseFloat(e.target.value.replace(",", ".")),
                     )
+                  }
+                  onKeyDown={(evt) =>
+                    ["e", "E", "+", "-"].includes(evt.key) &&
+                    evt.preventDefault()
                   }
                   type="number"
                   min={0}

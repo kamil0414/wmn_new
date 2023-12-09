@@ -15,7 +15,7 @@ export default function Loading() {
           disabled
           id="saveButton"
         >
-          Zapisz wydatek
+          Dodaj wydatek
         </button>
       </form>
     </div>

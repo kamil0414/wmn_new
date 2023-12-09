@@ -95,15 +95,14 @@ function ExpenseForm({
     jednostka_miary: null,
   };
 
-  if (sumInput.current) {
-    sumInput.current.value = selectedSum?.toString() ?? "0";
-  }
-
   useEffect(() => {
     if (descriptions?.length === 1) {
       setDescription(descriptions[0].id);
     } else {
       setDescription(selectedDescription ?? 0);
+    }
+    if (sumInput.current) {
+      sumInput.current.value = selectedSum?.toString() ?? "0";
     }
   }, [selectedDescription, descriptions]);
 
@@ -275,6 +274,10 @@ function ExpenseForm({
               <div className="flex">
                 <input
                   onChange={(e) => setCount(parseFloat(e.target.value))}
+                  onKeyDown={(evt) =>
+                    ["e", "E", "+", "-"].includes(evt.key) &&
+                    evt.preventDefault()
+                  }
                   min={1}
                   max={1000}
                   step="any"
@@ -296,6 +299,9 @@ function ExpenseForm({
                 ref={sumInput}
                 onChange={(e) =>
                   setSum(parseFloat(e.target.value.replace(",", ".")))
+                }
+                onKeyDown={(evt) =>
+                  ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
                 }
                 autoComplete="off"
                 type="number"
