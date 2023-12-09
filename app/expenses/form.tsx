@@ -306,7 +306,9 @@ function ExpenseForm({
                 ))}
               </select>
               <input
-                onChange={(e) => setNumber(e.target.value)}
+                onChange={(e) =>
+                  setNumber(e.target.value.replaceAll("  ", " "))
+                }
                 value={number}
                 maxLength={100}
                 type="text"
@@ -367,7 +369,11 @@ function ExpenseForm({
             </div>
           </div>
           <textarea
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) =>
+              setComment(
+                e.target.value.replaceAll(" ,", ", ").replaceAll("  ", " "),
+              )
+            }
             name="comment"
             id="comment"
             value={comment}

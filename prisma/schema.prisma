@@ -36,7 +36,7 @@ model naliczenie {
   fundusz                        Decimal            @db.Money
   woda                           Decimal            @db.Money
   id                             Int                @id @default(autoincrement())
-  smieci                         Decimal            @default(0) @db.Money
+  smieci                         Decimal            @db.Money
   is_deleted                     Boolean            @default(false)
   id_poprzedniego_stanu_licznika Int?               @db.SmallInt
   id_stanu_licznika              Int?               @db.SmallInt
@@ -67,8 +67,6 @@ model odczyt_wodomierza {
 model operacja {
   id_firmy                  Int                   @db.SmallInt
   data                      DateTime              @db.Date
-  id_typu_dowodu_ksiegowego Int                   @default(0)
-  typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
   numer_dowodu_ksiegowego   String
   kwota                     Decimal               @db.Money
   czy_bank                  Boolean
@@ -78,9 +76,11 @@ model operacja {
   komentarz                 String?
   id_opisu                  Int                   @db.SmallInt
   is_deleted                Boolean               @default(false)
+  id_typu_dowodu_ksiegowego Int
   firma                     firma                 @relation(fields: [id_firmy], references: [id])
   opis_pow                  opis                  @relation(fields: [id_opisu], references: [id])
   subkonta                  subkonto              @relation(fields: [id_subkonta], references: [id])
+  typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
 
   @@unique([id_firmy, data, id_typu_dowodu_ksiegowego, numer_dowodu_ksiegowego, kwota])
   @@map("operacje")
@@ -110,8 +110,8 @@ model typ_dowodu_ksiegowego {
   id       Int        @id @db.SmallInt
   opis     String     @unique
   dowplat  Boolean
-  opisy    opis[]     @relation("opisyTotypy_dowodow_ksiegowych")
   operacje operacja[]
+  opisy    opis[]     @relation("opisyTotypy_dowodow_ksiegowych")
 
   @@map("typy_dowodow_ksiegowych")
 }
@@ -135,11 +135,11 @@ model typ_stawki {
 model opis {
   id                      Int                     @id @default(autoincrement())
   opis                    String                  @unique
-  ilosc_wymagana          Boolean                 @default(false)
-  id_kategorii_wydatku    Int
+  ilosc_wymagana          Boolean                 
+  id_kategorii            Int
   jednostka_miary         String?
   operacje                operacja[]
-  kategoria_opisu         kategoria_opisu         @relation(fields: [id_kategorii_wydatku], references: [id])
+  kategoria_opisu         kategoria_opisu         @relation(fields: [id_kategorii], references: [id], map: "opisy_id_kategorii_wydatku_fkey")
   firmy                   firma[]                 @relation("firmyToopisy")
   typy_dowodow_ksiegowych typ_dowodu_ksiegowego[] @relation("opisyTotypy_dowodow_ksiegowych")
 
@@ -150,8 +150,8 @@ model kategoria_opisu {
   id              Int      @id @default(autoincrement())
   nazwa           String   @unique
   id_subkonta     Int
-  czy_wydatek     Boolean  @default(true)
-  czy_zawsze_bank Boolean  @default(false)
+  czy_wydatek     Boolean
+  czy_zawsze_bank Boolean
   subkonta        subkonto @relation(fields: [id_subkonta], references: [id])
   opisy           opis[]
 
@@ -162,10 +162,10 @@ view kartoteka {
   id                      Int      @id
   numer_mieszkania        Int      @db.SmallInt
   data                    DateTime @db.Date
-  opis                    String?
-  typ_dowodu_ksiegowego   String?
   numer_dowodu_ksiegowego String?
+  typ_dowodu_ksiegowego   String?
   naleznosc               Decimal  @db.Money
+  opis                    String?
   wplata                  Decimal  @db.Money
   saldo                   Decimal  @db.Money
   poprzedni_stan_licznika Decimal? @db.Decimal

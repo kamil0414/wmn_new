@@ -33,11 +33,15 @@ export default async function Expenses() {
           opis: true,
           kategoria_opisu: {
             select: {
+              czy_zawsze_bank: true,
+              id_subkonta: true,
               nazwa: true,
             },
           },
         },
       },
+      id_opisu: true,
+      id_subkonta: true,
     },
     where: {
       OR: [
@@ -142,13 +146,22 @@ export default async function Expenses() {
                           <div className="flex flex-col">
                             <span
                               className={`${classNames(
-                                row.opis_pow == null ? "text-red-500" : "",
+                                row.opis_pow == null ||
+                                  (row.opis_pow.kategoria_opisu
+                                    .czy_zawsze_bank &&
+                                    row.opis_pow.kategoria_opisu
+                                      .czy_zawsze_bank !== row.czy_bank) ||
+                                  (row.opis_pow.kategoria_opisu.id_subkonta !==
+                                    row.id_subkonta &&
+                                    row.id_opisu !== 11)
+                                  ? "text-red-500"
+                                  : "",
                               )} mb-1`}
                             >
-                              {row.opis_pow?.kategoria_opisu?.nazwa ===
-                              row.opis_pow?.opis
-                                ? row.opis_pow?.kategoria_opisu?.nazwa
-                                : `${row.opis_pow?.kategoria_opisu?.nazwa} / ${row.opis_pow?.opis}`}
+                              {row.opis_pow.kategoria_opisu?.nazwa ===
+                              row.opis_pow.opis
+                                ? row.opis_pow.kategoria_opisu?.nazwa
+                                : `${row.opis_pow.kategoria_opisu?.nazwa} / ${row.opis_pow.opis}`}
                               {row.ilosc && row.ilosc.toNumber() > 0
                                 ? ` (${row.ilosc})`
                                 : ""}
