@@ -98,10 +98,10 @@ model stawka {
 }
 
 model subkonto {
-  id                 Int                 @id
-  nazwa              String              @unique
-  kategorie_wydatkow kategoria_wydatku[]
-  operacje           operacja[]
+  id               Int               @id
+  nazwa            String            @unique
+  kategorie_opisow kategoria_opisu[]
+  operacje         operacja[]
 
   @@map("subkonta")
 }
@@ -139,22 +139,23 @@ model opis {
   id_kategorii_wydatku    Int
   jednostka_miary         String?
   operacje                operacja[]
-  kategoria_wydatku       kategoria_wydatku       @relation(fields: [id_kategorii_wydatku], references: [id])
+  kategoria_opisu         kategoria_opisu         @relation(fields: [id_kategorii_wydatku], references: [id])
   firmy                   firma[]                 @relation("firmyToopisy")
   typy_dowodow_ksiegowych typ_dowodu_ksiegowego[] @relation("opisyTotypy_dowodow_ksiegowych")
 
   @@map("opisy")
 }
 
-model kategoria_wydatku {
-  id          Int      @id @default(autoincrement())
-  nazwa       String   @unique
-  id_subkonta Int
-  czy_wydatek Boolean  @default(true)
-  subkonta    subkonto @relation(fields: [id_subkonta], references: [id])
-  opisy       opis[]
+model kategoria_opisu {
+  id              Int      @id @default(autoincrement())
+  nazwa           String   @unique
+  id_subkonta     Int
+  czy_wydatek     Boolean  @default(true)
+  czy_zawsze_bank Boolean  @default(false)
+  subkonta        subkonto @relation(fields: [id_subkonta], references: [id])
+  opisy           opis[]
 
-  @@map("kategorie_wydatkow")
+  @@map("kategorie_opisow")
 }
 
 view kartoteka {

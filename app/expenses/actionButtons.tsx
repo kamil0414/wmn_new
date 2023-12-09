@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import deleteExpense from "./actions";
+import { deleteExpense } from "./actions";
 
 const deleteConfirm = (id: number) => {
   if (confirm("Usunąć wydatek?")) {
@@ -17,7 +17,7 @@ export const ActionButtons = ({
   className?: string;
 }) => (
   <div className={className ?? ""}>
-    <Link className="hidden" href={`/expenses/edit/${id}`}>
+    <Link href={`/expenses/edit/${id}`}>
       <button type="button" className="font-medium text-sky-600">
         Edytuj
       </button>

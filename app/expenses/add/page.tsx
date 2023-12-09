@@ -2,11 +2,12 @@ import prisma from "@/lib/prisma";
 import ExpenseForm from "../form";
 
 async function AddExpense() {
-  const expensesCategory = await prisma.kategoria_wydatku.findMany({
+  const expensesCategory = await prisma.kategoria_opisu.findMany({
     select: {
       id: true,
       nazwa: true,
       id_subkonta: true,
+      czy_zawsze_bank: true,
       opisy: {
         select: {
           id: true,
@@ -62,6 +63,10 @@ async function AddExpense() {
     ],
   });
 
-  return <ExpenseForm expensesCategory={expensesCategory} />;
+  return (
+    <div className="container mx-auto px-4">
+      <ExpenseForm expensesCategory={expensesCategory} />
+    </div>
+  );
 }
 export default AddExpense;

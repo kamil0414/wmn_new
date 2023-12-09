@@ -31,7 +31,7 @@ export default async function Expenses() {
       opis_pow: {
         select: {
           opis: true,
-          kategoria_wydatku: {
+          kategoria_opisu: {
             select: {
               nazwa: true,
             },
@@ -145,10 +145,10 @@ export default async function Expenses() {
                                 row.opis_pow == null ? "text-red-500" : "",
                               )} mb-1`}
                             >
-                              {row.opis_pow?.kategoria_wydatku?.nazwa ===
+                              {row.opis_pow?.kategoria_opisu?.nazwa ===
                               row.opis_pow?.opis
-                                ? row.opis_pow?.kategoria_wydatku?.nazwa
-                                : `${row.opis_pow?.kategoria_wydatku?.nazwa} / ${row.opis_pow?.opis}`}
+                                ? row.opis_pow?.kategoria_opisu?.nazwa
+                                : `${row.opis_pow?.kategoria_opisu?.nazwa} / ${row.opis_pow?.opis}`}
                               {row.ilosc && row.ilosc.toNumber() > 0
                                 ? ` (${row.ilosc})`
                                 : ""}

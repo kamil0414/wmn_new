@@ -2,8 +2,100 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-const deleteExpense = async (id: number) => {
+export const upsertExpense = async ({
+  id,
+  id_firmy,
+  data,
+  id_opisu,
+  id_typu_dowodu_ksiegowego,
+  numer_dowodu_ksiegowego,
+  kwota,
+  czy_bank,
+  id_subkonta,
+  ilosc,
+  komentarz,
+  nazwaNowejFirmy,
+}: {
+  id?: number;
+  id_firmy: number;
+  data: Date;
+  id_opisu: number;
+  id_typu_dowodu_ksiegowego: number;
+  numer_dowodu_ksiegowego: string;
+  kwota: number;
+  czy_bank: boolean;
+  id_subkonta: number;
+  ilosc: number;
+  komentarz: string;
+  nazwaNowejFirmy?: string;
+}) => {
+  try {
+    let id_firmyCond = id_firmy;
+
+    if (nazwaNowejFirmy != null && nazwaNowejFirmy !== "") {
+      const { id } = await prisma.firma.create({
+        data: {
+          nazwa: nazwaNowejFirmy,
+        },
+      });
+      await prisma.opis.update({
+        data: {
+          firmy: {
+            connect: {
+              id,
+            },
+          },
+        },
+        where: {
+          id: id_opisu,
+        },
+      });
+      id_firmyCond = id;
+    }
+
+    await prisma.operacja.upsert({
+      where: {
+        id: id ?? -1,
+      },
+      update: {
+        id_firmy: id_firmyCond,
+        data,
+        id_opisu,
+        id_typu_dowodu_ksiegowego,
+        numer_dowodu_ksiegowego,
+        kwota,
+        czy_bank,
+        id_subkonta,
+        ilosc,
+        komentarz,
+      },
+      create: {
+        id_firmy: id_firmyCond,
+        data,
+        id_opisu,
+        id_typu_dowodu_ksiegowego,
+        numer_dowodu_ksiegowego,
+        kwota,
+        czy_bank,
+        id_subkonta,
+        ilosc,
+        komentarz,
+      },
+    });
+
+    console.log({ message: `${id ? "Updated" : "Added"} expense` });
+  } catch (e) {
+    console.log({ message: `Error ${e}` });
+  }
+  revalidatePath("/", "layout");
+  if (id) {
+    redirect(`/expenses`);
+  }
+};
+
+export const deleteExpense = async (id: number) => {
   try {
     const expense = await prisma.operacja.update({
       where: {
@@ -13,11 +105,9 @@ const deleteExpense = async (id: number) => {
         is_deleted: true,
       },
     });
-    revalidatePath("/", "layout");
-    return { message: `Deleted ${expense}` };
+    console.log({ message: `Deleted ${expense}` });
   } catch (e) {
-    return { message: `Error ${e}` };
+    console.log({ message: `Error ${e}` });
   }
+  revalidatePath("/", "layout");
 };
-
-export default deleteExpense;
