@@ -5,10 +5,7 @@ export default async function Home() {
   const basicData = await prisma.saldo.findMany();
 
   const sumaNaleznosci = basicData.reduce(
-    (accumulator, currentValue) =>
-      currentValue.saldo.toNumber() < 0
-        ? accumulator - currentValue.saldo.toNumber()
-        : 0,
+    (acc, el) => (el.saldo.toNumber() < 0 ? acc - el.saldo.toNumber() : acc),
     0,
   );
 

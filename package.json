@@ -18,10 +18,10 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.6.0",
+    "@prisma/client": "^5.7",
     "@tailwindcss/forms": "^0.5.3",
     "docxtemplater": "^3.42.2",
-    "next": "^14.0.3",
+    "next": "^14.0.4",
     "pizzip": "^3.1.4",
     "react": "^18",
     "react-dom": "^18",
@@ -30,22 +30,22 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
-    "@types/node": "^20.10.0",
-    "@types/react": "^18.2.39",
+    "@types/node": "^20",
+    "@types/react": "^18",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@vercel/speed-insights": "^1.0.1",
     "autoprefixer": "^10.4.13",
-    "eslint": "^8.54.0",
+    "eslint": "^8",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
-    "eslint-config-next": "^14.0.3",
+    "eslint-config-next": "^14.0.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "postcss": "^8.4.31",
+    "postcss": "^8",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
-    "prisma": "^5.6.0",
-    "tailwindcss": "^3.2.7",
-    "typescript": "^5.3.2"
+    "prisma": "^5.7",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5"
   }
 }

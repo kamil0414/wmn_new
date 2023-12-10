@@ -7,6 +7,7 @@ import {
   formatter,
 } from "@/utils/index";
 import { ActionButtons } from "./actionButtons";
+import AAlert from "@/atoms/a-alert";
 
 export default async function Expenses() {
   const expensesHistory = await prisma.operacja.findMany({
@@ -104,8 +105,28 @@ export default async function Expenses() {
     [".", ","].some((el) => number.toLocaleLowerCase().endsWith(el)) ||
     ["000"].some((el) => number.toLocaleLowerCase().startsWith(el));
 
+  const expensesWithIncorrectName = expensesHistory.reduce(
+    (acc, el) => (checkName(el.numer_dowodu_ksiegowego) ? acc + 1 : acc),
+    0,
+  );
+
+  const isWatherPaid = expensesHistory.some((el) => el.id_opisu === 5);
+
   return (
     <div className="container mx-auto px-4">
+      {expensesWithIncorrectName > 0 && (
+        <AAlert title="Błąd" color="red" className="mt-6">
+          <span>
+            Niepoprawny numer dowodu księgowego przy{" "}
+            <strong>{expensesWithIncorrectName}</strong> wydatkach
+          </span>
+        </AAlert>
+      )}
+      {!isWatherPaid && (
+        <AAlert title="Brak dowodu księgowego" color="yellow" className="mt-6">
+          <span>Woda i ścieki</span>
+        </AAlert>
+      )}
       <div className="relative mb-2 mt-6 overflow-hidden">
         <div className="relative overflow-auto">
           <div className="my-8 overflow-hidden shadow-sm">
