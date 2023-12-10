@@ -29,8 +29,8 @@ export const saveWater = async ({
           data.toISOString().split("T")[0]
         }'`}, ${numer_mieszkania})`,
       );
-      revalidatePath("/", "layout");
     }
+    revalidatePath("/", "layout");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -105,7 +105,7 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           },
         });
       }
-      revalidatePath("/addIncome");
+      revalidatePath("/", "layout");
     }
   } catch (e) {
     return { message: `Error ${e}` };
