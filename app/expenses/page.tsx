@@ -84,6 +84,26 @@ export default async function Expenses() {
     return { ...el, isDuplicated };
   });
 
+  const checkName = (number: string) =>
+    [
+      "  ",
+      "bilans otwarcia",
+      "brak",
+      "faktura",
+      "kp",
+      "lub",
+      "nnm",
+      "nr",
+      "paragon",
+      "pokwitowanie",
+      "polisa",
+      "potrzebna",
+      "przepięcia",
+      "wyciąg",
+    ].some((el) => number.toLocaleLowerCase().includes(el)) ||
+    [".", ","].some((el) => number.toLocaleLowerCase().endsWith(el)) ||
+    ["000"].some((el) => number.toLocaleLowerCase().startsWith(el));
+
   return (
     <div className="container mx-auto px-4">
       <div className="relative mb-2 mt-6 overflow-hidden">
@@ -182,7 +202,14 @@ export default async function Expenses() {
                             className="mb-1 flex gap-x-3"
                             id={row.id}
                           />
-                          <span className="text-xs text-slate-500">
+                          <span
+                            className={classNames(
+                              checkName(row.numer_dowodu_ksiegowego)
+                                ? "font-semibold text-red-500"
+                                : "text-slate-500",
+                              "text-xs",
+                            )}
+                          >
                             {row.typ_dowodu_ksiegowego.opis}{" "}
                             {row.numer_dowodu_ksiegowego}
                           </span>
