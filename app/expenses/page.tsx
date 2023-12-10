@@ -118,13 +118,13 @@ export default async function Expenses() {
         <AAlert title="Błąd" color="red" className="mt-6">
           <span>
             Niepoprawny numer dowodu księgowego przy{" "}
-            <strong>{expensesWithIncorrectName}</strong> wydatkach
+            <strong>{expensesWithIncorrectName}</strong> wydatkach(u)
           </span>
         </AAlert>
       )}
       {!isWatherPaid && (
         <AAlert title="Brak dowodu księgowego" color="yellow" className="mt-6">
-          <span>Woda i ścieki</span>
+          <span>Woda i kanalizacja</span>
         </AAlert>
       )}
       <div className="relative mb-2 mt-6 overflow-hidden">

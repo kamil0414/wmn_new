@@ -7,6 +7,11 @@ import { getEndDateFromEnv, formatter } from "@/utils/index";
 
 /* eslint-disable import/prefer-default-export */
 
+interface Wydatki {
+  o: string;
+  k: number;
+}
+
 export async function GET() {
   try {
     const file = path.join(process.cwd(), "templates", "financialReport.docx");
@@ -26,10 +31,10 @@ export async function GET() {
     const stanKont: any = await prisma.$queryRawUnsafe(
       `select * from podajStanKont(${`'${endDate}'`})`,
     );
-    const wydatkiOpalWodaSmieci = await prisma.$queryRawUnsafe(
+    const wydatkiOpalWodaSmieci: Wydatki[] = await prisma.$queryRawUnsafe(
       `select * from podajWydatkiOpalWodaSmieci(${`'${endDate}'`})`,
     );
-    const wydatkiFun = await prisma.$queryRawUnsafe(
+    const wydatkiFun: Wydatki[] = await prisma.$queryRawUnsafe(
       `select * from podajWydatkiFun(${`'${endDate}'`})`,
     );
 
@@ -39,9 +44,12 @@ export async function GET() {
         parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma),
       );
 
+    const breakLineAfter = 20;
+
     doc.render({
       zalOpal: formatter.format(daneDoSprawozdania[0].zalopal),
       zalWoda: formatter.format(daneDoSprawozdania[0].zalwoda),
+      zalSmieci: formatter.format(daneDoSprawozdania[0].zalsmieci),
       jestOdszk: daneDoSprawozdania[0].odszk > 0,
       odszk: formatter.format(daneDoSprawozdania[0].odszk),
       bilOtwOW: formatter.format(daneDoSprawozdania[0].bilotwow),
@@ -65,8 +73,20 @@ export async function GET() {
               parseFloat(stanKont[1]?.suma) -
               parseFloat(daneDoSprawozdania[0].bilans),
           )}`,
-      wydOpalWoda: wydatkiOpalWodaSmieci,
-      wydFun: wydatkiFun,
+      wydOpalWoda: wydatkiOpalWodaSmieci.map((el) => ({
+        o: el.o,
+        k:
+          el.o.length > breakLineAfter
+            ? "\n" + formatter.format(el?.k)
+            : formatter.format(el?.k),
+      })),
+      wydFun: wydatkiFun.map((el) => ({
+        o: el.o,
+        k:
+          el.o.length > breakLineAfter
+            ? "\n" + formatter.format(el?.k)
+            : formatter.format(el?.k),
+      })),
       rok: endDate.slice(0, 4),
       poprzRok: parseFloat(endDate.slice(0, 4)) - 1,
       data: endDate.split("T")[0],
