@@ -140,7 +140,7 @@ function AddIncomeForm({
       if (blankNumbers?.length > 0) {
         setOperationNumber(
           !basicData[index]?.platnosc_przelewem
-            ? Math.max.apply(null, blankNumbers) + 1
+            ? (Math.max.apply(null, blankNumbers) + 1).toString()
             : "",
         );
       }

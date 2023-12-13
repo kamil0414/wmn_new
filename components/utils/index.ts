@@ -3,7 +3,8 @@ export const formatter = new Intl.NumberFormat("pl-PL", {
   currency: "PLN",
 });
 
-export const classNames = (...classes) => classes.filter(Boolean).join(" ");
+export const classNames = (...classes: any) =>
+  classes.filter(Boolean).join(" ");
 
 export const getEndDateFromEnv = () => {
   const envYear = process.env.NEXT_PUBLIC_YEAR;

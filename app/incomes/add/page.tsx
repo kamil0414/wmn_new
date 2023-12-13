@@ -39,7 +39,7 @@ async function AddIncome() {
 
   return (
     <AddIncomeForm
-      basicData={basicData.map((el) => ({
+      basicData={basicData.map((el: any) => ({
         ...el,
         razem: el.razem.toNumber(),
         saldo: el.saldo.toNumber(),
