@@ -1,13 +1,23 @@
 "use client";
 
 import ASvg from "@/atoms/a-svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import closeIcon from "@/svg/closeIcon.svg";
 import hamburgerIcon from "@/svg/hamburgerIcon.svg";
 import Links from "./links";
+import { useRouter } from "next/navigation";
 
 function Menu() {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [router]);
+
   return (
     <>
       <button
