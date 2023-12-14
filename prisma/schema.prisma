@@ -44,7 +44,7 @@ model naliczenie {
   stan_licznika                  odczyt_wodomierza? @relation("stan_licznika", fields: [id_stanu_licznika], references: [id])
   mieszkanie                     mieszkanie         @relation(fields: [numer_mieszkania], references: [numer])
 
-  @@unique([numer_mieszkania, data, opis])
+  @@unique([numer_mieszkania, data, opis, is_deleted])
   @@map("naliczenia")
 }
 
@@ -60,7 +60,7 @@ model odczyt_wodomierza {
   mieszkanie       mieszkanie   @relation(fields: [numer_mieszkania], references: [numer])
   typy_odczytow    typ_odczytu  @relation(fields: [typ], references: [id])
 
-  @@unique([numer_mieszkania, data])
+  @@unique([numer_mieszkania, data, is_deleted])
   @@map("odczyty_wodomierzy")
 }
 
@@ -82,7 +82,7 @@ model operacja {
   subkonta                  subkonto              @relation(fields: [id_subkonta], references: [id])
   typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
 
-  @@unique([id_firmy, data, id_typu_dowodu_ksiegowego, numer_dowodu_ksiegowego, kwota])
+  @@unique([id_firmy, data, id_typu_dowodu_ksiegowego, numer_dowodu_ksiegowego, kwota, is_deleted])
   @@map("operacje")
 }
 

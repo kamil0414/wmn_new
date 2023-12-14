@@ -110,7 +110,9 @@ function ExpenseForm({
     setDescriptions(opisy);
     setAccount(id_subkonta);
     setAlwaysBank(czy_zawsze_bank);
-    setCashChecked(!czy_zawsze_bank);
+    if (czy_zawsze_bank) {
+      setCashChecked(false);
+    }
   }, [categories, category]);
 
   useEffect(() => {
