@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 
-export default function Refresh() {
+export default async function Refresh() {
   revalidatePath("/", "layout");
   return <span>ok</span>;
 }
