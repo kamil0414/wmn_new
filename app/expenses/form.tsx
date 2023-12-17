@@ -156,7 +156,9 @@ function ExpenseForm({
   }, [description]);
 
   useEffect(() => {
-    if (companies?.length === 1) {
+    if (company === -2) {
+      return;
+    } else if (companies?.length === 1) {
       setCompany(companies[0].id);
     } else if (
       selectedCompany &&
@@ -267,11 +269,11 @@ function ExpenseForm({
                   {obj.nazwa}
                 </option>
               ))}
-              <option value={-1} key="Inna">
+              <option value={-2} key="Inna">
                 Inna
               </option>
             </select>
-            {company === -1 && (
+            {company === -2 && (
               <input
                 onChange={(e) => setOtherCompanyName(e.target.value)}
                 autoComplete="off"
@@ -430,8 +432,9 @@ function ExpenseForm({
         disabled={
           !(
             company != null &&
-            (company !== -1 ||
-              (company === -1 &&
+            company !== -1 &&
+            (company !== -2 ||
+              (company === -2 &&
                 otherCompanyName != null &&
                 otherCompanyName !== "")) &&
             date != null &&

@@ -56,19 +56,19 @@ function AddIncomeForm({
   );
   const [balance, setBalance] = useState(0);
 
-  const naleznosciRazem = flatHistory
-    .filter((el) => el.numer_mieszkania === flat)
-    .map((el) => el.naleznosc)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  // const naleznosciRazem = flatHistory
+  //   .filter((el) => el.numer_mieszkania === flat)
+  //   .map((el) => el.naleznosc)
+  //   .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  const wplatyRazem = flatHistory
-    .filter((el) => el.numer_mieszkania === flat)
-    .map((el) => el.wplata)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  // const wplatyRazem = flatHistory
+  //   .filter((el) => el.numer_mieszkania === flat)
+  //   .map((el) => el.wplata)
+  //   .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  const { saldo } = flatHistory
-    .filter((el) => el.numer_mieszkania === flat)
-    .slice(-1)[0];
+  // const { saldo } = flatHistory
+  //   .filter((el) => el.numer_mieszkania === flat)
+  //   .slice(-1)[0];
 
   const saveWaterMeterValue = async () => {
     const response = await saveWater({
@@ -168,7 +168,7 @@ function AddIncomeForm({
       setWaterMeterCurrentMinValue(basicData[index]?.stan_wodomierza);
       setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
     }
-  }, [basicData, flat, blankNumbers]);
+  }, [flat]);
 
   const deleteConfirm = async (id: number, isWaterBill: boolean) => {
     if (confirm(`Usunąć ${!isWaterBill ? "wpłatę" : "naliczenie"}?`)) {

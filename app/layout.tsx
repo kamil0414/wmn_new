@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import OAutoRefresh from "@/organisms/o-autorefresh";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="pl-PL">
       <body className={inter.className}>
+        <OAutoRefresh />
         <OHeader />
         <div className="layout">{children}</div>
         <SpeedInsights />
