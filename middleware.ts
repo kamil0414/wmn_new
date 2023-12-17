@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' https://va.vercel-scripts.com/;
+    script-src 'self' 'nonce-${nonce}' unsafe-inline https://vercel.live/ https://va.vercel-scripts.com/;
     style-src 'self' 'nonce-${nonce}';
     img-src 'self' blob: data:;
     font-src 'self' https://fonts.gstatic.com/;
