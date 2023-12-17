@@ -4,8 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.scss";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-// export const revalidate = 0;
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
