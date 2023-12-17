@@ -143,10 +143,13 @@ function ExpenseForm({
       descriptions?.find((e) => e.id === selectedDescription)
     ) {
       setDescription(selectedDescription);
-    } else {
+    } else if (
+      !description ||
+      !descriptions?.find((e) => e.id === description)
+    ) {
       setDescription(-1);
     }
-  }, [selectedDescription, descriptions]);
+  }, [selectedDescription, description, descriptions]);
 
   useEffect(() => {
     setOtherCompanyName("");
@@ -160,20 +163,20 @@ function ExpenseForm({
       companies?.find((e) => e.id === selectedCompany)
     ) {
       setCompany(selectedCompany);
-    } else {
+    } else if (!company || !companies?.find((e) => e.id === company)) {
       setCompany(-1);
     }
-  }, [selectedCompany, companies]);
+  }, [selectedCompany, company, companies]);
 
   useEffect(() => {
     if (types?.length === 1) {
       setType(types[0].id);
     } else if (selectedType && types?.find((e) => e.id === selectedType)) {
       setType(selectedType);
-    } else {
+    } else if (!type || !types?.find((e) => e.id === type)) {
       setType(-1);
     }
-  }, [selectedType, types]);
+  }, [selectedType, type, types]);
 
   // after form submit clear sum field
   useEffect(() => {
