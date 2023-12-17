@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' unsafe-inline https://va.vercel-scripts.com/;
+    script-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://va.vercel-scripts.com/;
     style-src 'self' 'nonce-${nonce}';
     img-src 'self' blob: data:;
     font-src 'self' https://fonts.gstatic.com/;
@@ -42,7 +42,7 @@ export function middleware(request: NextRequest) {
     frame-ancestors 'none';
     block-all-mixed-content;
     upgrade-insecure-requests;
-    connect-src https://vercel.live/;
+    connect-src 'self' https://vercel.live/;
 `;
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, " ")
