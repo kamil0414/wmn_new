@@ -125,15 +125,10 @@ function ExpenseForm({
       };
 
     setCountRequired(ilosc_wymagana);
-    if (!ilosc_wymagana) {
-      setCount(0);
-    } else {
-      setCount(selectedCount ?? 0);
-    }
     setCompanies(firmy);
     setTypes(typy_dowodow_ksiegowych);
     setUnit(jednostka_miary);
-  }, [descriptions, description, selectedCount]);
+  }, [descriptions, description]);
 
   useEffect(() => {
     if (descriptions?.length === 1) {
@@ -198,7 +193,7 @@ function ExpenseForm({
       kwota: -1 * sum,
       czy_bank: !cashChecked,
       id_subkonta: account,
-      ilosc: count,
+      ilosc: countRequired ? count : 0,
       komentarz: comment,
       nazwaNowejFirmy: otherCompanyName,
     });
