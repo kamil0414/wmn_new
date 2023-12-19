@@ -20,7 +20,7 @@ export const ActionButtons = ({
   id: number;
   className?: string;
 }) => (
-  <div className={className ?? ""}>
+  <div className={`${className ?? ""} print:hidden`}>
     <Link href={`/expenses/edit/${id}`}>
       <button type="button" className="font-medium text-sky-600">
         Edytuj

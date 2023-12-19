@@ -23,6 +23,7 @@ interface FlatHistoryInterface {
   odczyt_wodomierza?: number;
   data_poprzedniego_odczytu_wodomierza: Date | null;
   data_odczytu_wodomierza: Date | null;
+  stawka: number;
 }
 
 function AddIncomeForm({
@@ -534,7 +535,8 @@ function AddIncomeForm({
                                   {row.odczyt_wodomierza}
                                   {" - "}
                                   {row.poprzedni_odczyt_wodomierza}
-                                  {")"}
+                                  {") x "}
+                                  {row.stawka}
                                 </>
                               )}
                           </div>
@@ -545,7 +547,7 @@ function AddIncomeForm({
                             {row.wplata > 0 ||
                             row.odczyt_wodomierza === waterMeterCurrentValue ? (
                               <form
-                                className="mb-1 text-right"
+                                className="mb-1 text-right print:hidden"
                                 action={() =>
                                   deleteConfirm(
                                     row.id,

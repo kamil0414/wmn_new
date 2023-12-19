@@ -19,7 +19,7 @@ export const ActionButtons = ({
   id: number;
   className?: string;
 }) => (
-  <div className={className ?? ""}>
+  <div className={`${className ?? ""} print:hidden`}>
     <form action={() => deleteConfirm(id)}>
       <button type="submit" className="font-medium text-red-600">
         Usuń

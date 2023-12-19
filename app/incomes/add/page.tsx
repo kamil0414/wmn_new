@@ -24,6 +24,7 @@ async function AddIncome() {
       odczyt_wodomierza: true,
       data_poprzedniego_odczytu_wodomierza: true,
       data_odczytu_wodomierza: true,
+      stawka: true,
     },
     where: {
       data: {
@@ -56,6 +57,7 @@ async function AddIncome() {
         wplata: el.wplata.toNumber(),
         poprzedni_odczyt_wodomierza: el.poprzedni_odczyt_wodomierza?.toNumber(),
         odczyt_wodomierza: el.odczyt_wodomierza?.toNumber(),
+        stawka: el.stawka?.toNumber(),
       }))}
     />
   );

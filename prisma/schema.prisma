@@ -175,6 +175,7 @@ view kartoteka {
   odczyt_wodomierza                    Decimal?  @db.Decimal
   data_poprzedniego_odczytu_wodomierza DateTime? @db.Date
   data_odczytu_wodomierza              DateTime? @db.Date
+  stawka                               Decimal?   @db.Money
 
   @@map("kartoteki")
 }
