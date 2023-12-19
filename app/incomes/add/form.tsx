@@ -21,6 +21,8 @@ interface FlatHistoryInterface {
   numer_mieszkania: number;
   poprzedni_odczyt_wodomierza?: number;
   odczyt_wodomierza?: number;
+  data_poprzedniego_odczytu_wodomierza: Date | null;
+  data_odczytu_wodomierza: Date | null;
 }
 
 function AddIncomeForm({
