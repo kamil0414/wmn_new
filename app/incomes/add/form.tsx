@@ -23,7 +23,7 @@ interface FlatHistoryInterface {
   odczyt_wodomierza?: number;
   data_poprzedniego_odczytu_wodomierza: Date | null;
   data_odczytu_wodomierza: Date | null;
-  stawka: number;
+  stawka: number | null;
 }
 
 function AddIncomeForm({
@@ -529,7 +529,8 @@ function AddIncomeForm({
                                 </>
                               )}
                             {row.poprzedni_odczyt_wodomierza &&
-                              row.odczyt_wodomierza && (
+                              row.odczyt_wodomierza &&
+                              row.stawka && (
                                 <>
                                   {" ("}
                                   {row.odczyt_wodomierza}
