@@ -7,8 +7,7 @@ import { classNames } from "@/utils/index";
 function Links() {
   const navigation = [
     { name: "Salda mieszkań", href: "/dashboard" },
-    { name: "Dodaj wpłatę", href: "/incomes/add" },
-    { name: "Dodaj wydatek", href: "/expenses/add" },
+    { name: "Wpłaty", href: "/incomes" },
     { name: "Wydatki", href: "/expenses" },
     { name: "Dokumenty", href: "/documents" },
   ];

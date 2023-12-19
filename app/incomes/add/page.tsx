@@ -20,8 +20,10 @@ async function AddIncome() {
       saldo: true,
       wplata: true,
       numer_mieszkania: true,
-      poprzedni_stan_licznika: true,
-      stan_licznika: true,
+      poprzedni_odczyt_wodomierza: true,
+      odczyt_wodomierza: true,
+      data_poprzedniego_odczytu_wodomierza: true,
+      data_odczytu_wodomierza: true,
     },
     where: {
       data: {
@@ -52,8 +54,8 @@ async function AddIncome() {
         naleznosc: el.naleznosc.toNumber(),
         saldo: el.saldo.toNumber(),
         wplata: el.wplata.toNumber(),
-        poprzedni_stan_licznika: el.poprzedni_stan_licznika?.toNumber(),
-        stan_licznika: el.stan_licznika?.toNumber(),
+        poprzedni_odczyt_wodomierza: el.poprzedni_odczyt_wodomierza?.toNumber(),
+        odczyt_wodomierza: el.odczyt_wodomierza?.toNumber(),
       }))}
     />
   );

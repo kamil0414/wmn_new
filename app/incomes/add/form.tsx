@@ -19,8 +19,8 @@ interface FlatHistoryInterface {
   saldo: number;
   wplata: number;
   numer_mieszkania: number;
-  poprzedni_stan_licznika?: number;
-  stan_licznika?: number;
+  poprzedni_odczyt_wodomierza?: number;
+  odczyt_wodomierza?: number;
 }
 
 function AddIncomeForm({
@@ -227,8 +227,8 @@ function AddIncomeForm({
               className="w-full rounded-l-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               placeholder="stan wodomierza"
             />
-            <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 text-slate-500 sm:text-sm">
-              m3
+            <span className="inline-flex rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 pt-2 text-slate-500 sm:text-sm">
+              m<sub>3</sub>
             </span>
           </div>
           <div className="rounded-md shadow-sm">
@@ -487,19 +487,67 @@ function AddIncomeForm({
                           </div>
                         </td>
                         <td className="border-b border-slate-200 p-2 print:whitespace-nowrap sm:pl-6">
-                          {row.opis}
+                          <div className="mb-1 flex grow items-center gap-x-2">
+                            <div>{row.opis}</div>
+                            {row.poprzedni_odczyt_wodomierza &&
+                              row.odczyt_wodomierza && (
+                                <span className="inline-flex items-center rounded-md bg-sky-50 px-2 py-1 text-xs font-medium text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                                  {Math.round(
+                                    (row.odczyt_wodomierza -
+                                      row.poprzedni_odczyt_wodomierza) *
+                                      1000,
+                                  ) / 1000}
+                                  m<sup>3</sup>
+                                </span>
+                              )}
+                          </div>
+
+                          <div className="text-xs text-slate-500">
+                            {row.data_poprzedniego_odczytu_wodomierza &&
+                              row.data_odczytu_wodomierza && (
+                                <>
+                                  {row.data_poprzedniego_odczytu_wodomierza?.toLocaleDateString(
+                                    "pl-PL",
+                                    {
+                                      year: "numeric",
+                                      month: "numeric",
+                                      day: "numeric",
+                                    },
+                                  )}
+                                  {" - "}
+                                  {row.data_odczytu_wodomierza?.toLocaleDateString(
+                                    "pl-PL",
+                                    {
+                                      year: "numeric",
+                                      month: "numeric",
+                                      day: "numeric",
+                                    },
+                                  )}
+                                </>
+                              )}
+                            {row.poprzedni_odczyt_wodomierza &&
+                              row.odczyt_wodomierza && (
+                                <>
+                                  {" ("}
+                                  {row.odczyt_wodomierza}
+                                  {" - "}
+                                  {row.poprzedni_odczyt_wodomierza}
+                                  {")"}
+                                </>
+                              )}
+                          </div>
                         </td>
 
                         <td className="border-b border-slate-200 p-2">
                           <div className="align-center flex flex-col items-end">
                             {row.wplata > 0 ||
-                            row.stan_licznika === waterMeterCurrentValue ? (
+                            row.odczyt_wodomierza === waterMeterCurrentValue ? (
                               <form
                                 className="mb-1 text-right"
                                 action={() =>
                                   deleteConfirm(
                                     row.id,
-                                    row.stan_licznika ===
+                                    row.odczyt_wodomierza ===
                                       waterMeterCurrentValue,
                                   )
                                 }

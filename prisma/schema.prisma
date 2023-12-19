@@ -40,8 +40,10 @@ model naliczenie {
   is_deleted                     Boolean            @default(false)
   id_poprzedniego_stanu_licznika Int?               @db.SmallInt
   id_stanu_licznika              Int?               @db.SmallInt
-  poprzedni_stan_licznika        odczyt_wodomierza? @relation("poprzedni_stan_licznika", fields: [id_poprzedniego_stanu_licznika], references: [id])
-  stan_licznika                  odczyt_wodomierza? @relation("stan_licznika", fields: [id_stanu_licznika], references: [id])
+  poprzedni_odczyt_wodomierza    odczyt_wodomierza? @relation("poprzedni_odczyt_wodomierza", fields: [id_poprzedniego_stanu_licznika], references: [id])
+  odczyt_wodomierza              odczyt_wodomierza? @relation("odczyt_wodomierza", fields: [id_stanu_licznika], references: [id])
+  id_stawki                      Int?               @db.SmallInt
+  stawka                         stawka?            @relation(fields: [id_stawki], references: [id])
   mieszkanie                     mieszkanie         @relation(fields: [numer_mieszkania], references: [numer])
 
   @@unique([numer_mieszkania, data, opis, is_deleted])
@@ -55,8 +57,8 @@ model odczyt_wodomierza {
   typ              Int          @db.SmallInt
   id               Int          @id @default(autoincrement())
   is_deleted       Boolean      @default(false)
-  naliczenia_poprz naliczenie[] @relation("poprzedni_stan_licznika")
-  naliczenia       naliczenie[] @relation("stan_licznika")
+  naliczenia_poprz naliczenie[] @relation("poprzedni_odczyt_wodomierza")
+  naliczenia       naliczenie[] @relation("odczyt_wodomierza")
   mieszkanie       mieszkanie   @relation(fields: [numer_mieszkania], references: [numer])
   typy_odczytow    typ_odczytu  @relation(fields: [typ], references: [id])
 
@@ -87,11 +89,12 @@ model operacja {
 }
 
 model stawka {
-  data         DateTime   @db.Date
-  kwota_brutto Decimal    @db.Money
-  id           Int        @id @default(autoincrement())
-  id_typu      Int        @db.SmallInt
-  typy_stawek  typ_stawki @relation(fields: [id_typu], references: [id])
+  data         DateTime     @db.Date
+  kwota_brutto Decimal      @db.Money
+  id           Int          @id @default(autoincrement())
+  id_typu      Int          @db.SmallInt
+  typy_stawek  typ_stawki   @relation(fields: [id_typu], references: [id])
+  naliczenia   naliczenie[]
 
   @@unique([data, kwota_brutto, id_typu])
   @@map("stawki")
@@ -135,7 +138,7 @@ model typ_stawki {
 model opis {
   id                      Int                     @id @default(autoincrement())
   opis                    String                  @unique
-  ilosc_wymagana          Boolean                 
+  ilosc_wymagana          Boolean
   id_kategorii            Int
   jednostka_miary         String?
   operacje                operacja[]
@@ -159,17 +162,19 @@ model kategoria_opisu {
 }
 
 view kartoteka {
-  id                      Int      @id
-  numer_mieszkania        Int      @db.SmallInt
-  data                    DateTime @db.Date
-  numer_dowodu_ksiegowego String?
-  typ_dowodu_ksiegowego   String?
-  naleznosc               Decimal  @db.Money
-  opis                    String?
-  wplata                  Decimal  @db.Money
-  saldo                   Decimal  @db.Money
-  poprzedni_stan_licznika Decimal? @db.Decimal
-  stan_licznika           Decimal? @db.Decimal
+  id                                   Int       @id
+  numer_mieszkania                     Int       @db.SmallInt
+  data                                 DateTime  @db.Date
+  numer_dowodu_ksiegowego              String?
+  typ_dowodu_ksiegowego                String?
+  naleznosc                            Decimal   @db.Money
+  opis                                 String?
+  wplata                               Decimal   @db.Money
+  saldo                                Decimal   @db.Money
+  poprzedni_odczyt_wodomierza          Decimal?  @db.Decimal
+  odczyt_wodomierza                    Decimal?  @db.Decimal
+  data_poprzedniego_odczytu_wodomierza DateTime? @db.Date
+  data_odczytu_wodomierza              DateTime? @db.Date
 
   @@map("kartoteki")
 }

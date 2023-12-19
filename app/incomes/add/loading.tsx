@@ -31,8 +31,8 @@ export default function Loading() {
               className="w-full rounded-l-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               placeholder="stan wodomierza"
             />
-            <span className="inline-flex items-center rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 text-slate-500 sm:text-sm">
-              m3
+            <span className="inline-flex rounded-none rounded-r-md border border-l-0 border-slate-300 px-3 pt-2 text-slate-500 sm:text-sm">
+              m<sub>3</sub>
             </span>
           </div>
           <div className="rounded-md shadow-sm">
