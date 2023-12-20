@@ -1,83 +1,11 @@
 import Link from "next/link";
-import prisma from "@/lib/prisma";
-import {
-  getStartDateFromEnv,
-  getEndDateFromEnv,
-  classNames,
-  formatter,
-} from "@/utils/index";
-import { ActionButtons } from "./actionButtons";
+import { classNames, formatter } from "@/utils/index";
 import AAlert from "@/atoms/a-alert";
+import ActionButtons from "./actionButtons";
+import { incomesHistory } from "./query";
+import incorrectDescriptions from "../query";
 
 export default async function Incomes() {
-  const incomesHistory = await prisma.operacja.findMany({
-    select: {
-      id: true,
-      data: true,
-      czy_bank: true,
-      ilosc: true,
-      kwota: true,
-      typ_dowodu_ksiegowego: {
-        select: {
-          opis: true,
-        },
-      },
-      numer_dowodu_ksiegowego: true,
-      komentarz: true,
-      firma: {
-        select: {
-          nazwa: true,
-        },
-      },
-      opis_pow: {
-        select: {
-          opis: true,
-          kategoria_opisu: {
-            select: {
-              czy_zawsze_bank: true,
-              id_subkonta: true,
-              nazwa: true,
-            },
-          },
-        },
-      },
-      id_opisu: true,
-      id_subkonta: true,
-    },
-    where: {
-      AND: [
-        {
-          kwota: {
-            gte: 0,
-          },
-        },
-        {
-          id_opisu: {
-            notIn: [11, 21, 25],
-          },
-        },
-      ],
-      data: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(),
-      },
-      is_deleted: false,
-    },
-    orderBy: [
-      {
-        data: "desc",
-      },
-      {
-        numer_dowodu_ksiegowego: "asc",
-      },
-      {
-        firma: {
-          nazwa: "asc",
-        },
-      },
-    ],
-  });
-
   const incomesHistoryGrouped = incomesHistory.map((el, index, array) => {
     const isDuplicated = array
       .slice(0, index)
@@ -86,24 +14,15 @@ export default async function Incomes() {
   });
 
   const checkName = (number: string) =>
-    [
-      "  ",
-      "bilans otwarcia",
-      "brak",
-      "faktura",
-      "kp",
-      "lub",
-      "nnm",
-      "nr",
-      "paragon",
-      "pokwitowanie",
-      "polisa",
-      "potrzebna",
-      "przepięcia",
-      "wyciąg",
-    ].some((el) => number.toLocaleLowerCase().includes(el)) ||
-    [".", ","].some((el) => number.toLocaleLowerCase().endsWith(el)) ||
-    ["000"].some((el) => number.toLocaleLowerCase().startsWith(el));
+    incorrectDescriptions?.zawiera.some((el: string) =>
+      number.toLocaleLowerCase().includes(el),
+    ) ||
+    incorrectDescriptions?.konczy_sie_na.some((el: string) =>
+      number.toLocaleLowerCase().endsWith(el),
+    ) ||
+    incorrectDescriptions?.zaczyna_sie_od.some((el: string) =>
+      number.toLocaleLowerCase().startsWith(el),
+    );
 
   const incomesWithIncorrectName = incomesHistory.reduce(
     (acc, el) => (checkName(el.numer_dowodu_ksiegowego) ? acc + 1 : acc),

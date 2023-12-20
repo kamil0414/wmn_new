@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 export default function Loading() {
   return (
     <div className="container mx-auto px-4 ">
@@ -47,7 +49,7 @@ export default function Loading() {
 
         <span className="my-2 flex items-center text-sm font-medium leading-6 text-slate-700">
           ostatni odczyt:&nbsp;
-          <div className="my-1.5 h-2 w-80 animate-pulse rounded bg-slate-200"></div>
+          <div className="my-1.5 h-2 w-80 animate-pulse rounded bg-slate-200" />
         </span>
 
         <div className="flex justify-end sm:justify-start">
@@ -98,7 +100,7 @@ export default function Loading() {
             className="ml-2 flex text-sm font-medium text-slate-900"
           >
             zgodny z saldem&nbsp;
-            <div className="my-1.5 h-2 w-16 animate-pulse rounded bg-slate-200"></div>
+            <div className="my-1.5 h-2 w-16 animate-pulse rounded bg-slate-200" />
           </label>
         </div>
 
@@ -140,38 +142,38 @@ export default function Loading() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {Array.from({ length: 5 }).map((row, id) => (
+                {Array.from({ length: 5 }).map(() => (
                   <>
                     <tr>
                       <td
                         colSpan={3}
                         className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 font-semibold"
                       >
-                        <div className="my-1.5 h-2 w-24 animate-pulse rounded bg-slate-200"></div>
+                        <div className="my-1.5 h-2 w-24 animate-pulse rounded bg-slate-200" />
                       </td>
                     </tr>
                     <tr
-                      key={id}
+                      key={uuidv4()}
                       className="hover:bg-gray-100 focus:bg-gray-100"
                     >
                       <td className="border-b border-slate-200 p-2 pl-6">
                         <div className="inline-flex flex-col items-start">
                           <div className="mb-1 font-medium">
-                            <div className="my-1.5 h-2 w-20 animate-pulse rounded bg-slate-200"></div>
+                            <div className="my-1.5 h-2 w-20 animate-pulse rounded bg-slate-200" />
                           </div>
                           <div className="text-xs">
-                            <div className="my-1.5 h-2 w-14 animate-pulse rounded bg-slate-200"></div>
+                            <div className="my-1.5 h-2 w-14 animate-pulse rounded bg-slate-200" />
                           </div>
                         </div>
                       </td>
                       <td className="border-b border-slate-200 p-2 print:whitespace-nowrap sm:pl-6">
-                        <div className="my-1.5 h-2 w-24 animate-pulse rounded bg-slate-200"></div>
+                        <div className="my-1.5 h-2 w-24 animate-pulse rounded bg-slate-200" />
                       </td>
                       <td className="border-b border-slate-200 p-2">
                         <div className="align-center flex flex-col items-end">
                           <div className="flex flex-col items-end text-right text-xs">
-                            <div className="my-1.5 h-2 w-10 animate-pulse rounded bg-slate-200"></div>
-                            <div className="my-1.5 h-2 w-14 animate-pulse rounded bg-slate-200"></div>
+                            <div className="my-1.5 h-2 w-10 animate-pulse rounded bg-slate-200" />
+                            <div className="my-1.5 h-2 w-14 animate-pulse rounded bg-slate-200" />
                           </div>
                         </div>
                       </td>

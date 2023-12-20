@@ -171,6 +171,7 @@ function AddIncomeForm({
       setWaterMeterCurrentMinValue(basicData[index]?.stan_wodomierza);
       setWaterMeterCurrentValue(basicData[index]?.stan_wodomierza);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flat]);
 
   const deleteConfirm = async (id: number, isWaterBill: boolean) => {

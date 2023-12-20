@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteIncome } from "./actions";
+import deleteIncome from "./actions";
 
 const deleteConfirm = async (id: number) => {
   if (confirm("Usunąć wpłatę?")) {
@@ -12,18 +12,20 @@ const deleteConfirm = async (id: number) => {
   }
 };
 
-export const ActionButtons = ({
+export default function ActionButtons({
   id,
   className,
 }: {
   id: number;
   className?: string;
-}) => (
-  <div className={`${className ?? ""} print:hidden`}>
-    <form action={() => deleteConfirm(id)}>
-      <button type="submit" className="font-medium text-red-600">
-        Usuń
-      </button>
-    </form>
-  </div>
-);
+}) {
+  return (
+    <div className={`${className ?? ""} print:hidden`}>
+      <form action={() => deleteConfirm(id)}>
+        <button type="submit" className="font-medium text-red-600">
+          Usuń
+        </button>
+      </form>
+    </div>
+  );
+}

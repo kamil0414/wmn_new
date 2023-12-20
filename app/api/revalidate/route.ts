@@ -1,7 +1,8 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
-export async function GET(req: any, res: any) {
+// eslint-disable-next-line import/prefer-default-export
+export async function GET(req: any) {
   const secret: string = req.nextUrl.searchParams.get("secret");
   if (secret?.toLocaleLowerCase() !== process.env.REVALIDATION_SECRET_TOKEN) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });

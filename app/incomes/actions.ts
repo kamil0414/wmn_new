@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
-export const deleteIncome = async (id: number) => {
+export default async function deleteIncome(id: number) {
   try {
-    const income = await prisma.operacja.update({
+    await prisma.operacja.update({
       where: {
         id,
       },
@@ -17,4 +17,4 @@ export const deleteIncome = async (id: number) => {
   } catch (e) {
     return { message: `Error ${e}` };
   }
-};
+}

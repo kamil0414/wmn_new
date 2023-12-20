@@ -35,7 +35,7 @@ export const upsertExpense = async ({
     let id_firmyCond = id_firmy;
 
     if (nazwaNowejFirmy != null && nazwaNowejFirmy !== "") {
-      const { id } = await prisma.firma.create({
+      const { id: companyId } = await prisma.firma.create({
         data: {
           nazwa: nazwaNowejFirmy,
         },
@@ -44,7 +44,7 @@ export const upsertExpense = async ({
         data: {
           firmy: {
             connect: {
-              id,
+              id: companyId,
             },
           },
         },
@@ -52,7 +52,7 @@ export const upsertExpense = async ({
           id: id_opisu,
         },
       });
-      id_firmyCond = id;
+      id_firmyCond = companyId;
     }
 
     await prisma.operacja.upsert({
@@ -95,7 +95,7 @@ export const upsertExpense = async ({
 
 export const deleteExpense = async (id: number) => {
   try {
-    const expense = await prisma.operacja.update({
+    await prisma.operacja.update({
       where: {
         id,
       },

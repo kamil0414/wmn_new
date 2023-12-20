@@ -1,121 +1,11 @@
 import Link from "next/link";
-import prisma from "@/lib/prisma";
-import {
-  getStartDateFromEnv,
-  getEndDateFromEnv,
-  classNames,
-  formatter,
-} from "@/utils/index";
-import { ActionButtons } from "./actionButtons";
+import { classNames, formatter } from "@/utils/index";
 import AAlert from "@/atoms/a-alert";
+import ActionButtons from "./actionButtons";
+import { accruals, expensesHistory, media, plans } from "./query";
+import incorrectDescriptions from "../query";
 
 export default async function Expenses() {
-  const plans = await prisma.plan.groupBy({
-    by: ["id_opisu"],
-    _sum: {
-      kwota: true,
-    },
-    where: {
-      termin_platnosci: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(7),
-      },
-      is_deleted: false,
-    },
-  });
-
-  const naliczenia = await prisma.naliczenie.aggregate({
-    _sum: {
-      woda: true,
-      smieci: true,
-    },
-    where: {
-      data: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(7),
-      },
-      is_deleted: false,
-    },
-  });
-
-  const media = await prisma.opis.findMany({
-    select: {
-      id: true,
-      opis: true,
-    },
-    where: {
-      czy_media: true,
-    },
-  });
-
-  const expensesHistory = await prisma.operacja.findMany({
-    select: {
-      id: true,
-      data: true,
-      czy_bank: true,
-      ilosc: true,
-      kwota: true,
-      typ_dowodu_ksiegowego: {
-        select: {
-          opis: true,
-        },
-      },
-      numer_dowodu_ksiegowego: true,
-      komentarz: true,
-      firma: {
-        select: {
-          nazwa: true,
-        },
-      },
-      opis_pow: {
-        select: {
-          opis: true,
-          kategoria_opisu: {
-            select: {
-              czy_zawsze_bank: true,
-              id_subkonta: true,
-              nazwa: true,
-            },
-          },
-        },
-      },
-      id_opisu: true,
-      id_subkonta: true,
-    },
-    where: {
-      OR: [
-        {
-          kwota: {
-            lte: 0,
-          },
-        },
-        {
-          id_opisu: {
-            in: [11, 21, 25],
-          },
-        },
-      ],
-      data: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(),
-      },
-      is_deleted: false,
-    },
-    orderBy: [
-      {
-        data: "desc",
-      },
-      {
-        numer_dowodu_ksiegowego: "asc",
-      },
-      {
-        firma: {
-          nazwa: "asc",
-        },
-      },
-    ],
-  });
-
   const expensesHistoryGrouped = expensesHistory.map((el, index, array) => {
     const isDuplicated = array
       .slice(0, index)
@@ -124,24 +14,15 @@ export default async function Expenses() {
   });
 
   const checkName = (number: string) =>
-    [
-      "  ",
-      "bilans otwarcia",
-      "brak",
-      "faktura",
-      "kp",
-      "lub",
-      "nnm",
-      "nr",
-      "paragon",
-      "pokwitowanie",
-      "polisa",
-      "potrzebna",
-      "przepięcia",
-      "wyciąg",
-    ].some((el) => number.toLocaleLowerCase().includes(el)) ||
-    [".", ","].some((el) => number.toLocaleLowerCase().endsWith(el)) ||
-    ["000"].some((el) => number.toLocaleLowerCase().startsWith(el));
+    incorrectDescriptions?.zawiera.some((el: string) =>
+      number.toLocaleLowerCase().includes(el),
+    ) ||
+    incorrectDescriptions?.konczy_sie_na.some((el: string) =>
+      number.toLocaleLowerCase().endsWith(el),
+    ) ||
+    incorrectDescriptions?.zaczyna_sie_od.some((el: string) =>
+      number.toLocaleLowerCase().startsWith(el),
+    );
 
   const expensesWithIncorrectName = expensesHistory.reduce(
     (acc, el) => (checkName(el.numer_dowodu_ksiegowego) ? acc + 1 : acc),
@@ -155,20 +36,19 @@ export default async function Expenses() {
           (plans.find((el) => el.id_opisu === e.id)?._sum.kwota?.toNumber() ??
             0) +
           (e.id === 4
-            ? naliczenia._sum.smieci?.toNumber() ?? 0
+            ? accruals._sum.smieci?.toNumber() ?? 0
             : e.id === 5
-              ? naliczenia._sum.woda?.toNumber() ?? 0
+              ? accruals._sum.woda?.toNumber() ?? 0
               : 0);
         const exp = expensesHistory.reduce(
-          (acc, el) =>
-            el.id_opisu === e.id ? (acc += el.kwota.toNumber()) : acc,
+          (acc, el) => (el.id_opisu === e.id ? acc + el.kwota.toNumber() : acc),
           0,
         );
 
         const value = -1 * exp - plan;
 
         return (
-          value != 0 && (
+          value !== 0 && (
             <AAlert
               key={e.id}
               title={`Niezgodność sald (${

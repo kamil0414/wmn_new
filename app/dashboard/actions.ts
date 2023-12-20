@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
-export const markRemindAsCompleted = async (id: number) => {
+export default async function markRemindAsCompleted(id: number) {
   try {
-    const reminder = await prisma.przypomnienie.update({
+    await prisma.przypomnienie.update({
       where: {
         id,
       },
@@ -17,4 +17,4 @@ export const markRemindAsCompleted = async (id: number) => {
   } catch (e) {
     return { message: `Error ${e}` };
   }
-};
+}

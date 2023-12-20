@@ -8,7 +8,7 @@ export default function OSpinner() {
         <ASvg
           className="-ml-1 mr-3 h-5 w-5 animate-spin text-sky-500"
           svg={spinnerIcon}
-        ></ASvg>
+        />
         Ładowanie...
       </div>
     </div>

@@ -12,8 +12,8 @@ model firma {
   id       Int        @id @default(autoincrement()) @db.SmallInt
   nazwa    String     @unique
   operacje operacja[]
-  opisy    opis[]     @relation("firmyToopisy")
   plan     plan[]
+  opisy    opis[]     @relation("firmyToopisy")
 
   @@map("firmy")
 }
@@ -41,9 +41,9 @@ model naliczenie {
   is_deleted                     Boolean            @default(false)
   id_poprzedniego_stanu_licznika Int?               @db.SmallInt
   id_stanu_licznika              Int?               @db.SmallInt
+  id_stawki                      Int?               @db.SmallInt
   poprzedni_odczyt_wodomierza    odczyt_wodomierza? @relation("poprzedni_odczyt_wodomierza", fields: [id_poprzedniego_stanu_licznika], references: [id])
   odczyt_wodomierza              odczyt_wodomierza? @relation("odczyt_wodomierza", fields: [id_stanu_licznika], references: [id])
-  id_stawki                      Int?               @db.SmallInt
   stawka                         stawka?            @relation(fields: [id_stawki], references: [id])
   mieszkanie                     mieszkanie         @relation(fields: [numer_mieszkania], references: [numer])
 
@@ -92,17 +92,17 @@ model operacja {
 model plan {
   id                        Int                   @id @default(autoincrement())
   id_firmy                  Int                   @db.SmallInt
-  firma                     firma                 @relation(fields: [id_firmy], references: [id])
   termin_platnosci          DateTime              @db.Date
   id_typu_dowodu_ksiegowego Int
-  typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
   numer_dowodu_ksiegowego   String
   kwota                     Decimal               @db.Money
   id_opisu                  Int                   @db.SmallInt
-  opis_pow                  opis                  @relation(fields: [id_opisu], references: [id])
   id_subkonta               Int
   komentarz                 String?
   is_deleted                Boolean               @default(false)
+  firma                     firma                 @relation(fields: [id_firmy], references: [id])
+  opis_pow                  opis                  @relation(fields: [id_opisu], references: [id])
+  typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
 
   @@unique([id_firmy, termin_platnosci, id_typu_dowodu_ksiegowego, numer_dowodu_ksiegowego, kwota, is_deleted])
   @@map("plany")
@@ -113,8 +113,8 @@ model stawka {
   kwota_brutto Decimal      @db.Money
   id           Int          @id @default(autoincrement())
   id_typu      Int          @db.SmallInt
-  typy_stawek  typ_stawki   @relation(fields: [id_typu], references: [id])
   naliczenia   naliczenie[]
+  typy_stawek  typ_stawki   @relation(fields: [id_typu], references: [id])
 
   @@unique([data, kwota_brutto, id_typu])
   @@map("stawki")
@@ -164,8 +164,8 @@ model opis {
   jednostka_miary         String?
   czy_media               Boolean
   operacje                operacja[]
-  plany                   plan[]
   kategoria_opisu         kategoria_opisu         @relation(fields: [id_kategorii], references: [id], map: "opisy_id_kategorii_wydatku_fkey")
+  plany                   plan[]
   firmy                   firma[]                 @relation("firmyToopisy")
   typy_dowodow_ksiegowych typ_dowodu_ksiegowego[] @relation("opisyTotypy_dowodow_ksiegowych")
 
@@ -192,6 +192,15 @@ model kategoria_opisu {
   opisy           opis[]
 
   @@map("kategorie_opisow")
+}
+
+model niepoprawny_opis {
+  id             Int      @id @default(autoincrement())
+  zaczyna_sie_od String[]
+  zawiera        String[]
+  konczy_sie_na  String[]
+
+  @@map("niepoprawne_opisy")
 }
 
 view kartoteka {

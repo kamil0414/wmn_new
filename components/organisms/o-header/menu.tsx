@@ -21,7 +21,7 @@ function Menu() {
           <ASvg
             className="block h-6 w-6"
             svg={isOpen ? closeIcon : hamburgerIcon}
-          ></ASvg>
+          />
         </span>
       </button>
       {isOpen && (
@@ -29,7 +29,7 @@ function Menu() {
           onClick={() => setIsOpen(false)}
           className="absolute -left-2 top-[64px] w-max space-y-1 bg-gray-800 px-2 pb-3 pt-2"
         >
-          <Links></Links>
+          <Links />
         </div>
       )}
     </>

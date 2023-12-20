@@ -77,14 +77,14 @@ export async function GET() {
         o: el.o,
         k:
           el.o.length > breakLineAfter
-            ? "\n" + formatter.format(el?.k)
+            ? `\n${formatter.format(el?.k)}`
             : formatter.format(el?.k),
       })),
       wydFun: wydatkiFun.map((el) => ({
         o: el.o,
         k:
           el.o.length > breakLineAfter
-            ? "\n" + formatter.format(el?.k)
+            ? `\n${formatter.format(el?.k)}`
             : formatter.format(el?.k),
       })),
       rok: endDate.slice(0, 4),
@@ -106,6 +106,6 @@ export async function GET() {
       },
     });
   } catch (e) {
-    console.log("Error", e);
+    //
   }
 }

@@ -56,7 +56,7 @@ export const saveIncome = async ({
   id_subkonta: number;
 }) => {
   try {
-    const income = await prisma.operacja.create({
+    await prisma.operacja.create({
       data: {
         id_firmy,
         data,
@@ -77,7 +77,7 @@ export const saveIncome = async ({
 export const deleteIncome = async (id: number, isWaterBill: boolean) => {
   try {
     if (!isWaterBill) {
-      const income = await prisma.operacja.update({
+      await prisma.operacja.update({
         where: {
           id,
         },

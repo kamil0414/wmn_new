@@ -1,8 +1,9 @@
+/* eslint-disable */
+import { PrismaClient } from "@prisma/client";
+
 declare global {
   var prisma: PrismaClient;
 }
-
-import { PrismaClient } from "@prisma/client";
 
 let prisma: PrismaClient;
 

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import ASvg from "./a-svg";
 import alertIcon from "@/svg/alertIcon.svg";
+import ASvg from "./a-svg";
 
 type AAlertProps = {
   className?: string;
@@ -45,7 +45,7 @@ export default function AAlert({
         <div
           className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${backgroundColor} sm:mx-0 sm:h-10 sm:w-10`}
         >
-          <ASvg svg={alertIcon} className={`${textColor} h-6 w-6`}></ASvg>
+          <ASvg svg={alertIcon} className={`${textColor} h-6 w-6`} />
         </div>
         <div className="mt-3 flex-1 text-center sm:ml-4 sm:mt-0 sm:text-left">
           <h3

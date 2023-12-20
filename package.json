@@ -20,20 +20,22 @@
   "dependencies": {
     "@prisma/client": "^5.7",
     "@tailwindcss/forms": "^0.5.3",
+    "@types/uuid": "^9.0.7",
+    "@vercel/speed-insights": "^1.0.2",
     "docxtemplater": "^3.42.6",
     "next": "^14.0.4",
     "pizzip": "^3.1.4",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.69.5",
-    "scss": "^0.2.4"
+    "scss": "^0.2.4",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.45",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@vercel/speed-insights": "^1.0.2",
     "autoprefixer": "^10.4.13",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -46,6 +48,6 @@
     "prettier-plugin-tailwindcss": "^0.5.9",
     "prisma": "^5.7",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5"    
   }
 }

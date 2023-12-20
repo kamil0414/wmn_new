@@ -1,16 +1,16 @@
 "use client";
 
-import { markRemindAsCompleted } from "./actions";
+import markRemindAsCompleted from "./actions";
 
-export const ActionButtons = ({
+export default function ActionButtons({
   id,
   className,
 }: {
   id: number;
   className?: string;
-}) => {
-  const handleAction = async (id: number) => {
-    const response = await markRemindAsCompleted(id);
+}) {
+  const handleAction = async (reminderId: number) => {
+    const response = await markRemindAsCompleted(reminderId);
 
     if (response?.message) {
       alert(response?.message);
@@ -29,4 +29,4 @@ export const ActionButtons = ({
       </form>
     </div>
   );
-};
+}

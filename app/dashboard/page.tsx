@@ -1,30 +1,9 @@
 import AAlert from "@/atoms/a-alert";
-import prisma from "@/lib/prisma";
-import {
-  classNames,
-  formatter,
-  getEndDateFromEnv,
-  getStartDateFromEnv,
-} from "@/utils/index";
-import { ActionButtons } from "./actionButtons";
+import { classNames, formatter } from "@/utils/index";
+import ActionButtons from "./actionButtons";
+import { basicData, reminders } from "./query";
 
 export default async function Home() {
-  const reminders = await prisma.przypomnienie.findMany({
-    where: {
-      data: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(7),
-      },
-      is_deleted: false,
-      czy_wykonane: false,
-    },
-    orderBy: {
-      data: "asc",
-    },
-  });
-
-  const basicData = await prisma.saldo.findMany();
-
   const sumaNaleznosci = basicData.reduce(
     (acc, el) => (el.saldo.toNumber() < 0 ? acc - el.saldo.toNumber() : acc),
     0,
@@ -47,7 +26,7 @@ export default async function Home() {
                 day: "numeric",
               })}
             </span>
-            <ActionButtons id={reminder.id}></ActionButtons>
+            <ActionButtons id={reminder.id} />
           </div>
         </AAlert>
       ))}
@@ -112,7 +91,7 @@ export default async function Home() {
               {sumaNaleznosci > 0 && (
                 <tfoot>
                   <tr>
-                    <th></th>
+                    <th />
                     <th className="py-2 pl-2 text-right font-normal text-slate-400">
                       Suma należności:
                     </th>

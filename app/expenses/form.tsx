@@ -90,7 +90,6 @@ function ExpenseForm({
   const [unit, setUnit] = useState<string | null>("");
 
   const sumInput = useRef<HTMLInputElement>(null);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (sumInput.current) {
@@ -152,7 +151,7 @@ function ExpenseForm({
 
   useEffect(() => {
     if (company === -2) {
-      return;
+      //
     } else if (companies?.length === 1) {
       setCompany(companies[0].id);
     } else if (
@@ -295,7 +294,7 @@ function ExpenseForm({
             <div className="flex w-full">
               <select
                 value={type}
-                onChange={(e) => setType(parseInt(e.target.value))}
+                onChange={(e) => setType(parseInt(e.target.value, 10))}
                 className="-mr-[1px] w-full rounded-l-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600 sm:text-sm sm:leading-6"
               >
                 <option disabled value={-1}>
