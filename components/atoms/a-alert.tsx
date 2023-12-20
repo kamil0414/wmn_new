@@ -15,13 +15,25 @@ export default function AAlert({
   children,
 }: AAlertProps) {
   const backgroundColor =
-    color?.toLocaleLowerCase() === "red" ? "bg-red-100" : "bg-amber-100";
+    color?.toLocaleLowerCase() === "red"
+      ? "bg-red-100"
+      : color?.toLocaleLowerCase() === "yellow"
+        ? "bg-amber-100"
+        : "bg-blue-100";
+
   const borderColor =
     color?.toLocaleLowerCase() === "red"
       ? "border-red-100"
-      : "border-amber-100";
+      : color?.toLocaleLowerCase() === "yellow"
+        ? "border-amber-100"
+        : "border-blue-100";
+
   const textColor =
-    color?.toLocaleLowerCase() === "red" ? "text-red-600" : "text-amber-600";
+    color?.toLocaleLowerCase() === "red"
+      ? "text-red-600"
+      : color?.toLocaleLowerCase() === "yellow"
+        ? "text-amber-600"
+        : "text-blue-600";
 
   return (
     <div
@@ -35,7 +47,7 @@ export default function AAlert({
         >
           <ASvg svg={alertIcon} className={`${textColor} h-6 w-6`}></ASvg>
         </div>
-        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+        <div className="mt-3 flex-1 text-center sm:ml-4 sm:mt-0 sm:text-left">
           <h3
             className="text-base font-semibold leading-6 text-gray-900"
             id="modal-title"
@@ -43,7 +55,7 @@ export default function AAlert({
             {title}
           </h3>
           <div className="mt-2">
-            <p className="text-sm text-gray-500">{children}</p>
+            <div className="text-sm text-gray-500">{children}</div>
           </div>
         </div>
       </div>

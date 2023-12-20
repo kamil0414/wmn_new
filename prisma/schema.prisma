@@ -172,6 +172,16 @@ model opis {
   @@map("opisy")
 }
 
+model przypomnienie {
+  id           Int      @id @default(autoincrement())
+  data         DateTime @db.Date
+  tresc        String   @unique
+  czy_wykonane Boolean  @default(false)
+  is_deleted   Boolean  @default(false)
+
+  @@map("przypomnienia")
+}
+
 model kategoria_opisu {
   id              Int      @id @default(autoincrement())
   nazwa           String   @unique

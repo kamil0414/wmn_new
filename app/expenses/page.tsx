@@ -148,8 +148,6 @@ export default async function Expenses() {
     0,
   );
 
-  const isWatherPaid = expensesHistory.some((el) => el.id_opisu === 5);
-
   return (
     <div className="container mx-auto px-4">
       {media.map((e) => {
@@ -198,11 +196,6 @@ export default async function Expenses() {
           <span>
             przy <strong>{expensesWithIncorrectName}</strong> wydatkach(u)
           </span>
-        </AAlert>
-      )}
-      {!isWatherPaid && (
-        <AAlert title="Brak dowodu księgowego" color="yellow" className="mt-6">
-          <span>Woda i kanalizacja</span>
         </AAlert>
       )}
       <div className="relative mb-2 mt-6 overflow-hidden">

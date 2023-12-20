@@ -1,7 +1,28 @@
+import AAlert from "@/atoms/a-alert";
 import prisma from "@/lib/prisma";
-import { classNames, formatter } from "@/utils/index";
+import {
+  classNames,
+  formatter,
+  getEndDateFromEnv,
+  getStartDateFromEnv,
+} from "@/utils/index";
+import { ActionButtons } from "./actionButtons";
 
 export default async function Home() {
+  const reminders = await prisma.przypomnienie.findMany({
+    where: {
+      data: {
+        gte: getStartDateFromEnv(),
+        lte: getEndDateFromEnv(7),
+      },
+      is_deleted: false,
+      czy_wykonane: false,
+    },
+    orderBy: {
+      data: "asc",
+    },
+  });
+
   const basicData = await prisma.saldo.findMany();
 
   const sumaNaleznosci = basicData.reduce(
@@ -11,6 +32,26 @@ export default async function Home() {
 
   return (
     <div className="container mx-auto px-4">
+      {reminders.map((reminder) => (
+        <AAlert
+          key={reminder.id}
+          title={reminder.tresc}
+          color="blue"
+          className="mt-6"
+        >
+          <div className="flex justify-between">
+            <span>
+              {reminder.data.toLocaleDateString("pl-PL", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <ActionButtons id={reminder.id}></ActionButtons>
+          </div>
+        </AAlert>
+      ))}
+
       <div className="mb-2 mt-6 text-sm font-medium text-gray-700">
         Salda mieszkań
       </div>
