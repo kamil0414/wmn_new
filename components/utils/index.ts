@@ -6,7 +6,7 @@ export const formatter = new Intl.NumberFormat("pl-PL", {
 export const classNames = (...classes: any) =>
   classes.filter(Boolean).join(" ");
 
-export const getEndDateFromEnv = () => {
+export const getEndDateFromEnv = (offset = 0) => {
   const envYear = process.env.NEXT_PUBLIC_YEAR;
   if (
     envYear &&
@@ -15,7 +15,7 @@ export const getEndDateFromEnv = () => {
   ) {
     return new Date(Date.UTC(parseInt(envYear, 10), 11, 31));
   }
-  return new Date();
+  return new Date(new Date().setDate(new Date().getDate() + offset));
 };
 
 export const getStartDateFromEnv = () => {

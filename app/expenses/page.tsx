@@ -10,6 +10,44 @@ import { ActionButtons } from "./actionButtons";
 import AAlert from "@/atoms/a-alert";
 
 export default async function Expenses() {
+  const plans = await prisma.plan.groupBy({
+    by: ["id_opisu"],
+    _sum: {
+      kwota: true,
+    },
+    where: {
+      termin_platnosci: {
+        gte: getStartDateFromEnv(),
+        lte: getEndDateFromEnv(7),
+      },
+      is_deleted: false,
+    },
+  });
+
+  const naliczenia = await prisma.naliczenie.aggregate({
+    _sum: {
+      woda: true,
+      smieci: true,
+    },
+    where: {
+      data: {
+        gte: getStartDateFromEnv(),
+        lte: getEndDateFromEnv(7),
+      },
+      is_deleted: false,
+    },
+  });
+
+  const media = await prisma.opis.findMany({
+    select: {
+      id: true,
+      opis: true,
+    },
+    where: {
+      czy_media: true,
+    },
+  });
+
   const expensesHistory = await prisma.operacja.findMany({
     select: {
       id: true,
@@ -114,11 +152,51 @@ export default async function Expenses() {
 
   return (
     <div className="container mx-auto px-4">
+      {media.map((e) => {
+        const plan =
+          (plans.find((el) => el.id_opisu === e.id)?._sum.kwota?.toNumber() ??
+            0) +
+          (e.id === 4
+            ? naliczenia._sum.smieci?.toNumber() ?? 0
+            : e.id === 5
+              ? naliczenia._sum.woda?.toNumber() ?? 0
+              : 0);
+        const exp = expensesHistory.reduce(
+          (acc, el) =>
+            el.id_opisu === e.id ? (acc += el.kwota.toNumber()) : acc,
+          0,
+        );
+
+        const value = -1 * exp - plan;
+
+        return (
+          value != 0 && (
+            <AAlert
+              key={e.id}
+              title={`Niezgodność sald (${
+                value < 0 ? "niedopłata" : "nadpłata"
+              })`}
+              color="red"
+              className="mt-6"
+            >
+              <span>
+                {e.opis}
+                {": "}
+                <strong>{formatter.format(value)}</strong>
+              </span>
+            </AAlert>
+          )
+        );
+      })}
+
       {expensesWithIncorrectName > 0 && (
-        <AAlert title="Błąd" color="red" className="mt-6">
+        <AAlert
+          title="Niepoprawny numer dowodu księgowego"
+          color="yellow"
+          className="mt-6"
+        >
           <span>
-            Niepoprawny numer dowodu księgowego przy{" "}
-            <strong>{expensesWithIncorrectName}</strong> wydatkach(u)
+            przy <strong>{expensesWithIncorrectName}</strong> wydatkach(u)
           </span>
         </AAlert>
       )}

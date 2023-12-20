@@ -13,6 +13,7 @@ model firma {
   nazwa    String     @unique
   operacje operacja[]
   opisy    opis[]     @relation("firmyToopisy")
+  plan     plan[]
 
   @@map("firmy")
 }
@@ -88,6 +89,25 @@ model operacja {
   @@map("operacje")
 }
 
+model plan {
+  id                        Int                   @id @default(autoincrement())
+  id_firmy                  Int                   @db.SmallInt
+  firma                     firma                 @relation(fields: [id_firmy], references: [id])
+  termin_platnosci          DateTime              @db.Date
+  id_typu_dowodu_ksiegowego Int
+  typ_dowodu_ksiegowego     typ_dowodu_ksiegowego @relation(fields: [id_typu_dowodu_ksiegowego], references: [id])
+  numer_dowodu_ksiegowego   String
+  kwota                     Decimal               @db.Money
+  id_opisu                  Int                   @db.SmallInt
+  opis_pow                  opis                  @relation(fields: [id_opisu], references: [id])
+  id_subkonta               Int
+  komentarz                 String?
+  is_deleted                Boolean               @default(false)
+
+  @@unique([id_firmy, termin_platnosci, id_typu_dowodu_ksiegowego, numer_dowodu_ksiegowego, kwota, is_deleted])
+  @@map("plany")
+}
+
 model stawka {
   data         DateTime     @db.Date
   kwota_brutto Decimal      @db.Money
@@ -114,6 +134,7 @@ model typ_dowodu_ksiegowego {
   opis     String     @unique
   dowplat  Boolean
   operacje operacja[]
+  plany    plan[]
   opisy    opis[]     @relation("opisyTotypy_dowodow_ksiegowych")
 
   @@map("typy_dowodow_ksiegowych")
@@ -141,7 +162,9 @@ model opis {
   ilosc_wymagana          Boolean
   id_kategorii            Int
   jednostka_miary         String?
+  czy_media               Boolean
   operacje                operacja[]
+  plany                   plan[]
   kategoria_opisu         kategoria_opisu         @relation(fields: [id_kategorii], references: [id], map: "opisy_id_kategorii_wydatku_fkey")
   firmy                   firma[]                 @relation("firmyToopisy")
   typy_dowodow_ksiegowych typ_dowodu_ksiegowego[] @relation("opisyTotypy_dowodow_ksiegowych")
@@ -175,7 +198,7 @@ view kartoteka {
   odczyt_wodomierza                    Decimal?  @db.Decimal
   data_poprzedniego_odczytu_wodomierza DateTime? @db.Date
   data_odczytu_wodomierza              DateTime? @db.Date
-  stawka                               Decimal?   @db.Money
+  stawka                               Decimal?  @db.Money
 
   @@map("kartoteki")
 }

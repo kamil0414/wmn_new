@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="pl-PL">
       <body className={inter.className}>
-        <OAutoRefresh />
+        {process.env.NODE_ENV === "production" && <OAutoRefresh />}
         <OHeader />
         <div className="layout">{children}</div>
         <SpeedInsights />
