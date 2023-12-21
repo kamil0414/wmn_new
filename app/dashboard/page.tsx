@@ -55,7 +55,7 @@ export default async function Home() {
                     Data ostatniego odczytu wodomierza
                   </th>
                   <th className="border-b pb-2 pl-2 pr-4 pt-0 text-right font-medium text-slate-400 sm:text-left">
-                    Zużycie wody w m3
+                    Suma zużycia wody w m3
                   </th>
                 </tr>
               </thead>
@@ -90,7 +90,7 @@ export default async function Home() {
                           ).toLocaleDateString("pl-PL")
                         : "-"}
                     </td>
-                    <td className="border-b border-slate-200 p-2 text-right text-slate-500 sm:text-left">
+                    <td className="border-b border-slate-200 py-2 pl-2 pr-4 text-right text-slate-500 sm:text-left">
                       {row.zuzycie}
                     </td>
                   </tr>
@@ -118,10 +118,10 @@ export default async function Home() {
                       {formatter.format(receivableSum)}
                     </th>
                     <th className="hidden py-2 pl-2 text-right font-normal text-slate-400 sm:block">
-                      Suma zużycia wody:
+                      Suma:
                     </th>
 
-                    <th className="p-2 text-right font-normal text-slate-400 sm:text-left">
+                    <th className="py-2 pl-2 pr-4 text-right font-normal text-slate-400 sm:text-left">
                       {consumptionSum}
                     </th>
                   </tr>

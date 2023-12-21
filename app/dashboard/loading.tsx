@@ -25,7 +25,7 @@ export default function Loading() {
                     Data ostatniego odczytu wodomierza
                   </th>
                   <th className="border-b pb-2 pl-2 pr-4 pt-0 text-right font-medium text-slate-400 sm:text-left">
-                    Zużycie wody w m3
+                    Suma zużycia wody w m3
                   </th>
                 </tr>
               </thead>
