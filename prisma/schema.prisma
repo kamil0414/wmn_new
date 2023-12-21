@@ -223,9 +223,11 @@ view kartoteka {
 }
 
 view saldo {
-  numer_mieszkania Int       @id @db.SmallInt
-  data             DateTime? @db.Date
-  saldo            Decimal   @db.Money
+  numer_mieszkania                   Int       @id @db.SmallInt
+  data                               DateTime? @db.Date
+  saldo                              Decimal   @db.Money
+  data_ostatniego_odczytu_wodomierza DateTime? @db.Date
+  zuzycie                            Decimal   @db.Decimal
 
   @@map("salda")
 }

@@ -4,10 +4,12 @@ import ActionButtons from "./actionButtons";
 import { basicData, reminders } from "./query";
 
 export default async function Home() {
-  const sumaNaleznosci = basicData.reduce(
+  const receivableSum = basicData.reduce(
     (acc, el) => (el.saldo.toNumber() < 0 ? acc - el.saldo.toNumber() : acc),
     0,
   );
+
+  const consumptionSum = basicData.reduce((acc, el) => acc + el.zuzycie, 0);
 
   return (
     <div className="container mx-auto px-4">
@@ -46,8 +48,14 @@ export default async function Home() {
                   <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                     Data ostatniej wpłaty
                   </th>
-                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-left font-medium text-slate-400">
+                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                     Saldo
+                  </th>
+                  <th className="hidden border-b p-2 pt-0 text-left font-medium text-slate-400 sm:block">
+                    Data ostatniego odczytu wodomierza
+                  </th>
+                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-left font-medium text-slate-400">
+                    Zużycie wody w m3
                   </th>
                 </tr>
               </thead>
@@ -70,10 +78,20 @@ export default async function Home() {
                         row.saldo.toNumber() < 0
                           ? "text-red-500"
                           : "text-slate-500",
-                        "border-b border-slate-200 py-2 pl-2 pr-4",
+                        "border-b border-slate-200 p-2 text-right sm:text-left",
                       )}
                     >
                       {formatter.format(row.saldo.toNumber())}
+                    </td>
+                    <td className="hidden border-b border-slate-200 p-2 text-slate-500 sm:block">
+                      {row.data_ostatniego_odczytu_wodomierza
+                        ? new Date(
+                            row.data_ostatniego_odczytu_wodomierza,
+                          ).toLocaleDateString("pl-PL")
+                        : "-"}
+                    </td>
+                    <td className="border-b border-slate-200 p-2 text-right text-slate-500 sm:text-left">
+                      {row.zuzycie}
                     </td>
                   </tr>
                 ))}
@@ -88,7 +106,7 @@ export default async function Home() {
                   </tr>
                 )}
               </tbody>
-              {sumaNaleznosci > 0 && (
+              {receivableSum > 0 && (
                 <tfoot>
                   <tr>
                     <th />
@@ -96,8 +114,15 @@ export default async function Home() {
                       Suma należności:
                     </th>
 
-                    <th className="py-2 pl-2 pr-4 text-left font-normal text-red-500">
-                      {formatter.format(sumaNaleznosci)}
+                    <th className="p-2 text-left font-normal text-red-500">
+                      {formatter.format(receivableSum)}
+                    </th>
+                    <th className="hidden py-2 pl-2 text-right font-normal text-slate-400 sm:block">
+                      Suma zużycia wody:
+                    </th>
+
+                    <th className="p-2 text-right font-normal text-slate-400 sm:text-left">
+                      {consumptionSum}
                     </th>
                   </tr>
                 </tfoot>

@@ -18,8 +18,14 @@ export default function Loading() {
                   <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                     Data ostatniej wpłaty
                   </th>
-                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-left font-medium text-slate-400">
+                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                     Saldo
+                  </th>
+                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
+                    Data ostatniego odczytu wodomierza
+                  </th>
+                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-left font-medium text-slate-400">
+                    Zużycie wody w m3
                   </th>
                 </tr>
               </thead>
@@ -28,6 +34,12 @@ export default function Loading() {
                   <tr key={uuidv4()}>
                     <td className="border-b border-slate-200 py-2 pl-4 pr-2">
                       <div className="my-1.5 h-2 w-4 rounded bg-slate-200" />
+                    </td>
+                    <td className="border-b border-slate-200 p-2 ">
+                      <div className="my-1.5 h-2 w-20 rounded bg-slate-200" />
+                    </td>
+                    <td className="border-b border-slate-200 p-2 ">
+                      <div className="my-1.5 h-2 w-20 rounded bg-slate-200" />
                     </td>
                     <td className="border-b border-slate-200 p-2 ">
                       <div className="my-1.5 h-2 w-20 rounded bg-slate-200" />
