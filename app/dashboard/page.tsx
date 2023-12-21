@@ -48,13 +48,13 @@ export default async function Home() {
                   <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
                     Data ostatniej wpłaty
                   </th>
-                  <th className="border-b p-2 pt-0 text-left font-medium text-slate-400">
+                  <th className="border-b p-2 pt-0 text-center font-medium text-slate-400 sm:text-left">
                     Saldo
                   </th>
                   <th className="hidden border-b p-2 pt-0 text-left font-medium text-slate-400 sm:block">
                     Data ostatniego odczytu wodomierza
                   </th>
-                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-left font-medium text-slate-400">
+                  <th className="border-b pb-2 pl-2 pr-4 pt-0 text-center font-medium text-slate-400 sm:text-left">
                     Zużycie wody w m3
                   </th>
                 </tr>
@@ -114,7 +114,7 @@ export default async function Home() {
                       Suma należności:
                     </th>
 
-                    <th className="p-2 text-left font-normal text-red-500">
+                    <th className="p-2 text-right font-normal text-red-500 sm:text-left">
                       {formatter.format(receivableSum)}
                     </th>
                     <th className="hidden py-2 pl-2 text-right font-normal text-slate-400 sm:block">
