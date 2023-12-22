@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { classNames, formatter } from "@/utils/index";
 import AAlert from "@/atoms/a-alert";
+import React from "react";
 import ActionButtons from "./actionButtons";
 import { accruals, expensesHistory, media, plans } from "./query";
 import incorrectDescriptions from "../query";
@@ -45,9 +46,10 @@ export default async function Expenses() {
           0,
         );
 
-        const value = -1 * exp - plan;
+        const value = Math.round(100 * (-1 * exp - plan)) / 100;
 
         return (
+          plan !== 0 &&
           value !== 0 && (
             <AAlert
               key={e.id}
@@ -98,9 +100,9 @@ export default async function Expenses() {
               </thead>
               <tbody className="bg-white">
                 {expensesHistoryGrouped.map((row) => (
-                  <>
+                  <React.Fragment key={row.id}>
                     {!row.isDuplicated ? (
-                      <tr key={`head_${row.id}`}>
+                      <tr>
                         <td
                           colSpan={3}
                           className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 font-semibold"
@@ -115,10 +117,7 @@ export default async function Expenses() {
                     ) : (
                       ""
                     )}
-                    <tr
-                      key={row.id}
-                      className="hover:bg-gray-100 focus:bg-gray-100"
-                    >
+                    <tr className="hover:bg-gray-100 focus:bg-gray-100">
                       <td className="border-b border-slate-200 p-2 pl-4  sm:px-6 sm:py-2 ">
                         <div className="flex grow flex-col items-start gap-x-3 sm:flex-row">
                           <span className="mb-1 font-medium sm:mb-0">
@@ -188,7 +187,7 @@ export default async function Expenses() {
                         </div>
                       </td>
                     </tr>
-                  </>
+                  </React.Fragment>
                 ))}
                 {(expensesHistoryGrouped == null ||
                   expensesHistoryGrouped?.length === 0) && (

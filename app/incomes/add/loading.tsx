@@ -1,3 +1,4 @@
+import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Loading() {
@@ -143,7 +144,7 @@ export default function Loading() {
               </thead>
               <tbody className="bg-white">
                 {Array.from({ length: 5 }).map(() => (
-                  <>
+                  <React.Fragment key={uuidv4()}>
                     <tr>
                       <td
                         colSpan={3}
@@ -152,10 +153,7 @@ export default function Loading() {
                         <div className="my-1.5 h-2 w-24 animate-pulse rounded bg-slate-200" />
                       </td>
                     </tr>
-                    <tr
-                      key={uuidv4()}
-                      className="hover:bg-gray-100 focus:bg-gray-100"
-                    >
+                    <tr className="hover:bg-gray-100 focus:bg-gray-100">
                       <td className="border-b border-slate-200 p-2 pl-6">
                         <div className="inline-flex flex-col items-start">
                           <div className="mb-1 font-medium">
@@ -178,7 +176,7 @@ export default function Loading() {
                         </div>
                       </td>
                     </tr>
-                  </>
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>

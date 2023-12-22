@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { classNames, formatter } from "@/utils/index";
 import AAlert from "@/atoms/a-alert";
+import React from "react";
 import ActionButtons from "./actionButtons";
 import { incomesHistory } from "./query";
 import incorrectDescriptions from "../query";
@@ -59,9 +60,9 @@ export default async function Incomes() {
               </thead>
               <tbody className="bg-white">
                 {incomesHistoryGrouped.map((row) => (
-                  <>
+                  <React.Fragment key={row.id}>
                     {!row.isDuplicated ? (
-                      <tr key={`head_${row.id}`}>
+                      <tr>
                         <td
                           colSpan={3}
                           className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 font-semibold"
@@ -149,7 +150,7 @@ export default async function Incomes() {
                         </div>
                       </td>
                     </tr>
-                  </>
+                  </React.Fragment>
                 ))}
                 {(incomesHistoryGrouped == null ||
                   incomesHistoryGrouped?.length === 0) && (

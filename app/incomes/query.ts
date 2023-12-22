@@ -60,7 +60,7 @@ export const incomesHistory = await prisma.operacja.findMany({
       data: "desc",
     },
     {
-      numer_dowodu_ksiegowego: "asc",
+      numer_dowodu_ksiegowego: "desc",
     },
     {
       firma: {

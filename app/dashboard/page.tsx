@@ -122,7 +122,7 @@ export default async function Home() {
                     </th>
 
                     <th className="py-2 pl-2 pr-4 text-right font-normal text-slate-400 sm:text-left">
-                      {consumptionSum}
+                      {Math.round(1000 * consumptionSum) / 1000}
                     </th>
                   </tr>
                 </tfoot>

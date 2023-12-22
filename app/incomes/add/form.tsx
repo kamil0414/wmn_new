@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   getEndDateFromEnv,
   getStartDateFromEnv,
@@ -444,9 +444,9 @@ function AddIncomeForm({
                     return { ...el, isDuplicated };
                   })
                   .map((row) => (
-                    <>
+                    <React.Fragment key={row.id}>
                       {!row.isDuplicated ? (
-                        <tr key={`head_${row.id}`}>
+                        <tr>
                           <td
                             colSpan={3}
                             className="border-b border-slate-200 bg-slate-50 px-4 py-2.5 font-semibold"
@@ -575,7 +575,7 @@ function AddIncomeForm({
                           </div>
                         </td>
                       </tr>
-                    </>
+                    </React.Fragment>
                   ))}
                 {/* {flatHistory != null && flatHistory?.length !== 0 && (
                   <tr>
