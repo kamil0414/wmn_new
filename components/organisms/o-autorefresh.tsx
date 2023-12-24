@@ -9,7 +9,7 @@ function OAutoRefresh() {
   useEffect(() => {
     const interval = setInterval(() => {
       router.refresh();
-    }, 1000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [router]);

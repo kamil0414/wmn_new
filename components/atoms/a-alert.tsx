@@ -37,7 +37,7 @@ export default function AAlert({
 
   return (
     <div
-      className={`rounded-lg border ${borderColor} bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 ${
+      className={`rounded-lg border ${borderColor} bg-white px-4 pb-4 pt-5 print:hidden sm:p-6 sm:pb-4 ${
         className ?? ""
       }`}
     >

@@ -47,7 +47,7 @@ model naliczenie {
   stawka                         stawka?            @relation(fields: [id_stawki], references: [id])
   mieszkanie                     mieszkanie         @relation(fields: [numer_mieszkania], references: [numer])
 
-  @@unique([numer_mieszkania, data, opis, is_deleted])
+  @@unique([numer_mieszkania, data, opis, id_stawki, is_deleted])
   @@map("naliczenia")
 }
 

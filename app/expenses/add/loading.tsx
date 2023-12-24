@@ -11,7 +11,7 @@ export default function Loading() {
 
         <button
           type="button"
-          className="mt-2 inline-flex justify-center self-start rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-gray-300"
+          className="mt-2 inline-flex justify-center self-start rounded-md bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 disabled:bg-gray-300 print:hidden"
           disabled
         >
           Dodaj wydatek

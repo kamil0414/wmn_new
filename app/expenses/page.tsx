@@ -90,7 +90,7 @@ export default async function Expenses() {
                     <div className="flex items-center justify-between  px-5 pb-8">
                       <div className="text-base font-semibold">Wydatki</div>
                       <Link href="/expenses/add">
-                        <div className="pointer-events-auto rounded-md bg-sky-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-sky-500">
+                        <div className="pointer-events-auto rounded-md bg-sky-600 px-3 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-sky-500 print:hidden">
                           Dodaj nowy
                         </div>
                       </Link>
