@@ -1,45 +1,48 @@
 import Link from "next/link";
 import { classNames, formatter } from "@/utils/index";
-import AAlert from "@/atoms/a-alert";
+// import AAlert from "@/atoms/a-alert";
 import React from "react";
 import ActionButtons from "./actionButtons";
 import { incomesHistory } from "./query";
 import incorrectDescriptions from "../query";
 
 export default async function Incomes() {
-  const incomesHistoryGrouped = incomesHistory.map((el, index, array) => {
-    const isDuplicated = array
-      .slice(0, index)
-      .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
-    return { ...el, isDuplicated };
-  });
+  const incomesHistoryGrouped = (await incomesHistory()).map(
+    (el, index, array) => {
+      const isDuplicated = array
+        .slice(0, index)
+        .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
+      return { ...el, isDuplicated };
+    },
+  );
 
-  const checkName = (number: string) =>
-    incorrectDescriptions?.zawiera.some((el: string) =>
+  const checkName = async (number: string) =>
+    (await incorrectDescriptions())?.zawiera.some((el: string) =>
       number.toLocaleLowerCase().includes(el),
     ) ||
-    incorrectDescriptions?.konczy_sie_na.some((el: string) =>
+    (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
       number.toLocaleLowerCase().endsWith(el),
     ) ||
-    incorrectDescriptions?.zaczyna_sie_od.some((el: string) =>
+    (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
       number.toLocaleLowerCase().startsWith(el),
     );
 
-  const incomesWithIncorrectName = incomesHistory.reduce(
-    (acc, el) => (checkName(el.numer_dowodu_ksiegowego) ? acc + 1 : acc),
-    0,
-  );
+  // const incomesWithIncorrectName = (await incomesHistory()).reduce(
+  //   async (acc, el) =>
+  //     (await checkName(el.numer_dowodu_ksiegowego)) ? acc + 1 : acc,
+  //   0,
+  // );
 
   return (
     <div className="container mx-auto px-4">
-      {incomesWithIncorrectName > 0 && (
+      {/* {incomesWithIncorrectName > 0 && (
         <AAlert title="Błąd" color="red" className="mt-6">
           <span>
             Niepoprawny numer dowodu księgowego przy{" "}
             <strong>{incomesWithIncorrectName}</strong> wpłatach(cie)
           </span>
         </AAlert>
-      )}
+      )} */}
       <div className="relative mb-2 mt-6 overflow-hidden">
         <div className="relative overflow-auto">
           <div className="my-8 overflow-hidden shadow-sm">
@@ -59,7 +62,7 @@ export default async function Incomes() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {incomesHistoryGrouped.map((row) => (
+                {incomesHistoryGrouped.map(async (row) => (
                   <React.Fragment key={row.id}>
                     {!row.isDuplicated ? (
                       <tr>
@@ -138,7 +141,7 @@ export default async function Incomes() {
                           />
                           <span
                             className={classNames(
-                              checkName(row.numer_dowodu_ksiegowego)
+                              (await checkName(row.numer_dowodu_ksiegowego))
                                 ? "font-semibold text-red-500"
                                 : "text-slate-500",
                               "text-xs",

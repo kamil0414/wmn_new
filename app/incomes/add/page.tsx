@@ -4,15 +4,15 @@ import { basicData, blankNumbers, flatHistory } from "./query";
 async function AddIncome() {
   return (
     <AddIncomeForm
-      basicData={basicData.map((el: any) => ({
+      basicData={(await basicData()).map((el: any) => ({
         ...el,
         razem: el.razem.toNumber(),
         saldo: el.saldo.toNumber(),
         data_odczytu_wodomierza: el.data_odczytu_wodomierza.toISOString(),
         stan_wodomierza: el.stan_wodomierza.toNumber(),
       }))}
-      blankNumbers={blankNumbers.map((el) => el.nr)}
-      flatHistory={flatHistory.map((el) => ({
+      blankNumbers={(await blankNumbers()).map((el) => el.nr)}
+      flatHistory={(await flatHistory()).map((el) => ({
         ...el,
         naleznosc: el.naleznosc.toNumber(),
         saldo: el.saldo.toNumber(),

@@ -37,7 +37,7 @@ async function EditExpense({ params }: { params: { slug: string } }) {
     <div className="container mx-auto px-4">
       <ExpenseForm
         className="mt-6"
-        categories={categories}
+        categories={await categories()}
         id={id}
         selectedCategory={record?.opis_pow?.kategoria_opisu.id}
         selectedDescription={record?.opis_pow?.id}

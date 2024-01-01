@@ -7,41 +7,45 @@ import { accruals, expensesHistory, media, plans } from "./query";
 import incorrectDescriptions from "../query";
 
 export default async function Expenses() {
-  const expensesHistoryGrouped = expensesHistory.map((el, index, array) => {
-    const isDuplicated = array
-      .slice(0, index)
-      .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
-    return { ...el, isDuplicated };
-  });
+  const expensesHistoryGrouped = (await expensesHistory()).map(
+    (el, index, array) => {
+      const isDuplicated = array
+        .slice(0, index)
+        .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
+      return { ...el, isDuplicated };
+    },
+  );
 
-  const checkName = (number: string) =>
-    incorrectDescriptions?.zawiera.some((el: string) =>
+  const checkName = async (number: string) =>
+    (await incorrectDescriptions())?.zawiera.some((el: string) =>
       number.toLocaleLowerCase().includes(el),
     ) ||
-    incorrectDescriptions?.konczy_sie_na.some((el: string) =>
+    (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
       number.toLocaleLowerCase().endsWith(el),
     ) ||
-    incorrectDescriptions?.zaczyna_sie_od.some((el: string) =>
+    (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
       number.toLocaleLowerCase().startsWith(el),
     );
 
-  const expensesWithIncorrectName = expensesHistory.reduce(
-    (acc, el) => (checkName(el.numer_dowodu_ksiegowego) ? acc + 1 : acc),
-    0,
-  );
+  // const expensesWithIncorrectName = (await expensesHistory()).reduce(
+  //   async (acc, el) =>
+  //     (await checkName(el.numer_dowodu_ksiegowego)) ? acc + 1 : acc,
+  //   0,
+  // );
 
   return (
     <div className="container mx-auto px-4">
-      {media.map((e) => {
+      {(await media()).map(async (e) => {
         const plan =
-          (plans.find((el) => el.id_opisu === e.id)?._sum.kwota?.toNumber() ??
-            0) +
+          ((await plans())
+            .find((el) => el.id_opisu === e.id)
+            ?._sum.kwota?.toNumber() ?? 0) +
           (e.id === 4
-            ? accruals._sum.smieci?.toNumber() ?? 0
+            ? (await accruals())._sum.smieci?.toNumber() ?? 0
             : e.id === 5
-              ? accruals._sum.woda?.toNumber() ?? 0
+              ? (await accruals())._sum.woda?.toNumber() ?? 0
               : 0);
-        const exp = expensesHistory.reduce(
+        const exp = (await expensesHistory()).reduce(
           (acc, el) => (el.id_opisu === e.id ? acc + el.kwota.toNumber() : acc),
           0,
         );
@@ -69,7 +73,7 @@ export default async function Expenses() {
         );
       })}
 
-      {expensesWithIncorrectName > 0 && (
+      {/* {expensesWithIncorrectName > 0 && (
         <AAlert
           title="Niepoprawny numer dowodu księgowego"
           color="yellow"
@@ -79,7 +83,7 @@ export default async function Expenses() {
             przy <strong>{expensesWithIncorrectName}</strong> wydatkach(u)
           </span>
         </AAlert>
-      )}
+      )} */}
       <div className="relative mb-2 mt-6 overflow-hidden">
         <div className="relative overflow-auto">
           <div className="my-8 overflow-hidden shadow-sm">
@@ -99,7 +103,7 @@ export default async function Expenses() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {expensesHistoryGrouped.map((row) => (
+                {expensesHistoryGrouped.map(async (row) => (
                   <React.Fragment key={row.id}>
                     {!row.isDuplicated ? (
                       <tr>
@@ -175,7 +179,7 @@ export default async function Expenses() {
                           />
                           <span
                             className={classNames(
-                              checkName(row.numer_dowodu_ksiegowego)
+                              (await checkName(row.numer_dowodu_ksiegowego))
                                 ? "font-semibold text-red-500"
                                 : "text-slate-500",
                               "text-xs",

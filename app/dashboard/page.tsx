@@ -4,16 +4,19 @@ import ActionButtons from "./actionButtons";
 import { basicData, reminders } from "./query";
 
 export default async function Home() {
-  const receivableSum = basicData.reduce(
+  const receivableSum = (await basicData()).reduce(
     (acc, el) => (el.saldo.toNumber() < 0 ? acc - el.saldo.toNumber() : acc),
     0,
   );
 
-  const consumptionSum = basicData.reduce((acc, el) => acc + el.zuzycie, 0);
+  const consumptionSum = (await basicData()).reduce(
+    (acc, el) => acc + el.zuzycie,
+    0,
+  );
 
   return (
     <div className="container mx-auto px-4">
-      {reminders.map((reminder) => (
+      {(await reminders()).map((reminder) => (
         <AAlert
           key={reminder.id}
           title={reminder.tresc}
@@ -60,7 +63,7 @@ export default async function Home() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {basicData?.map((row) => (
+                {(await basicData()).map((row) => (
                   <tr
                     key={row.numer_mieszkania}
                     className="hover:bg-gray-100 focus:bg-gray-100"
