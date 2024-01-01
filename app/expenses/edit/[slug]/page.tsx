@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import ExpenseForm from "../../form";
 import { categories } from "./query";
 
