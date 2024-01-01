@@ -4,7 +4,7 @@ import { classNames, formatter } from "@/utils/index";
 import React from "react";
 import ActionButtons from "./actionButtons";
 import { incomesHistory } from "./query";
-import incorrectDescriptions from "../query";
+// import incorrectDescriptions from "../query";
 
 export default async function Incomes() {
   const incomesHistoryGrouped = (await incomesHistory()).map(
@@ -16,16 +16,16 @@ export default async function Incomes() {
     },
   );
 
-  const checkName = async (number: string) =>
-    (await incorrectDescriptions())?.zawiera.some((el: string) =>
-      number.toLocaleLowerCase().includes(el),
-    ) ||
-    (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
-      number.toLocaleLowerCase().endsWith(el),
-    ) ||
-    (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
-      number.toLocaleLowerCase().startsWith(el),
-    );
+  // const checkName = async (number: string) =>
+  //   (await incorrectDescriptions())?.zawiera.some((el: string) =>
+  //     number.toLocaleLowerCase().includes(el),
+  //   ) ||
+  //   (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
+  //     number.toLocaleLowerCase().endsWith(el),
+  //   ) ||
+  //   (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
+  //     number.toLocaleLowerCase().startsWith(el),
+  //   );
 
   // const incomesWithIncorrectName = (await incomesHistory()).reduce(
   //   async (acc, el) =>
@@ -141,9 +141,9 @@ export default async function Incomes() {
                           />
                           <span
                             className={classNames(
-                              (await checkName(row.numer_dowodu_ksiegowego))
-                                ? "font-semibold text-red-500"
-                                : "text-slate-500",
+                              // (await checkName(row.numer_dowodu_ksiegowego))
+                              //   ? "font-semibold text-red-500"
+                              //   : "text-slate-500",
                               "text-xs",
                             )}
                           >

@@ -4,7 +4,7 @@ import AAlert from "@/atoms/a-alert";
 import React from "react";
 import ActionButtons from "./actionButtons";
 import { accruals, expensesHistory, media, plans } from "./query";
-import incorrectDescriptions from "../query";
+// import incorrectDescriptions from "../query";
 
 export default async function Expenses() {
   const expensesHistoryGrouped = (await expensesHistory()).map(
@@ -16,16 +16,16 @@ export default async function Expenses() {
     },
   );
 
-  const checkName = async (number: string) =>
-    (await incorrectDescriptions())?.zawiera.some((el: string) =>
-      number.toLocaleLowerCase().includes(el),
-    ) ||
-    (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
-      number.toLocaleLowerCase().endsWith(el),
-    ) ||
-    (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
-      number.toLocaleLowerCase().startsWith(el),
-    );
+  // const checkName = async (number: string) =>
+  //   (await incorrectDescriptions())?.zawiera.some((el: string) =>
+  //     number.toLocaleLowerCase().includes(el),
+  //   ) ||
+  //   (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
+  //     number.toLocaleLowerCase().endsWith(el),
+  //   ) ||
+  //   (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
+  //     number.toLocaleLowerCase().startsWith(el),
+  //   );
 
   // const expensesWithIncorrectName = (await expensesHistory()).reduce(
   //   async (acc, el) =>
@@ -179,9 +179,9 @@ export default async function Expenses() {
                           />
                           <span
                             className={classNames(
-                              (await checkName(row.numer_dowodu_ksiegowego))
-                                ? "font-semibold text-red-500"
-                                : "text-slate-500",
+                              // (await checkName(row.numer_dowodu_ksiegowego))
+                              //   ? "font-semibold text-red-500"
+                              //   : "text-slate-500",
                               "text-xs",
                             )}
                           >
