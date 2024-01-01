@@ -41,7 +41,7 @@ export async function GET() {
     const blad =
       formatter.format(parseFloat(daneDoSprawozdania[0].bilans)) !==
       formatter.format(
-        parseFloat(stanKont[0]?.suma) + parseFloat(stanKont[1]?.suma),
+        parseFloat(stanKont[0]?.suma ?? 0) + parseFloat(stanKont[1]?.suma ?? 0),
       );
 
     const breakLineAfter = 20;
@@ -63,14 +63,14 @@ export async function GET() {
       wydF: formatter.format(daneDoSprawozdania[0].wydf),
       prowizje: formatter.format(daneDoSprawozdania[0].prowizje),
       wydRaz: formatter.format(daneDoSprawozdania[0].wydraz),
-      kasa: formatter.format(stanKont[0]?.suma),
-      bank: formatter.format(stanKont[1]?.suma),
+      kasa: formatter.format(stanKont[0]?.suma ?? 0),
+      bank: formatter.format(stanKont[1]?.suma ?? 0),
       blad,
       bilans: !blad
         ? formatter.format(daneDoSprawozdania[0].bilans)
         : `NIEZGODNOŚĆ: ${formatter.format(
-            parseFloat(stanKont[0]?.suma) +
-              parseFloat(stanKont[1]?.suma) -
+            parseFloat(stanKont[0]?.suma ?? 0) +
+              parseFloat(stanKont[1]?.suma ?? 0) -
               parseFloat(daneDoSprawozdania[0].bilans),
           )}`,
       wydOpalWoda: wydatkiOpalWodaSmieci.map((el) => ({

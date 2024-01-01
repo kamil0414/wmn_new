@@ -23,8 +23,8 @@ async function OHeader() {
     },
   });
 
-  const accountState = operationSums[1]._sum.kwota?.toNumber() ?? 0;
-  const cashState = operationSums[0]._sum.kwota?.toNumber() ?? 0;
+  const accountState = operationSums[1]?._sum.kwota?.toNumber() ?? 0;
+  const cashState = operationSums[0]?._sum.kwota?.toNumber() ?? 0;
 
   return (
     <nav className="sticky top-0 z-10 bg-gray-800 print:hidden">
@@ -69,8 +69,3 @@ async function OHeader() {
 }
 
 export default OHeader;
-
-// <HeaderNav
-//   accountState={accountState[1]._sum.kwota?.toNumber() ?? 0}
-//   cashState={accountState[0]._sum.kwota?.toNumber() ?? 0}
-// />
