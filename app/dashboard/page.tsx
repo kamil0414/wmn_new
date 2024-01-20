@@ -101,7 +101,7 @@ export default async function Home() {
                 {(basicData == null || basicData?.length === 0) && (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={4}
                       className="border-b border-slate-200 p-4 text-center text-slate-500"
                     >
                       {basicData?.length === 0 ? "brak operacji" : ""}
