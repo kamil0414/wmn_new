@@ -228,7 +228,7 @@ view saldo {
   data                               DateTime? @db.Date
   saldo                              Decimal   @db.Money
   data_ostatniego_odczytu_wodomierza DateTime? @db.Date
-  zuzycie                            Decimal   @db.Decimal
+  zuzycie                            Decimal?   @db.Decimal
 
   @@map("salda")
 }

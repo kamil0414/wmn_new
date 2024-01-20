@@ -6,7 +6,7 @@ export const basicDataRaw = async () => prisma.saldo.findMany();
 export const basicData = async () =>
   (await basicDataRaw()).map((el) => ({
     ...el,
-    zuzycie: el.zuzycie.toNumber(),
+    zuzycie: el.zuzycie ? el.zuzycie.toNumber() : 0,
   }));
 
 export const reminders = async () =>
