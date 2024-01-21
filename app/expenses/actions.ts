@@ -84,7 +84,7 @@ export const upsertExpense = async ({
         komentarz,
       },
     });
-    revalidatePath("/", "layout");
+    await revalidatePath("/", "layout");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -103,7 +103,7 @@ export const deleteExpense = async (id: number) => {
         is_deleted: true,
       },
     });
-    revalidatePath("/", "layout");
+    await revalidatePath("/", "layout");
   } catch (e) {
     return { message: `Error ${e}` };
   }
