@@ -9,7 +9,7 @@ export async function GET(req: any) {
   }
 
   try {
-    revalidatePath("/", "layout");
+    await revalidatePath("/", "layout");
     return NextResponse.json({ revalidated: true });
   } catch (e) {
     return NextResponse.json(
