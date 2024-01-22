@@ -3,49 +3,51 @@ import { classNames, formatter } from "@/utils/index";
 import AAlert from "@/atoms/a-alert";
 import React from "react";
 import ActionButtons from "./actionButtons";
-import { accruals, expensesHistory, media, plans } from "./query";
-// import incorrectDescriptions from "../query";
+import { getAccruals, getExpensesHistory, getMedia, getPlans } from "./query";
+import getIncorrectDescriptions from "../query";
 
 export default async function Expenses() {
-  const expensesHistoryGrouped = (await expensesHistory()).map(
-    (el, index, array) => {
-      const isDuplicated = array
-        .slice(0, index)
-        .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
-      return { ...el, isDuplicated };
-    },
+  const expensesHistory = await getExpensesHistory();
+  const accruals = await getAccruals();
+  const plans = await getPlans();
+  const media = await getMedia();
+  const incorrectDescriptions = await getIncorrectDescriptions();
+
+  const expensesHistoryGrouped = expensesHistory.map((el, index, array) => {
+    const isDuplicated = array
+      .slice(0, index)
+      .some((prevEl) => prevEl.data.getTime() === el.data.getTime());
+    return { ...el, isDuplicated };
+  });
+
+  const checkName = (number: string) =>
+    incorrectDescriptions?.zawiera.some((el: string) =>
+      number.toLocaleLowerCase().includes(el),
+    ) ||
+    incorrectDescriptions?.konczy_sie_na.some((el: string) =>
+      number.toLocaleLowerCase().endsWith(el),
+    ) ||
+    incorrectDescriptions?.zaczyna_sie_od.some((el: string) =>
+      number.toLocaleLowerCase().startsWith(el),
+    );
+
+  const expensesWithIncorrectName = expensesHistory.reduce(
+    (acc, el) => (checkName(el.numer_dowodu_ksiegowego) ? acc + 1 : acc),
+    0,
   );
-
-  // const checkName = async (number: string) =>
-  //   (await incorrectDescriptions())?.zawiera.some((el: string) =>
-  //     number.toLocaleLowerCase().includes(el),
-  //   ) ||
-  //   (await incorrectDescriptions())?.konczy_sie_na.some((el: string) =>
-  //     number.toLocaleLowerCase().endsWith(el),
-  //   ) ||
-  //   (await incorrectDescriptions())?.zaczyna_sie_od.some((el: string) =>
-  //     number.toLocaleLowerCase().startsWith(el),
-  //   );
-
-  // const expensesWithIncorrectName = (await expensesHistory()).reduce(
-  //   async (acc, el) =>
-  //     (await checkName(el.numer_dowodu_ksiegowego)) ? acc + 1 : acc,
-  //   0,
-  // );
 
   return (
     <div className="container mx-auto px-4">
-      {(await media()).map(async (e) => {
+      {media.map((e) => {
         const plan =
-          ((await plans())
-            .find((el) => el.id_opisu === e.id)
-            ?._sum.kwota?.toNumber() ?? 0) +
+          (plans.find((el) => el.id_opisu === e.id)?._sum.kwota?.toNumber() ??
+            0) +
           (e.id === 4
-            ? (await accruals())._sum.smieci?.toNumber() ?? 0
+            ? accruals._sum.smieci?.toNumber() ?? 0
             : e.id === 5
-              ? (await accruals())._sum.woda?.toNumber() ?? 0
+              ? accruals._sum.woda?.toNumber() ?? 0
               : 0);
-        const exp = (await expensesHistory()).reduce(
+        const exp = expensesHistory.reduce(
           (acc, el) => (el.id_opisu === e.id ? acc + el.kwota.toNumber() : acc),
           0,
         );
@@ -73,7 +75,7 @@ export default async function Expenses() {
         );
       })}
 
-      {/* {expensesWithIncorrectName > 0 && (
+      {expensesWithIncorrectName > 0 && (
         <AAlert
           title="Niepoprawny numer dowodu księgowego"
           color="yellow"
@@ -83,7 +85,8 @@ export default async function Expenses() {
             przy <strong>{expensesWithIncorrectName}</strong> wydatkach(u)
           </span>
         </AAlert>
-      )} */}
+      )}
+
       <div className="relative mb-2 mt-6 overflow-hidden">
         <div className="relative overflow-auto">
           <div className="my-8 overflow-hidden shadow-sm">
@@ -179,9 +182,9 @@ export default async function Expenses() {
                           />
                           <span
                             className={classNames(
-                              // (await checkName(row.numer_dowodu_ksiegowego))
-                              //   ? "font-semibold text-red-500"
-                              //   : "text-slate-500",
+                              checkName(row.numer_dowodu_ksiegowego)
+                                ? "font-semibold text-red-500"
+                                : "text-slate-500",
                               "text-xs",
                             )}
                           >

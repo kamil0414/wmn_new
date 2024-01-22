@@ -1,15 +1,15 @@
 import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import prisma from "@/lib/prisma";
 
-export const basicDataRaw = async () => prisma.saldo.findMany();
+const getBasicDataRaw = async () => prisma.saldo.findMany();
 
-export const basicData = async () =>
-  (await basicDataRaw()).map((el) => ({
+export const getBasicData = async () =>
+  (await getBasicDataRaw()).map((el) => ({
     ...el,
     zuzycie: el.zuzycie ? el.zuzycie.toNumber() : 0,
   }));
 
-export const reminders = async () =>
+export const getReminders = async () =>
   prisma.przypomnienie.findMany({
     where: {
       data: {

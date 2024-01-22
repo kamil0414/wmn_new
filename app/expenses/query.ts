@@ -1,7 +1,7 @@
 import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import prisma from "@/lib/prisma";
 
-export const accruals = async () =>
+export const getAccruals = async () =>
   prisma.naliczenie.aggregate({
     _sum: {
       woda: true,
@@ -16,7 +16,7 @@ export const accruals = async () =>
     },
   });
 
-export const expensesHistory = async () =>
+export const getExpensesHistory = async () =>
   prisma.operacja.findMany({
     select: {
       id: true,
@@ -85,7 +85,7 @@ export const expensesHistory = async () =>
     ],
   });
 
-export const media = async () =>
+export const getMedia = async () =>
   prisma.opis.findMany({
     select: {
       id: true,
@@ -96,7 +96,7 @@ export const media = async () =>
     },
   });
 
-export const plans = async () =>
+export const getPlans = async () =>
   prisma.plan.groupBy({
     by: ["id_opisu"],
     _sum: {

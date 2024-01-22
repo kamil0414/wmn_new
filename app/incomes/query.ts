@@ -2,7 +2,7 @@ import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import prisma from "@/lib/prisma";
 
 // eslint-disable-next-line import/prefer-default-export
-export const incomesHistory = async () =>
+export const getIncomesHistory = async () =>
   prisma.operacja.findMany({
     select: {
       id: true,

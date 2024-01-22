@@ -13,7 +13,7 @@ export default async function deleteIncome(id: number) {
         is_deleted: true,
       },
     });
-    await revalidatePath("/", "layout");
+    revalidatePath("/", "layout");
   } catch (e) {
     return { message: `Error ${e}` };
   }

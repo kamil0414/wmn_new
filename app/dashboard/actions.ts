@@ -13,7 +13,7 @@ export default async function markRemindAsCompleted(id: number) {
         czy_wykonane: true,
       },
     });
-    await revalidatePath("/dashboard");
+    revalidatePath("/dashboard");
   } catch (e) {
     return { message: `Error ${e}` };
   }

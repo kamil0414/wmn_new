@@ -1,18 +1,22 @@
 import AddIncomeForm from "./form";
-import { basicData, blankNumbers, flatHistory } from "./query";
+import { getBasicData, getBlankNumbers, getFlatHistory } from "./query";
 
 async function AddIncome() {
+  const basicData = await getBasicData();
+  const blankNumbers = await getBlankNumbers();
+  const flatHistory = await getFlatHistory();
+
   return (
     <AddIncomeForm
-      basicData={(await basicData()).map((el: any) => ({
+      basicData={basicData.map((el: any) => ({
         ...el,
         razem: el.razem.toNumber(),
         saldo: el.saldo.toNumber(),
         data_odczytu_wodomierza: el.data_odczytu_wodomierza.toISOString(),
         stan_wodomierza: el.stan_wodomierza.toNumber(),
       }))}
-      blankNumbers={(await blankNumbers()).map((el) => el.nr)}
-      flatHistory={(await flatHistory()).map((el) => ({
+      blankNumbers={blankNumbers.map((el) => el.nr)}
+      flatHistory={flatHistory.map((el) => ({
         ...el,
         naleznosc: el.naleznosc.toNumber(),
         saldo: el.saldo.toNumber(),

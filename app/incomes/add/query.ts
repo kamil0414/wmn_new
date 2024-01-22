@@ -1,12 +1,12 @@
 import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import prisma from "@/lib/prisma";
 
-export const basicData: any = async () =>
+export const getBasicData: any = async () =>
   prisma.$queryRawUnsafe(`select * from PodajDanePomonicze()`);
 
-export const blankNumbers = async () => prisma.numerKP.findMany();
+export const getBlankNumbers = async () => prisma.numerKP.findMany();
 
-export const flatHistory = async () =>
+export const getFlatHistory = async () =>
   prisma.kartoteka.findMany({
     select: {
       id: true,

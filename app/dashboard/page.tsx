@@ -1,22 +1,22 @@
 import AAlert from "@/atoms/a-alert";
 import { classNames, formatter } from "@/utils/index";
 import ActionButtons from "./actionButtons";
-import { basicData, reminders } from "./query";
+import { getBasicData, getReminders } from "./query";
 
 export default async function Home() {
-  const receivableSum = (await basicData()).reduce(
+  const basicData = await getBasicData();
+  const reminders = await getReminders();
+
+  const receivableSum = basicData.reduce(
     (acc, el) => (el.saldo.toNumber() < 0 ? acc - el.saldo.toNumber() : acc),
     0,
   );
 
-  const consumptionSum = (await basicData()).reduce(
-    (acc, el) => acc + el.zuzycie,
-    0,
-  );
+  const consumptionSum = basicData.reduce((acc, el) => acc + el.zuzycie, 0);
 
   return (
     <div className="container mx-auto px-4">
-      {(await reminders()).map((reminder) => (
+      {reminders.map((reminder) => (
         <AAlert
           key={reminder.id}
           title={reminder.tresc}
@@ -63,7 +63,7 @@ export default async function Home() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {(await basicData()).map((row) => (
+                {basicData.map((row) => (
                   <tr
                     key={row.numer_mieszkania}
                     className="hover:bg-gray-100 focus:bg-gray-100"

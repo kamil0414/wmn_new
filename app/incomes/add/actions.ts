@@ -30,7 +30,7 @@ export const saveWater = async ({
         }'`}, ${numer_mieszkania})`,
       );
     }
-    await revalidatePath("/", "layout");
+    revalidatePath("/", "layout");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -68,7 +68,7 @@ export const saveIncome = async ({
         id_subkonta,
       },
     });
-    await revalidatePath("/", "layout");
+    revalidatePath("/", "layout");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -85,7 +85,7 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           is_deleted: true,
         },
       });
-      await revalidatePath("/", "layout");
+      revalidatePath("/", "layout");
     } else {
       const bill = await prisma.naliczenie.update({
         where: {
@@ -105,7 +105,7 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           },
         });
       }
-      await revalidatePath("/", "layout");
+      revalidatePath("/", "layout");
     }
   } catch (e) {
     return { message: `Error ${e}` };
