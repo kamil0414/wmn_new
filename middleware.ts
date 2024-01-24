@@ -42,7 +42,7 @@ export function middleware(request: NextRequest) {
     frame-ancestors 'none';
     block-all-mixed-content;
     upgrade-insecure-requests;
-    connect-src 'self' https://vercel.live/ https://vitals.vercel-insights.com/v1/vitals/;
+    connect-src 'self' https://vercel.live https://vitals.vercel-insights.com/v1/vitals;
 `;
   const contentSecurityPolicyHeaderValue = cspHeader
     .replace(/\s{2,}/g, " ")
