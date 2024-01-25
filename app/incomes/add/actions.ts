@@ -3,6 +3,9 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
+// eslint-disable-next-line
+const revalidate = true;
+
 export const saveWater = async ({
   numer_mieszkania,
   stan,
