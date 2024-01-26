@@ -9,7 +9,7 @@ async function OHeader() {
         `${process.env.USER}:${process.env.PASSWORD}`,
       )}`,
     },
-    next: { tags: ["operationSums"] },
+    // next: { tags: ["operationSums"] },
   });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
