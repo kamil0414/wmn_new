@@ -3,20 +3,19 @@ import Links from "./links";
 import Menu from "./menu";
 
 async function getData() {
-  const res = await fetch(`${process.env.API_URL}api/operationSums`, {
-    headers: {
-      Authorization: `Barer ${btoa(
-        `${process.env.USER}:${process.env.PASSWORD}`,
-      )}`,
-    },
-    next: { tags: ["operationSums"], revalidate: 0 },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
+  // const res = await fetch(`${process.env.API_URL}api/operationSums`, {
+  //   headers: {
+  //     Authorization: `Barer ${btoa(
+  //       `${process.env.USER}:${process.env.PASSWORD}`,
+  //     )}`,
+  //   },
+  //   next: { tags: ["operationSums"], revalidate: 0 },
+  // });
+  // if (!res.ok) {
+  //   throw new Error("Failed to fetch data");
+  // }
+  // return res.json();
+  return [{ _sum: { kwota: "0" } }, { _sum: { kwota: "0" } }];
 }
 
 async function OHeader() {
