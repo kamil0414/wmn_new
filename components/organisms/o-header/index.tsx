@@ -3,8 +3,6 @@ import { revalidateTag } from "next/cache";
 import Links from "./links";
 import Menu from "./menu";
 
-revalidateTag("operationSums");
-
 async function getData() {
   const res = await fetch(`${process.env.API_URL}api/operationSums`, {
     headers: {
@@ -21,6 +19,8 @@ async function getData() {
 }
 
 async function OHeader() {
+  revalidateTag("operationSums");
+
   const operationSums = await getData();
 
   const accountState = parseFloat(operationSums[1]?._sum.kwota);
