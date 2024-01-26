@@ -71,9 +71,9 @@ export const saveIncome = async ({
         id_subkonta,
       },
     });
-    revalidateTag("operationSums");
     revalidatePath("/incomes");
     revalidatePath("/incomes/add");
+    revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -90,9 +90,9 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           is_deleted: true,
         },
       });
-      revalidateTag("operationSums");
       revalidatePath("/incomes");
       revalidatePath("/incomes/add");
+      revalidateTag("operationSums");
     } else {
       const bill = await prisma.naliczenie.update({
         where: {
@@ -112,9 +112,9 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           },
         });
       }
-      revalidateTag("operationSums");
       revalidatePath("/incomes");
       revalidatePath("/incomes/add");
+      revalidateTag("operationSums");
     }
   } catch (e) {
     return { message: `Error ${e}` };

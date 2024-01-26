@@ -1,6 +1,9 @@
 import { formatter } from "@/utils/index";
+import { revalidateTag } from "next/cache";
 import Links from "./links";
 import Menu from "./menu";
+
+revalidateTag("operationSums");
 
 async function getData() {
   const res = await fetch(`${process.env.API_URL}api/operationSums`, {
