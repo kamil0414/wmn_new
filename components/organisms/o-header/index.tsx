@@ -1,30 +1,29 @@
-/* eslint-disable no-underscore-dangle */
-import prisma from "@/lib/prisma";
-import {
-  getStartDateFromEnv,
-  getEndDateFromEnv,
-  formatter,
-} from "@/utils/index";
+import { formatter } from "@/utils/index";
 import Links from "./links";
 import Menu from "./menu";
 
-async function OHeader() {
-  const operationSums = await prisma.operacja.groupBy({
-    by: ["czy_bank"],
-    _sum: {
-      kwota: true,
+async function getData() {
+  const res = await fetch("http://localhost:3000/api/operationSums", {
+    headers: {
+      Authorization: `Barer ${btoa(
+        `${process.env.USER}:${process.env.PASSWORD}`,
+      )}`,
     },
-    where: {
-      data: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(),
-      },
-      is_deleted: false,
-    },
+    next: { tags: ["operationSums"], revalidate: 0 },
   });
 
-  const accountState = operationSums[1]?._sum.kwota?.toNumber() ?? 0;
-  const cashState = operationSums[0]?._sum.kwota?.toNumber() ?? 0;
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+
+async function OHeader() {
+  const operationSums = await getData();
+
+  const accountState = parseFloat(operationSums[1]?._sum.kwota);
+  const cashState = parseFloat(operationSums[0]?._sum.kwota);
 
   return (
     <nav className="sticky top-0 z-10 bg-gray-800 print:hidden">

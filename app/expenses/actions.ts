@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
@@ -87,13 +87,12 @@ export const upsertExpense = async ({
         komentarz,
       },
     });
-    revalidatePath("/", "layout");
+    revalidatePath("/expenses");
+    revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };
   }
-  if (id) {
-    redirect(`/expenses`);
-  }
+  redirect(`/expenses`);
 };
 
 export const deleteExpense = async (id: number) => {
@@ -106,7 +105,8 @@ export const deleteExpense = async (id: number) => {
         is_deleted: true,
       },
     });
-    revalidatePath("/", "layout");
+    revalidatePath("/expenses");
+    revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };
   }

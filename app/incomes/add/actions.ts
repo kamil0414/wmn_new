@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 // eslint-disable-next-line
@@ -33,7 +33,7 @@ export const saveWater = async ({
         }'`}, ${numer_mieszkania})`,
       );
     }
-    revalidatePath("/", "layout");
+    revalidatePath("/incomes/add");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -71,7 +71,9 @@ export const saveIncome = async ({
         id_subkonta,
       },
     });
-    revalidatePath("/", "layout");
+    revalidateTag("operationSums");
+    revalidatePath("/incomes");
+    revalidatePath("/incomes/add");
   } catch (e) {
     return { message: `Error ${e}` };
   }
@@ -88,7 +90,9 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           is_deleted: true,
         },
       });
-      revalidatePath("/", "layout");
+      revalidateTag("operationSums");
+      revalidatePath("/incomes");
+      revalidatePath("/incomes/add");
     } else {
       const bill = await prisma.naliczenie.update({
         where: {
@@ -108,7 +112,9 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           },
         });
       }
-      revalidatePath("/", "layout");
+      revalidateTag("operationSums");
+      revalidatePath("/incomes");
+      revalidatePath("/incomes/add");
     }
   } catch (e) {
     return { message: `Error ${e}` };
