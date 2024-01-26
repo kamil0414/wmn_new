@@ -2,6 +2,9 @@ import { formatter } from "@/utils/index";
 import Links from "./links";
 import Menu from "./menu";
 
+// eslint-disable-next-line
+const revalidate = true;
+
 async function getData() {
   const res = await fetch(`${process.env.API_URL}api/operationSums`, {
     headers: {
