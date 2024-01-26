@@ -9,7 +9,7 @@ async function getData() {
         `${process.env.USER}:${process.env.PASSWORD}`,
       )}`,
     },
-    next: { tags: ["operationSums"], revalidate: 10 },
+    next: { tags: ["operationSums"], revalidate: 0 },
   });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
