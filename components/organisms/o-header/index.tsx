@@ -3,7 +3,9 @@ import { revalidateTag } from "next/cache";
 import Links from "./links";
 import Menu from "./menu";
 
-async function getData() {
+async function OHeader() {
+  revalidateTag("operationSums");
+
   const res = await fetch(`${process.env.API_URL}api/operationSums`, {
     headers: {
       Authorization: `Barer ${btoa(
@@ -15,13 +17,7 @@ async function getData() {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  return res.json();
-}
-
-async function OHeader() {
-  revalidateTag("operationSums");
-
-  const operationSums = await getData();
+  const operationSums = await res.json();
 
   const accountState = parseFloat(operationSums[1]?._sum.kwota);
   const cashState = parseFloat(operationSums[0]?._sum.kwota);
