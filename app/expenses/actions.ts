@@ -88,10 +88,10 @@ export const upsertExpense = async ({
       },
     });
     revalidatePath("/expenses");
-    revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };
   }
+  revalidateTag("operationSums");
   redirect(`/expenses`);
 };
 

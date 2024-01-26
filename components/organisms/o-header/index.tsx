@@ -1,18 +1,15 @@
 import { formatter } from "@/utils/index";
-import { revalidateTag } from "next/cache";
 import Links from "./links";
 import Menu from "./menu";
 
 async function OHeader() {
-  revalidateTag("operationSums");
-
   const res = await fetch(`${process.env.API_URL}api/operationSums`, {
     headers: {
       Authorization: `Barer ${btoa(
         `${process.env.USER}:${process.env.PASSWORD}`,
       )}`,
     },
-    next: { tags: ["operationSums"], revalidate: 0 },
+    next: { tags: ["operationSums"] },
   });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
