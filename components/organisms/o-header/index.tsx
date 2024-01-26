@@ -2,9 +2,6 @@ import { formatter } from "@/utils/index";
 import Links from "./links";
 import Menu from "./menu";
 
-// eslint-disable-next-line
-const revalidate = true;
-
 async function getData() {
   const res = await fetch(`${process.env.API_URL}api/operationSums`, {
     headers: {
@@ -12,7 +9,8 @@ async function getData() {
         `${process.env.USER}:${process.env.PASSWORD}`,
       )}`,
     },
-    next: { tags: ["operationSums"] },
+    // @ts-ignore
+    next: { tags: ["operationSums"], revalidate: true },
   });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
