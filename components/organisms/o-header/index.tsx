@@ -3,14 +3,17 @@ import Links from "./links";
 import Menu from "./menu";
 
 async function getData() {
-  const res = await fetch("http://localhost:3000/api/operationSums", {
-    headers: {
-      Authorization: `Barer ${btoa(
-        `${process.env.USER}:${process.env.PASSWORD}`,
-      )}`,
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_VERCEL_URL}/api/operationSums`,
+    {
+      headers: {
+        Authorization: `Barer ${btoa(
+          `${process.env.USER}:${process.env.PASSWORD}`,
+        )}`,
+      },
+      next: { tags: ["operationSums"], revalidate: 0 },
     },
-    next: { tags: ["operationSums"], revalidate: 0 },
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
