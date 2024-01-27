@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useOptimistic, useRef, useState } from "react";
 import {
   getStartDateFromEnv,
   getEndDateFromEnv,
   classNames,
 } from "@/utils/index";
+import OSpinner from "@/organisms/o-spinner";
 import { upsertExpense } from "./actions";
 
 interface Company {
@@ -64,6 +65,7 @@ function ExpenseForm({
   selectedComment?: string;
   selectedCash?: boolean;
 }) {
+  const [loading, setLoading] = useOptimistic(false, (state) => !state);
   const [category, setCategory] = useState(selectedCategory ?? -1);
   const [description, setDescription] = useState(selectedDescription ?? -1);
   const [company, setCompany] = useState(selectedCompany ?? -1);
@@ -182,6 +184,7 @@ function ExpenseForm({
   }, [sum]);
 
   const saveOperation = async () => {
+    setLoading(true);
     const response = await upsertExpense({
       id,
       id_firmy: company,
@@ -206,7 +209,12 @@ function ExpenseForm({
       setSum(0);
       setComment("");
     }
+    setLoading(false);
   };
+
+  if (loading) {
+    return <OSpinner />;
+  }
 
   return (
     <form

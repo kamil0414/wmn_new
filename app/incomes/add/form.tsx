@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useOptimistic, useRef, useState } from "react";
 import {
   getEndDateFromEnv,
   getStartDateFromEnv,
@@ -35,6 +35,7 @@ function AddIncomeForm({
   blankNumbers: number[];
   flatHistory: FlatHistoryInterface[];
 }) {
+  const [loading, setLoading] = useOptimistic(false, (state) => !state);
   const sumInput = useRef<HTMLInputElement>(null);
   const [flat, setFlat] = useState(1);
 
@@ -94,6 +95,7 @@ function AddIncomeForm({
   };
 
   const saveOperation = async () => {
+    setLoading(true);
     const response = await saveIncome({
       id_firmy: flat,
       data: new Date(operationDate),
@@ -112,6 +114,7 @@ function AddIncomeForm({
     if (response?.message) {
       alert(response?.message);
     }
+    setLoading(false);
   };
 
   const defaultOptionClick = () => {
@@ -411,7 +414,7 @@ function AddIncomeForm({
                 operationNumber !== "" &&
                 operationSum != null &&
                 operationSum > 0
-              )
+              ) || loading
             }
           >
             Zapisz wpłatę
