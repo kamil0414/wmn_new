@@ -88,7 +88,6 @@ export const upsertExpense = async ({
       },
     });
     revalidatePath("/expenses");
-    // revalidatePath("/", "layout");
     revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };
@@ -107,7 +106,6 @@ export const deleteExpense = async (id: number) => {
       },
     });
     revalidatePath("/expenses");
-    // revalidatePath("/", "layout");
     revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };

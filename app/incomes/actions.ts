@@ -18,7 +18,6 @@ export default async function deleteIncome(id: number) {
     });
     revalidatePath("/incomes");
     revalidatePath("/incomes/add");
-    // revalidatePath("/", "layout");
     revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };

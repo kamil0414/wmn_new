@@ -10,7 +10,6 @@ async function OHeader() {
       )}`,
     },
     next: { tags: ["operationSums"] },
-    cache: "no-store",
   });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
