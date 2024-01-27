@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
 // eslint-disable-next-line
@@ -71,8 +71,8 @@ export const saveIncome = async ({
         id_subkonta,
       },
     });
-    // revalidatePath("/incomes");
-    // revalidatePath("/incomes/add");
+    revalidatePath("/incomes");
+    revalidatePath("/incomes/add");
     revalidatePath("/", "layout");
     // revalidateTag("operationSums");
   } catch (e) {
@@ -91,8 +91,8 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           is_deleted: true,
         },
       });
-      // revalidatePath("/incomes");
-      // revalidatePath("/incomes/add");
+      revalidatePath("/incomes");
+      revalidatePath("/incomes/add");
       revalidatePath("/", "layout");
       // revalidateTag("operationSums");
     } else {
@@ -114,8 +114,8 @@ export const deleteIncome = async (id: number, isWaterBill: boolean) => {
           },
         });
       }
-      // revalidatePath("/incomes");
-      // revalidatePath("/incomes/add");
+      revalidatePath("/incomes");
+      revalidatePath("/incomes/add");
       revalidatePath("/", "layout");
       // revalidateTag("operationSums");
     }
