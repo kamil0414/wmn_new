@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma";
 import { getStartDateFromEnv, getEndDateFromEnv } from "@/utils/index";
 import { NextResponse } from "next/server";
 
+export const revalidate = 0;
+
 // eslint-disable-next-line import/prefer-default-export
 export async function GET() {
   try {

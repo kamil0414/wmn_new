@@ -1,44 +1,41 @@
-import {
-  formatter,
-  getEndDateFromEnv,
-  getStartDateFromEnv,
-} from "@/utils/index";
-import prisma from "@/lib/prisma";
+import { formatter } from "@/utils/index";
 import Links from "./links";
 import Menu from "./menu";
 
 async function OHeader() {
-  // const res = await fetch(`${process.env.API_URL}api/operationSums`, {
-  //   headers: {
-  //     Authorization: `Barer ${btoa(
-  //       `${process.env.USER}:${process.env.PASSWORD}`,
-  //     )}`,
+  const res = await fetch(`${process.env.API_URL}api/operationSums`, {
+    headers: {
+      Authorization: `Barer ${btoa(
+        `${process.env.USER}:${process.env.PASSWORD}`,
+      )}`,
+    },
+    next: { tags: ["operationSums"] },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const operationSums = await res.json();
+
+  const accountState = parseFloat(operationSums[1]?._sum.kwota);
+  const cashState = parseFloat(operationSums[0]?._sum.kwota);
+
+  // const operationSums = await prisma.operacja.groupBy({
+  //   by: ["czy_bank"],
+  //   _sum: {
+  //     kwota: true,
+  //   },
+  //   where: {
+  //     data: {
+  //       gte: getStartDateFromEnv(),
+  //       lte: getEndDateFromEnv(),
+  //     },
+  //     is_deleted: false,
   //   },
   // });
-  // if (!res.ok) {
-  //   throw new Error("Failed to fetch data");
-  // }
-  // const operationSums = await res.json();
 
-  // const accountState = parseFloat(operationSums[1]?._sum.kwota);
-  // const cashState = parseFloat(operationSums[0]?._sum.kwota);
-
-  const operationSums = await prisma.operacja.groupBy({
-    by: ["czy_bank"],
-    _sum: {
-      kwota: true,
-    },
-    where: {
-      data: {
-        gte: getStartDateFromEnv(),
-        lte: getEndDateFromEnv(),
-      },
-      is_deleted: false,
-    },
-  });
-
-  const accountState = operationSums[1]?._sum.kwota?.toNumber() ?? 0;
-  const cashState = operationSums[0]?._sum.kwota?.toNumber() ?? 0;
+  // const accountState = operationSums[1]?._sum.kwota?.toNumber() ?? 0;
+  // const cashState = operationSums[0]?._sum.kwota?.toNumber() ?? 0;
 
   return (
     <nav className="sticky top-0 z-10 bg-gray-800 print:hidden">

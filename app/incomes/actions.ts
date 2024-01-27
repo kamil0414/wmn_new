@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 
 // eslint-disable-next-line
@@ -18,8 +18,8 @@ export default async function deleteIncome(id: number) {
     });
     revalidatePath("/incomes");
     revalidatePath("/incomes/add");
-    revalidatePath("/", "layout");
-    // revalidateTag("operationSums");
+    // revalidatePath("/", "layout");
+    revalidateTag("operationSums");
   } catch (e) {
     return { message: `Error ${e}` };
   }
