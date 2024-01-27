@@ -16,8 +16,8 @@ export default async function deleteIncome(id: number) {
         is_deleted: true,
       },
     });
-    revalidatePath("/incomes");
-    revalidatePath("/incomes/add");
+    // revalidatePath("/incomes");
+    // revalidatePath("/incomes/add");
     revalidatePath("/", "layout");
     // revalidateTag("operationSums");
   } catch (e) {

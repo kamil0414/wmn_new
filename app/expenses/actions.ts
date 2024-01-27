@@ -87,7 +87,7 @@ export const upsertExpense = async ({
         komentarz,
       },
     });
-    revalidatePath("/expenses");
+    // revalidatePath("/expenses");
     revalidatePath("/", "layout");
     // revalidateTag("operationSums");
   } catch (e) {
@@ -106,7 +106,7 @@ export const deleteExpense = async (id: number) => {
         is_deleted: true,
       },
     });
-    revalidatePath("/expenses");
+    // revalidatePath("/expenses");
     revalidatePath("/", "layout");
     // revalidateTag("operationSums");
   } catch (e) {
