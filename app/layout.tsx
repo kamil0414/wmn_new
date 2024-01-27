@@ -7,9 +7,6 @@ import OAutoRefresh from "@/organisms/o-autorefresh";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// eslint-disable-next-line
-const revalidate = true;
-
 export const metadata: Metadata = {
   title: "WMN",
   description: "WMN",

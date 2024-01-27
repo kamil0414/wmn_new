@@ -4,9 +4,6 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
-// eslint-disable-next-line
-const revalidate = true;
-
 export const upsertExpense = async ({
   id,
   id_firmy,
