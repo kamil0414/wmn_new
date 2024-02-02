@@ -364,7 +364,7 @@ function ExpenseForm({
                   if (["e", "E", "+", "-", "."].includes(evt.key)) {
                     evt.preventDefault();
                   }
-                  alert(evt.keyCode);
+                  alert(evt.code);
                 }}
                 autoComplete="off"
                 type="number"
