@@ -360,10 +360,12 @@ function ExpenseForm({
               <input
                 ref={sumInput}
                 onChange={(e) => setSum(parseFloat(e.target.value))}
-                onKeyDown={(evt) =>
-                  ["e", "E", "+", "-", "."].includes(evt.key) &&
-                  evt.preventDefault()
-                }
+                onKeyDown={(evt) => {
+                  if (["e", "E", "+", "-", "."].includes(evt.key)) {
+                    evt.preventDefault();
+                  }
+                  alert(evt.keyCode);
+                }}
                 autoComplete="off"
                 type="number"
                 min={0}
