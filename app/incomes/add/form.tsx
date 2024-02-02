@@ -37,6 +37,7 @@ function AddIncomeForm({
 }) {
   const [loading, setLoading] = useOptimistic(false, (state) => !state);
   const sumInput = useRef<HTMLInputElement>(null);
+  const waterMeterInput = useRef<HTMLInputElement>(null);
   const [flat, setFlat] = useState(1);
 
   const [waterMeterCurrentDate, setWaterMeterCurrentDate] = useState(
@@ -217,14 +218,18 @@ function AddIncomeForm({
         <div className="flex gap-x-2">
           <div className="mt-2 flex w-[135px] rounded-md shadow-sm sm:flex-none">
             <input
+              ref={waterMeterInput}
               onChange={(e) =>
-                setWaterMeterCurrentValue(
-                  parseFloat(e.target.value.replace(",", ".")),
-                )
+                setWaterMeterCurrentValue(parseFloat(e.target.value))
               }
-              onKeyDown={(evt) =>
-                ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
-              }
+              onKeyDown={(evt) => {
+                if (["e", "E", "+", "-"].includes(evt.key)) {
+                  evt.preventDefault();
+                } else if (waterMeterInput.current && evt.key === ".") {
+                  evt.preventDefault();
+                  waterMeterInput.current.value = `${waterMeterInput.current?.value}.000`;
+                }
+              }}
               min={waterMeterCurrentMinValue}
               step="any"
               value={waterMeterCurrentValue}
@@ -367,15 +372,15 @@ function AddIncomeForm({
               <div className="flex rounded-md shadow-sm">
                 <input
                   ref={sumInput}
-                  onChange={(e) =>
-                    setOperationSum(
-                      parseFloat(e.target.value.replace(",", ".")),
-                    )
-                  }
-                  onKeyDown={(evt) =>
-                    ["e", "E", "+", "-"].includes(evt.key) &&
-                    evt.preventDefault()
-                  }
+                  onChange={(e) => setOperationSum(parseFloat(e.target.value))}
+                  onKeyDown={(evt) => {
+                    if (["e", "E", "+", "-"].includes(evt.key)) {
+                      evt.preventDefault();
+                    } else if (sumInput.current && evt.key === ".") {
+                      evt.preventDefault();
+                      sumInput.current.value = `${sumInput.current?.value}.00`;
+                    }
+                  }}
                   type="number"
                   min={0}
                   step="any"

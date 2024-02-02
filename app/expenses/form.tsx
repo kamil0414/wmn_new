@@ -92,6 +92,7 @@ function ExpenseForm({
   const [unit, setUnit] = useState<string | null>("");
 
   const sumInput = useRef<HTMLInputElement>(null);
+  const countInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (sumInput.current) {
@@ -333,12 +334,17 @@ function ExpenseForm({
             {countRequired && (
               <div className="flex">
                 <input
+                  ref={countInput}
                   onChange={(e) => setCount(parseFloat(e.target.value))}
-                  onKeyDown={(evt) =>
-                    ["e", "E", "+", "-"].includes(evt.key) &&
-                    evt.preventDefault()
-                  }
-                  min={1}
+                  onKeyDown={(evt) => {
+                    if (["e", "E", "+", "-"].includes(evt.key)) {
+                      evt.preventDefault();
+                    } else if (countInput.current && evt.key === ".") {
+                      evt.preventDefault();
+                      countInput.current.value = `${countInput.current?.value}.00`;
+                    }
+                  }}
+                  min={0.01}
                   max={1000}
                   step="any"
                   type="number"
@@ -357,12 +363,15 @@ function ExpenseForm({
             <div className="flex">
               <input
                 ref={sumInput}
-                onChange={(e) =>
-                  setSum(parseFloat(e.target.value.replace(",", ".")))
-                }
-                onKeyDown={(evt) =>
-                  ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
-                }
+                onChange={(e) => setSum(parseFloat(e.target.value))}
+                onKeyDown={(evt) => {
+                  if (["e", "E", "+", "-"].includes(evt.key)) {
+                    evt.preventDefault();
+                  } else if (sumInput.current && evt.key === ".") {
+                    evt.preventDefault();
+                    sumInput.current.value = `${sumInput.current?.value}.00`;
+                  }
+                }}
                 autoComplete="off"
                 type="number"
                 min={0}
