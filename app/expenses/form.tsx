@@ -361,7 +361,10 @@ function ExpenseForm({
                 ref={sumInput}
                 onChange={(e) => setSum(parseFloat(e.target.value))}
                 onKeyDown={(evt) => {
-                  if (["e", "E", "+", "-", "."].includes(evt.key)) {
+                  if (
+                    ["e", "E", "+", "-", ".", "."].includes(evt.key) ||
+                    evt.code === "NumpadDecimal"
+                  ) {
                     evt.preventDefault();
                   }
                   alert(evt.code);
