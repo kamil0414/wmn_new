@@ -362,12 +362,12 @@ function ExpenseForm({
                 onChange={(e) => setSum(parseFloat(e.target.value))}
                 onKeyDown={(evt) => {
                   if (
-                    ["e", "E", "+", "-", ".", "."].includes(evt.key) ||
-                    evt.code === "NumpadDecimal"
+                    ["e", "E", "+", "-", "."].includes(evt.key) ||
+                    evt.which === 110
                   ) {
                     evt.preventDefault();
                   }
-                  alert(evt.code);
+                  alert(evt.which);
                 }}
                 autoComplete="off"
                 type="number"
