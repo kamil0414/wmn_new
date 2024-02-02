@@ -336,14 +336,10 @@ function ExpenseForm({
                 <input
                   ref={countInput}
                   onChange={(e) => setCount(parseFloat(e.target.value))}
-                  onKeyDown={(evt) => {
-                    if (["e", "E", "+", "-"].includes(evt.key)) {
-                      evt.preventDefault();
-                    } else if (countInput.current && evt.key === ".") {
-                      evt.preventDefault();
-                      countInput.current.value = `${countInput.current?.value}.00`;
-                    }
-                  }}
+                  onKeyDown={(evt) =>
+                    ["e", "E", "+", "-", "."].includes(evt.key) &&
+                    evt.preventDefault()
+                  }
                   min={0.01}
                   max={1000}
                   step="any"
@@ -364,14 +360,10 @@ function ExpenseForm({
               <input
                 ref={sumInput}
                 onChange={(e) => setSum(parseFloat(e.target.value))}
-                onKeyDown={(evt) => {
-                  if (["e", "E", "+", "-"].includes(evt.key)) {
-                    evt.preventDefault();
-                  } else if (sumInput.current && evt.key === ".") {
-                    evt.preventDefault();
-                    sumInput.current.value = `${sumInput.current?.value}.00`;
-                  }
-                }}
+                onKeyDown={(evt) =>
+                  ["e", "E", "+", "-", "."].includes(evt.key) &&
+                  evt.preventDefault()
+                }
                 autoComplete="off"
                 type="number"
                 min={0}

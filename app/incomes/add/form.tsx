@@ -222,14 +222,10 @@ function AddIncomeForm({
               onChange={(e) =>
                 setWaterMeterCurrentValue(parseFloat(e.target.value))
               }
-              onKeyDown={(evt) => {
-                if (["e", "E", "+", "-"].includes(evt.key)) {
-                  evt.preventDefault();
-                } else if (waterMeterInput.current && evt.key === ".") {
-                  evt.preventDefault();
-                  waterMeterInput.current.value = `${waterMeterInput.current?.value}.000`;
-                }
-              }}
+              onKeyDown={(evt) =>
+                ["e", "E", "+", "-", "."].includes(evt.key) &&
+                evt.preventDefault()
+              }
               min={waterMeterCurrentMinValue}
               step="any"
               value={waterMeterCurrentValue}
@@ -302,7 +298,8 @@ function AddIncomeForm({
             <input
               onChange={(e) => setOperationNumber(e.target.value)}
               onKeyDown={(evt) =>
-                ["e", "E", "+", "-"].includes(evt.key) && evt.preventDefault()
+                ["e", "E", "+", "-", "."].includes(evt.key) &&
+                evt.preventDefault()
               }
               min={1}
               max={10000}
@@ -373,14 +370,10 @@ function AddIncomeForm({
                 <input
                   ref={sumInput}
                   onChange={(e) => setOperationSum(parseFloat(e.target.value))}
-                  onKeyDown={(evt) => {
-                    if (["e", "E", "+", "-"].includes(evt.key)) {
-                      evt.preventDefault();
-                    } else if (sumInput.current && evt.key === ".") {
-                      evt.preventDefault();
-                      sumInput.current.value = `${sumInput.current?.value}.00`;
-                    }
-                  }}
+                  onKeyDown={(evt) =>
+                    ["e", "E", "+", "-", "."].includes(evt.key) &&
+                    evt.preventDefault()
+                  }
                   type="number"
                   min={0}
                   step="any"
