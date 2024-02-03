@@ -363,11 +363,10 @@ function ExpenseForm({
                 onKeyDown={(evt) => {
                   if (
                     ["e", "E", "+", "-", "."].includes(evt.key) ||
-                    evt.which === 110
+                    evt.which === 229
                   ) {
                     evt.preventDefault();
                   }
-                  alert(evt.which);
                 }}
                 autoComplete="off"
                 type="number"
