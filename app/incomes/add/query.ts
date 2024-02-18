@@ -35,5 +35,9 @@ export const getFlatHistory = async () =>
         ),
       },
     },
-    orderBy: [{ numer_mieszkania: "asc" }, { data: "desc" }, { opis: "desc" }],
+    orderBy: [
+      { numer_mieszkania: "asc" },
+      { data: "desc" },
+      { numer_dowodu_ksiegowego: "desc" },
+    ],
   });
